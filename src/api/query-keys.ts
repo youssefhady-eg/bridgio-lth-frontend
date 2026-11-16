@@ -1,9 +1,13 @@
 import type {
-  ClassroomId,
-  MaterialId,
-  QuestionId,
-  TestId,
-  UserId,
+  CohortId,
+  CurriculumId,
+  DimensionId,
+  LanguageId,
+  LessonId,
+  MessageThreadId,
+  RubricId,
+  SessionId,
+  UnitId,
 } from './types'
 
 /**
@@ -19,92 +23,51 @@ export const queryKeys = {
   auth: {
     session: () => ['auth', 'session'] as const,
   },
-  teachers: {
-    all: () => ['teachers'] as const,
-    profile: (teacherId: UserId) =>
-      ['teachers', teacherId, 'profile'] as const,
-    dashboard: (teacherId: UserId) =>
-      ['teachers', teacherId, 'dashboard'] as const,
+  languages: {
+    all: () => ['languages'] as const,
+    list: () => ['languages', 'list'] as const,
+    levels: (languageId: LanguageId) =>
+      ['languages', languageId, 'levels'] as const,
   },
-  students: {
-    all: () => ['students'] as const,
-    profile: (studentId: UserId) =>
-      ['students', studentId, 'profile'] as const,
-    progress: (studentId: UserId, classroomId?: ClassroomId) =>
-      ['students', studentId, 'progress', classroomId ?? 'all'] as const,
+  academies: {
+    all: () => ['academies'] as const,
+    current: () => ['academies', 'current'] as const,
+    onboarding: () => ['academies', 'current', 'onboarding'] as const,
+    dashboard: () => ['academies', 'current', 'dashboard'] as const,
   },
-  rbac: {
-    all: () => ['rbac'] as const,
-    capabilities: (userId: UserId) =>
-      ['rbac', userId, 'capabilities'] as const,
+  cohorts: {
+    all: () => ['cohorts'] as const,
+    list: () => ['cohorts', 'list'] as const,
+    detail: (cohortId: CohortId) => ['cohorts', cohortId] as const,
+    roster: (cohortId: CohortId) => ['cohorts', cohortId, 'roster'] as const,
+    attendance: (cohortId: CohortId, sessionId: SessionId) =>
+      ['cohorts', cohortId, 'sessions', sessionId, 'attendance'] as const,
   },
-  parents: {
-    all: () => ['parents'] as const,
-    profile: () => ['parents', 'profile'] as const,
-    overview: (childId: UserId) => ['parents', 'children', childId] as const,
+  curricula: {
+    all: () => ['curricula'] as const,
+    list: () => ['curricula', 'list'] as const,
+    detail: (curriculumId: CurriculumId) =>
+      ['curricula', curriculumId] as const,
+    unit: (curriculumId: CurriculumId, unitId: UnitId) =>
+      ['curricula', curriculumId, 'units', unitId] as const,
+    lesson: (curriculumId: CurriculumId, lessonId: LessonId) =>
+      ['curricula', curriculumId, 'lessons', lessonId] as const,
+  },
+  rubrics: {
+    all: () => ['rubrics'] as const,
+    list: () => ['rubrics', 'list'] as const,
+    detail: (rubricId: RubricId) => ['rubrics', rubricId] as const,
+    dimension: (rubricId: RubricId, dimensionId: DimensionId) =>
+      ['rubrics', rubricId, 'dimensions', dimensionId] as const,
+  },
+  earnings: {
+    all: () => ['earnings'] as const,
+    ledger: () => ['earnings', 'ledger'] as const,
   },
   messages: {
     all: () => ['messages'] as const,
     threads: () => ['messages', 'threads'] as const,
-    thread: (threadId: string) => ['messages', 'threads', threadId] as const,
-  },
-  classrooms: {
-    all: () => ['classrooms'] as const,
-    forTeacher: (teacherId: UserId) =>
-      ['classrooms', 'teacher', teacherId] as const,
-    detail: (classroomId: ClassroomId) =>
-      ['classrooms', classroomId] as const,
-    students: (classroomId: ClassroomId) =>
-      ['classrooms', classroomId, 'students'] as const,
-  },
-  curriculum: {
-    all: () => ['curriculum'] as const,
-    subjects: (gradeLevel?: string) =>
-      ['curriculum', 'subjects', gradeLevel ?? 'all'] as const,
-    units: (subjectId: string) =>
-      ['curriculum', 'subjects', subjectId, 'units'] as const,
-    unit: (unitId: string) => ['curriculum', 'units', unitId] as const,
-  },
-  materials: {
-    all: () => ['materials'] as const,
-    forTeacher: (teacherId: UserId, classroomId?: ClassroomId) =>
-      ['materials', 'teacher', teacherId, classroomId ?? 'all'] as const,
-    detail: (materialId: MaterialId) =>
-      ['materials', materialId] as const,
-    /** Composed library view: materials + the teacher's classes and units. */
-    library: (teacherId: UserId) =>
-      ['materials', 'library', teacherId] as const,
-  },
-  questions: {
-    all: () => ['questions'] as const,
-    /** Composed bank view: every test of the teacher with its full questions. */
-    forTeacher: (teacherId: UserId) =>
-      ['questions', 'teacher', teacherId] as const,
-  },
-  tests: {
-    all: () => ['tests'] as const,
-    forTeacher: (teacherId: UserId) =>
-      ['tests', 'teacher', teacherId] as const,
-    forClass: (classroomId: ClassroomId) =>
-      ['tests', 'classroom', classroomId] as const,
-    detail: (testId: TestId) => ['tests', testId] as const,
-    questions: (testId: TestId) => ['tests', testId, 'questions'] as const,
-    // Separate key on purpose: the student player must never read cached full
-    // questions (which carry `correctOptionId`) that the teacher builder loaded.
-    studentQuestions: (testId: TestId) =>
-      ['tests', testId, 'student-questions'] as const,
-    question: (testId: TestId, questionId: QuestionId) =>
-      ['tests', testId, 'questions', questionId] as const,
-  },
-  attempts: {
-    all: () => ['attempts'] as const,
-    forStudent: (studentId: UserId) =>
-      ['attempts', 'student', studentId] as const,
-    /** Teacher-only: every attempt on one test, with backend-supplied scores. */
-    forTest: (testId: TestId) => ['attempts', 'test', testId] as const,
-    detail: (attemptId: string) => ['attempts', attemptId] as const,
-  },
-  mohsen: {
-    all: () => ['mohsen'] as const,
+    thread: (threadId: MessageThreadId) =>
+      ['messages', 'threads', threadId] as const,
   },
 }

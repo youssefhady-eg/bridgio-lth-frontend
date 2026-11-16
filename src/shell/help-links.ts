@@ -14,20 +14,13 @@ import { defaultRoleForPath, type AppRole } from '~/shell/nav'
 /** Link id → the real screen a Help or Guide link opens. */
 export const linkRoutes: Record<HelpLinkId, string> = {
   profile: '/profile',
-  teacherDashboard: '/teacher/dashboard',
-  teacherClasses: '/teacher/classes',
-  teacherTests: '/teacher/tests',
-  teacherQuestionBank: '/teacher/question-bank',
-  teacherMaterials: '/teacher/materials',
-  teacherStudents: '/teacher/students',
-  studentTests: '/student/tests',
-  studentLessons: '/student/lessons',
-  studentProgress: '/student/progress',
-  parentProgress: '/parent/progress',
-  parentTests: '/parent/tests',
-  parentResults: '/parent/results',
-  parentMessages: '/parent/messages',
-  assistantHome: '/assistant',
+  onboarding: '/academy/onboarding',
+  dashboard: '/academy',
+  cohorts: '/academy/cohorts',
+  roster: '/academy/cohorts',
+  curriculum: '/academy/curriculum',
+  rubrics: '/academy/rubrics',
+  earnings: '/academy/earnings',
 }
 
 /**

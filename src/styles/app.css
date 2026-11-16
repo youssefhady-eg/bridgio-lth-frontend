@@ -445,7 +445,7 @@ summary:focus-visible,
 /* Desktop: the sidebar is a fixed column beside the content. */
 @media (min-width: 1024px) {
   .app-body {
-    grid-template-columns: 272px minmax(0, 1fr);
+    grid-template-columns: 240px minmax(0, 1fr);
   }
 
   .app-sidebar {
@@ -1164,7 +1164,7 @@ h3 + .row-meta {
     linear-gradient(var(--disabled-overlay), var(--disabled-overlay)),
     var(--bridgio-paper);
   border-color: var(--border);
-  color: var(--disabled-text);
+  color: var(--text-secondary);
   cursor: not-allowed;
 }
 
@@ -2690,7 +2690,7 @@ h3 + .summary-list {
   /* Folded: an icon rail. Labels stay in the DOM (visually hidden) so every
      control keeps its accessible name. */
   .app-body--collapsed {
-    grid-template-columns: 88px minmax(0, 1fr);
+    grid-template-columns: 72px minmax(0, 1fr);
   }
 
   .app-sidebar.is-collapsed .app-sidebar__label {

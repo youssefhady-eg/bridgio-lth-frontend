@@ -175,13 +175,12 @@ body {
 }
 
 @media (min-width: 1024px) {
-  /* Redesign shell lock: 272 px expanded / 88 px collapsed. Written in px on
-     purpose — the desktop root font-size is 17 px, so 5.5rem would render
-     93.5 px, not 88 px. */
+  /* Redesign shell lock (LTH): 240 px expanded / 72 px collapsed. Written in
+     px on purpose — the desktop root font-size is 17 px, so rem would drift. */
   .app-body {
-    grid-template-columns: 272px minmax(0, 1fr);
+    grid-template-columns: 240px minmax(0, 1fr);
     /* Owner decision 2026-11-13: the sidebar and the content column animate
-       together. Only the first track changes (272px ↔ 88px); the content track
+       together. Only the first track changes (240px ↔ 72px); the content track
        keeps its width and moves with the grid, so there is no separate content
        animation and no jump. `grid-template-columns` is interpolable because
        both states have the same track count and the same flexible second
@@ -189,10 +188,10 @@ body {
     transition: grid-template-columns 250ms ease;
   }
 
-  /* Collapsed rail — must stay after the 272 px rule above to win at equal
+  /* Collapsed rail — must stay after the 240 px rule above to win at equal
      specificity (this was the live collapse bug). */
   .app-body--collapsed {
-    grid-template-columns: 88px minmax(0, 1fr);
+    grid-template-columns: 72px minmax(0, 1fr);
   }
 
   /* The sidebar starts below the header, so a sticky top:0 + height:100dvh

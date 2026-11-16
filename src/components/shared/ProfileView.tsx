@@ -5,6 +5,7 @@ import { EmptyNote } from '~/components/dashboard/EmptyNote'
 import { MetaList } from '~/components/shared/MetaList'
 import { PageHero } from '~/components/shared/PageHero'
 import { hrefWithLang } from '~/shell/lang'
+import { appRoles, hrefWithRole } from '~/shell/nav'
 import { usePreviewRole } from '~/shell/usePreviewRole'
 import { useTheme } from '~/shell/useTheme'
 import { useLang, useStrings } from '~/shell/useStrings'
@@ -91,6 +92,34 @@ export function ProfileView() {
             {copy.accountSignIn}
           </Link>
         </p>
+      </section>
+
+      <section className="dashboard__section">
+        <h2>{copy.previewHeading}</h2>
+        <MetaList
+          items={[
+            {
+              label: copy.previewHeading,
+              value: (
+                <span className="profile-preview">
+                  {appRoles.map((appRole) => (
+                    <a
+                      key={appRole}
+                      className={`button button--small ${
+                        appRole === role ? 'button--primary' : 'button--secondary'
+                      }`}
+                      href={hrefWithRole(pathname, searchStr, appRole)}
+                      aria-current={appRole === role ? 'true' : undefined}
+                    >
+                      {copy.roles[appRole === 'academy' ? 'academy_owner' : 'instructor']}
+                    </a>
+                  ))}
+                </span>
+              ),
+            },
+          ]}
+        />
+        <p className="finish-note">{copy.previewNote}</p>
       </section>
 
       <section className="dashboard__section">

@@ -5,8 +5,10 @@ import type { ApiMode } from './types'
  *
  * The mock adapter is the default for this MVP. Switching to the real Mentingo
  * backend is a configuration change (`VITE_API_ADAPTER=http` + `VITE_API_URL`),
- * never a screen rewrite. No live Mentingo backend is connected in Stage 0.
+ * never a screen rewrite. No live Mentingo backend is connected in Batch 1.
  */
+
+export type MockSession = 'academy' | 'instructor' | 'none'
 
 export interface ApiConfig {
   mode: ApiMode
@@ -14,7 +16,7 @@ export interface ApiConfig {
   requestTimeoutMs: number
   mock: {
     scenario: 'seeded' | 'empty'
-    session: 'teacher' | 'student' | 'assistant' | 'parent' | 'none'
+    session: MockSession
     latencyMs: number
   }
 }
@@ -41,22 +43,16 @@ function readScenario(value: string | undefined): 'seeded' | 'empty' {
   )
 }
 
-function readSession(
-  value: string | undefined,
-): 'teacher' | 'student' | 'assistant' | 'parent' | 'none' {
-  if (value === undefined || value === '' || value === 'teacher') {
-    return 'teacher'
+function readSession(value: string | undefined): MockSession {
+  if (value === undefined || value === '' || value === 'academy') {
+    return 'academy'
   }
-  if (
-    value === 'student' ||
-    value === 'assistant' ||
-    value === 'parent' ||
-    value === 'none'
-  ) {
-    return value
-  }
+  // Hosted preview builds baked `teacher` before the LTH rename; keep it as an
+  // alias so an existing deployment does not need a rebuild.
+  if (value === 'teacher') return 'academy'
+  if (value === 'instructor' || value === 'none') return value
   throw new Error(
-    `Invalid VITE_MOCK_SESSION "${value}". Expected "teacher", "student", "assistant", "parent" or "none".`,
+    `Invalid VITE_MOCK_SESSION "${value}". Expected "academy", "instructor" or "none".`,
   )
 }
 

@@ -75,26 +75,6 @@ export function HelpView() {
             const inCategory = articles.filter(
               (article) => article.category === category,
             )
-            if (category === 'faq') {
-              return (
-                <section
-                  key={category}
-                  id="help-cat-faq"
-                  className="help-category"
-                  aria-labelledby="help-faq-heading"
-                >
-                  <h2 id="help-faq-heading">{copy.categories.faq}</h2>
-                  <dl className="help-faq">
-                    {copy.faq.map((item) => (
-                      <div className="help-faq__item" key={item.question}>
-                        <dt>{item.question}</dt>
-                        <dd>{item.answer}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </section>
-              )
-            }
             return (
               <section
                 key={category}

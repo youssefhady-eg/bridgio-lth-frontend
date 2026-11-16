@@ -1,35 +1,17 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 /**
- * Role home — each role lands on its own first screen: the teacher dashboard,
- * the student tests list, the parent child progress, or the assistant's granted
- * sections. The home route never renders a screen of its own.
+ * Role home — the shell opens on the academy dashboard.
+ *
+ * `/academy/*` is the only area in Batch 1; the instructor role is a preview
+ * switch (`?as=instructor`) over the same routes, not a separate area. The home
+ * route never renders a screen of its own.
  */
 export const Route = createFileRoute('/')({
   beforeLoad: ({ search }) => {
-    if (search.as === 'student') {
-      throw redirect({
-        to: '/student/tests',
-        search: { as: 'student', lang: search.lang },
-      })
-    }
-    if (search.as === 'parent') {
-      throw redirect({
-        to: '/parent/progress',
-        search: { as: 'parent', lang: search.lang },
-      })
-    }
-    if (search.as === 'assistant') {
-      throw redirect({
-        to: '/assistant',
-        search: { as: 'assistant', lang: search.lang },
-      })
-    }
-    // No `?as` means the default teacher role.
     throw redirect({
-      to: '/teacher/dashboard',
-      search: { as: 'teacher', lang: search.lang },
+      to: '/academy',
+      search: { as: search.as, lang: search.lang },
     })
   },
-  component: () => null,
 })

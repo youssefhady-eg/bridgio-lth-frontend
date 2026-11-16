@@ -1,149 +1,118 @@
 import { describe, expect, it } from 'vitest'
 import {
+  academyNav,
   appRoles,
   defaultRoleForPath,
-  assistantNav,
   hrefWithRole,
+  instructorNav,
+  isNavItemActive,
   navFor,
-  parentNav,
   parseAppRole,
-  studentNav,
-  teacherNav,
 } from './nav'
 
 describe('shell nav', () => {
-  it('teacher nav is Dashboard, My Classes, Tests, Question bank, Material library, Students — in that order', () => {
-    expect(teacherNav.map((item) => item.id)).toEqual([
-      'teacher-dashboard',
-      'teacher-classes',
-      'teacher-tests',
-      'teacher-question-bank',
-      'teacher-materials',
-      'teacher-students',
+  it('academy nav is Dashboard, Onboarding, Cohorts, Curriculum, Rubrics, Earnings — in that order', () => {
+    expect(academyNav.map((item) => item.id)).toEqual([
+      'academy-dashboard',
+      'academy-onboarding',
+      'academy-cohorts',
+      'academy-curriculum',
+      'academy-rubrics',
+      'academy-earnings',
+    ])
+    expect(academyNav.map((item) => item.to)).toEqual([
+      '/academy',
+      '/academy/onboarding',
+      '/academy/cohorts',
+      '/academy/curriculum',
+      '/academy/rubrics',
+      '/academy/earnings',
     ])
   })
 
-  it('student nav is My Tests, Lessons, Progress — in that order', () => {
-    expect(studentNav.map((item) => item.id)).toEqual([
-      'student-tests',
-      'student-lessons',
-      'student-progress',
+  it('instructor nav is the assigned-work subset, in canonical order', () => {
+    expect(instructorNav.map((item) => item.id)).toEqual([
+      'academy-dashboard',
+      'academy-cohorts',
+      'academy-curriculum',
+      'academy-rubrics',
     ])
-  })
-
-  it('parent nav is Progress, Tests, Results, Messages — in that order', () => {
-    expect(parentNav.map((item) => item.id)).toEqual([
-      'parent-progress',
-      'parent-tests',
-      'parent-results',
-      'parent-messages',
-    ])
-  })
-
-  it('navFor returns the right set per role', () => {
-    expect(navFor('teacher')).toBe(teacherNav)
-    expect(navFor('student')).toBe(studentNav)
-    expect(navFor('parent')).toBe(parentNav)
-    expect(navFor('assistant')).toEqual([])
-  })
-
-  it('assistant nav is exactly the granted subset, in canonical order', () => {
-    expect(assistantNav([]).map((item) => item.id)).toEqual([])
-    expect(assistantNav(['tests']).map((item) => item.id)).toEqual([
-      'teacher-tests',
-    ])
-    expect(assistantNav(['tests', 'dashboard']).map((item) => item.id)).toEqual([
-      'teacher-dashboard',
-      'teacher-tests',
-    ])
-    expect(
-      assistantNav(['students', 'classes', 'tests', 'dashboard']).map(
-        (item) => item.id,
-      ),
-    ).toEqual([
-      'teacher-dashboard',
-      'teacher-classes',
-      'teacher-tests',
-      'teacher-students',
-    ])
-  })
-
-  it('keeps assistant capability routes stable when teacher nav grows', () => {
-    // The question bank and material library sit between Tests and Students;
-    // the assistant must still map each grant to its own original item.
-    expect(assistantNav(['students'])[0]?.id).toBe('teacher-students')
-    expect(assistantNav(['tests'])[0]?.id).toBe('teacher-tests')
-    expect(assistantNav(['classes'])[0]?.id).toBe('teacher-classes')
-    expect(assistantNav(['dashboard'])[0]?.id).toBe('teacher-dashboard')
-    expect(assistantNav(['students'])[0]?.hash).toBe('students')
-  })
-
-  it('every nav route has a unique path', () => {
-    const all = [...teacherNav, ...studentNav, ...parentNav]
-    const tos = all.map((item) => item.to)
-    expect(new Set(tos).size).toBe(tos.length)
-  })
-
-  it('parses the ?as preview role strictly', () => {
-    expect(appRoles).toEqual(['teacher', 'student', 'assistant', 'parent'])
-    expect(parseAppRole('student')).toBe('student')
-    expect(parseAppRole('teacher')).toBe('teacher')
-    expect(parseAppRole('assistant')).toBe('assistant')
-    expect(parseAppRole('parent')).toBe('parent')
-    expect(parseAppRole('admin')).toBeUndefined()
-    expect(parseAppRole(undefined)).toBeUndefined()
-    expect(parseAppRole('')).toBeUndefined()
-  })
-
-  it('hrefWithRole keeps the current path and sets the role param', () => {
-    expect(hrefWithRole('/teacher/tests', '', 'student')).toBe(
-      '/teacher/tests?as=student',
+    // No partner onboarding and no earnings ledger for an instructor.
+    expect(instructorNav.map((item) => item.id)).not.toContain(
+      'academy-onboarding',
     )
-    expect(hrefWithRole('/student/progress', '?as=teacher', 'teacher')).toBe(
-      '/student/progress?as=teacher',
+    expect(instructorNav.map((item) => item.id)).not.toContain(
+      'academy-earnings',
     )
-    expect(hrefWithRole('/parent/results', '?lang=en&as=teacher', 'parent')).toBe(
-      '/parent/results?lang=en&as=parent',
+  })
+
+  it('selects the nav set by role', () => {
+    expect(navFor('academy')).toBe(academyNav)
+    expect(navFor('instructor')).toBe(instructorNav)
+  })
+
+  it('has exactly the two LTH preview roles', () => {
+    expect(appRoles).toEqual(['academy', 'instructor'])
+    expect(parseAppRole('academy')).toBe('academy')
+    expect(parseAppRole('instructor')).toBe('instructor')
+  })
+
+  it('rejects roles that do not exist in LTH', () => {
+    expect(parseAppRole('teacher')).toBeUndefined()
+    expect(parseAppRole('student')).toBeUndefined()
+    expect(parseAppRole('parent')).toBeUndefined()
+    expect(parseAppRole('assistant')).toBeUndefined()
+    expect(parseAppRole(null)).toBeUndefined()
+  })
+
+  it('defaults to the academy area for every LTH path', () => {
+    expect(defaultRoleForPath('/academy')).toBe('academy')
+    expect(defaultRoleForPath('/academy/cohorts')).toBe('academy')
+    expect(defaultRoleForPath('/academy/cohorts/coh_1')).toBe('academy')
+    expect(defaultRoleForPath('/profile')).toBe('academy')
+    expect(defaultRoleForPath('/')).toBe('academy')
+    expect(defaultRoleForPath('/does-not-exist')).toBe('academy')
+  })
+
+  it('previews the instructor rail only on an explicit /instructor path', () => {
+    expect(defaultRoleForPath('/instructor')).toBe('instructor')
+    expect(defaultRoleForPath('/instructor/cohorts')).toBe('instructor')
+    // A path that only shares the first letters is not the instructor area.
+    expect(defaultRoleForPath('/instructors-archive')).toBe('academy')
+  })
+
+  it('every academy nav destination opens in the academy role', () => {
+    for (const item of academyNav) {
+      expect(defaultRoleForPath(item.to)).toBe('academy')
+    }
+  })
+
+  it('every instructor destination also exists in the full academy nav', () => {
+    const destinations = academyNav.map((item) => item.to)
+    for (const item of instructorNav) {
+      expect(destinations).toContain(item.to)
+    }
+  })
+
+  it('highlights only the dashboard on the dashboard route', () => {
+    const dashboard = academyNav[0] as (typeof academyNav)[number]
+    const cohorts = academyNav[2] as (typeof academyNav)[number]
+    expect(isNavItemActive('/academy', dashboard)).toBe(true)
+    expect(isNavItemActive('/academy/curriculum/cur_1', dashboard)).toBe(false)
+    expect(isNavItemActive('/academy/curriculum/cur_1', cohorts)).toBe(false)
+    expect(isNavItemActive('/academy/cohorts/coh_1', cohorts)).toBe(true)
+    expect(isNavItemActive('/academy/cohorts', cohorts)).toBe(true)
+  })
+  it('hrefWithRole keeps the path and other params, sets the role', () => {
+    expect(hrefWithRole('/academy/cohorts', '', 'instructor')).toBe(
+      '/academy/cohorts?as=instructor',
     )
-    expect(hrefWithRole('/', '?x=1&as=student', 'teacher')).toBe('/?x=1&as=teacher')
-    expect(hrefWithRole('/', '?y=2', 'student')).toBe('/?y=2&as=student')
-  })
-
-  it('defaults the role from the route area when no ?as is given', () => {
-    expect(defaultRoleForPath('/student/tests')).toBe('student')
-    expect(defaultRoleForPath('/student')).toBe('student')
-    expect(defaultRoleForPath('/parent/progress')).toBe('parent')
-    expect(defaultRoleForPath('/teacher/dashboard')).toBe('teacher')
-    expect(defaultRoleForPath('/')).toBe('teacher')
-    expect(defaultRoleForPath('/does-not-exist')).toBe('teacher')
-    // A path that only starts with the same letters is not the student area.
-    expect(defaultRoleForPath('/students-archive')).toBe('teacher')
-  })
-
-  it('every student and parent nav destination defaults to its own role', () => {
-    for (const item of studentNav) expect(defaultRoleForPath(item.to)).toBe('student')
-    for (const item of parentNav) expect(defaultRoleForPath(item.to)).toBe('parent')
-    for (const item of teacherNav) expect(defaultRoleForPath(item.to)).toBe('teacher')
-  })
-
-  it('routes the assistant area to the assistant role', () => {
-    expect(defaultRoleForPath('/assistant')).toBe('assistant')
-    expect(defaultRoleForPath('/assistants')).toBe('teacher')
-  })
-
-  it('points every granted assistant capability at the one grants screen', () => {
-    const items = assistantNav(['students', 'classes', 'tests', 'dashboard'])
-    expect(items.map((item) => item.to)).toEqual([
-      '/assistant',
-      '/assistant',
-      '/assistant',
-      '/assistant',
-    ])
-    expect(items.map((item) => item.hash)).toEqual([
-      'dashboard',
-      'classes',
-      'tests',
-      'students',
-    ])
+    expect(hrefWithRole('/academy', '?lang=en&as=academy', 'instructor')).toBe(
+      '/academy?lang=en&as=instructor',
+    )
+    expect(hrefWithRole('/profile', '?as=instructor', 'academy')).toBe(
+      '/profile?as=academy',
+    )
+    expect(hrefWithRole('/', '?x=1', 'academy')).toBe('/?x=1&as=academy')
   })
 })

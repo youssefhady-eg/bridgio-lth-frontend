@@ -10,41 +10,28 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AssistantRouteImport } from './routes/assistant'
+import { Route as AcademyRouteImport } from './routes/academy'
 import { Route as GuideRouteImport } from './routes/guide'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as SignInRouteImport } from './routes/sign-in'
-import { Route as ParentMessagesRouteImport } from './routes/parent.messages'
-import { Route as ParentProgressRouteImport } from './routes/parent.progress'
-import { Route as ParentResultsRouteImport } from './routes/parent.results'
-import { Route as ParentTestsRouteImport } from './routes/parent.tests'
-import { Route as StudentLessonsRouteImport } from './routes/student.lessons'
-import { Route as StudentProgressRouteImport } from './routes/student.progress'
-import { Route as StudentTestsRouteImport } from './routes/student.tests'
-import { Route as TeacherClassesRouteImport } from './routes/teacher.classes'
-import { Route as TeacherDashboardRouteImport } from './routes/teacher.dashboard'
-import { Route as TeacherMaterialsRouteImport } from './routes/teacher.materials'
-import { Route as TeacherQuestionBankRouteImport } from './routes/teacher.question-bank'
-import { Route as TeacherStudentsRouteImport } from './routes/teacher.students'
-import { Route as TeacherTestsRouteImport } from './routes/teacher.tests'
-import { Route as StudentTestsIndexRouteImport } from './routes/student.tests.index'
-import { Route as TeacherClassesIndexRouteImport } from './routes/teacher.classes.index'
-import { Route as TeacherClassesClassIdRouteImport } from './routes/teacher.classes.$classId'
-import { Route as TeacherStudentsIndexRouteImport } from './routes/teacher.students.index'
-import { Route as TeacherStudentsStudentIdRouteImport } from './routes/teacher.students.$studentId'
-import { Route as TeacherTestsIndexRouteImport } from './routes/teacher.tests.index'
-import { Route as TeacherTestsTestIdRouteImport } from './routes/teacher.tests.$testId'
-import { Route as StudentTestsTestIdResultsRouteImport } from './routes/student.tests.$testId.results'
+import { Route as AcademyCohortsRouteImport } from './routes/academy_.cohorts'
+import { Route as AcademyCurriculumRouteImport } from './routes/academy_.curriculum'
+import { Route as AcademyEarningsRouteImport } from './routes/academy_.earnings'
+import { Route as AcademyOnboardingRouteImport } from './routes/academy_.onboarding'
+import { Route as AcademyRubricsRouteImport } from './routes/academy_.rubrics'
+import { Route as AcademyCohortsCohortIdRouteImport } from './routes/academy_.cohorts_.$cohortId'
+import { Route as AcademyCurriculumCurriculumIdRouteImport } from './routes/academy_.curriculum_.$curriculumId'
+import { Route as AcademyRubricsRubricIdRouteImport } from './routes/academy_.rubrics_.$rubricId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AssistantRoute = AssistantRouteImport.update({
-  id: '/assistant',
-  path: '/assistant',
+const AcademyRoute = AcademyRouteImport.update({
+  id: '/academy',
+  path: '/academy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuideRoute = GuideRouteImport.update({
@@ -67,304 +54,163 @@ const SignInRoute = SignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ParentMessagesRoute = ParentMessagesRouteImport.update({
-  id: '/parent/messages',
-  path: '/parent/messages',
+const AcademyCohortsRoute = AcademyCohortsRouteImport.update({
+  id: '/academy_/cohorts',
+  path: '/academy/cohorts',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ParentProgressRoute = ParentProgressRouteImport.update({
-  id: '/parent/progress',
-  path: '/parent/progress',
+const AcademyCurriculumRoute = AcademyCurriculumRouteImport.update({
+  id: '/academy_/curriculum',
+  path: '/academy/curriculum',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ParentResultsRoute = ParentResultsRouteImport.update({
-  id: '/parent/results',
-  path: '/parent/results',
+const AcademyEarningsRoute = AcademyEarningsRouteImport.update({
+  id: '/academy_/earnings',
+  path: '/academy/earnings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ParentTestsRoute = ParentTestsRouteImport.update({
-  id: '/parent/tests',
-  path: '/parent/tests',
+const AcademyOnboardingRoute = AcademyOnboardingRouteImport.update({
+  id: '/academy_/onboarding',
+  path: '/academy/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StudentLessonsRoute = StudentLessonsRouteImport.update({
-  id: '/student/lessons',
-  path: '/student/lessons',
+const AcademyRubricsRoute = AcademyRubricsRouteImport.update({
+  id: '/academy_/rubrics',
+  path: '/academy/rubrics',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StudentProgressRoute = StudentProgressRouteImport.update({
-  id: '/student/progress',
-  path: '/student/progress',
+const AcademyCohortsCohortIdRoute = AcademyCohortsCohortIdRouteImport.update({
+  id: '/academy_/cohorts_/$cohortId',
+  path: '/academy/cohorts/$cohortId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StudentTestsRoute = StudentTestsRouteImport.update({
-  id: '/student/tests',
-  path: '/student/tests',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeacherClassesRoute = TeacherClassesRouteImport.update({
-  id: '/teacher/classes',
-  path: '/teacher/classes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeacherDashboardRoute = TeacherDashboardRouteImport.update({
-  id: '/teacher/dashboard',
-  path: '/teacher/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeacherMaterialsRoute = TeacherMaterialsRouteImport.update({
-  id: '/teacher/materials',
-  path: '/teacher/materials',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeacherQuestionBankRoute = TeacherQuestionBankRouteImport.update({
-  id: '/teacher/question-bank',
-  path: '/teacher/question-bank',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeacherStudentsRoute = TeacherStudentsRouteImport.update({
-  id: '/teacher/students',
-  path: '/teacher/students',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeacherTestsRoute = TeacherTestsRouteImport.update({
-  id: '/teacher/tests',
-  path: '/teacher/tests',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudentTestsIndexRoute = StudentTestsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => StudentTestsRoute,
-} as any)
-const TeacherClassesIndexRoute = TeacherClassesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => TeacherClassesRoute,
-} as any)
-const TeacherClassesClassIdRoute = TeacherClassesClassIdRouteImport.update({
-  id: '/$classId',
-  path: '/$classId',
-  getParentRoute: () => TeacherClassesRoute,
-} as any)
-const TeacherStudentsIndexRoute = TeacherStudentsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => TeacherStudentsRoute,
-} as any)
-const TeacherStudentsStudentIdRoute =
-  TeacherStudentsStudentIdRouteImport.update({
-    id: '/$studentId',
-    path: '/$studentId',
-    getParentRoute: () => TeacherStudentsRoute,
+const AcademyCurriculumCurriculumIdRoute =
+  AcademyCurriculumCurriculumIdRouteImport.update({
+    id: '/academy_/curriculum_/$curriculumId',
+    path: '/academy/curriculum/$curriculumId',
+    getParentRoute: () => rootRouteImport,
   } as any)
-const TeacherTestsIndexRoute = TeacherTestsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => TeacherTestsRoute,
+const AcademyRubricsRubricIdRoute = AcademyRubricsRubricIdRouteImport.update({
+  id: '/academy_/rubrics_/$rubricId',
+  path: '/academy/rubrics/$rubricId',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const TeacherTestsTestIdRoute = TeacherTestsTestIdRouteImport.update({
-  id: '/$testId',
-  path: '/$testId',
-  getParentRoute: () => TeacherTestsRoute,
-} as any)
-const StudentTestsTestIdResultsRoute =
-  StudentTestsTestIdResultsRouteImport.update({
-    id: '/$testId/results',
-    path: '/$testId/results',
-    getParentRoute: () => StudentTestsRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/assistant': typeof AssistantRoute
+  '/academy': typeof AcademyRoute
   '/guide': typeof GuideRoute
   '/help': typeof HelpRoute
   '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
-  '/parent/messages': typeof ParentMessagesRoute
-  '/parent/progress': typeof ParentProgressRoute
-  '/parent/results': typeof ParentResultsRoute
-  '/parent/tests': typeof ParentTestsRoute
-  '/student/lessons': typeof StudentLessonsRoute
-  '/student/progress': typeof StudentProgressRoute
-  '/student/tests': typeof StudentTestsRouteWithChildren
-  '/teacher/classes': typeof TeacherClassesRouteWithChildren
-  '/teacher/dashboard': typeof TeacherDashboardRoute
-  '/teacher/materials': typeof TeacherMaterialsRoute
-  '/teacher/question-bank': typeof TeacherQuestionBankRoute
-  '/teacher/students': typeof TeacherStudentsRouteWithChildren
-  '/teacher/tests': typeof TeacherTestsRouteWithChildren
-  '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
-  '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
-  '/teacher/tests/$testId': typeof TeacherTestsTestIdRoute
-  '/student/tests/': typeof StudentTestsIndexRoute
-  '/teacher/classes/': typeof TeacherClassesIndexRoute
-  '/teacher/students/': typeof TeacherStudentsIndexRoute
-  '/teacher/tests/': typeof TeacherTestsIndexRoute
-  '/student/tests/$testId/results': typeof StudentTestsTestIdResultsRoute
+  '/academy/cohorts': typeof AcademyCohortsRoute
+  '/academy/curriculum': typeof AcademyCurriculumRoute
+  '/academy/earnings': typeof AcademyEarningsRoute
+  '/academy/onboarding': typeof AcademyOnboardingRoute
+  '/academy/rubrics': typeof AcademyRubricsRoute
+  '/academy/cohorts/$cohortId': typeof AcademyCohortsCohortIdRoute
+  '/academy/curriculum/$curriculumId': typeof AcademyCurriculumCurriculumIdRoute
+  '/academy/rubrics/$rubricId': typeof AcademyRubricsRubricIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/assistant': typeof AssistantRoute
+  '/academy': typeof AcademyRoute
   '/guide': typeof GuideRoute
   '/help': typeof HelpRoute
   '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
-  '/parent/messages': typeof ParentMessagesRoute
-  '/parent/progress': typeof ParentProgressRoute
-  '/parent/results': typeof ParentResultsRoute
-  '/parent/tests': typeof ParentTestsRoute
-  '/student/lessons': typeof StudentLessonsRoute
-  '/student/progress': typeof StudentProgressRoute
-  '/teacher/dashboard': typeof TeacherDashboardRoute
-  '/teacher/materials': typeof TeacherMaterialsRoute
-  '/teacher/question-bank': typeof TeacherQuestionBankRoute
-  '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
-  '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
-  '/teacher/tests/$testId': typeof TeacherTestsTestIdRoute
-  '/student/tests': typeof StudentTestsIndexRoute
-  '/teacher/classes': typeof TeacherClassesIndexRoute
-  '/teacher/students': typeof TeacherStudentsIndexRoute
-  '/teacher/tests': typeof TeacherTestsIndexRoute
-  '/student/tests/$testId/results': typeof StudentTestsTestIdResultsRoute
+  '/academy/cohorts': typeof AcademyCohortsRoute
+  '/academy/curriculum': typeof AcademyCurriculumRoute
+  '/academy/earnings': typeof AcademyEarningsRoute
+  '/academy/onboarding': typeof AcademyOnboardingRoute
+  '/academy/rubrics': typeof AcademyRubricsRoute
+  '/academy/cohorts/$cohortId': typeof AcademyCohortsCohortIdRoute
+  '/academy/curriculum/$curriculumId': typeof AcademyCurriculumCurriculumIdRoute
+  '/academy/rubrics/$rubricId': typeof AcademyRubricsRubricIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/assistant': typeof AssistantRoute
+  '/academy': typeof AcademyRoute
   '/guide': typeof GuideRoute
   '/help': typeof HelpRoute
   '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
-  '/parent/messages': typeof ParentMessagesRoute
-  '/parent/progress': typeof ParentProgressRoute
-  '/parent/results': typeof ParentResultsRoute
-  '/parent/tests': typeof ParentTestsRoute
-  '/student/lessons': typeof StudentLessonsRoute
-  '/student/progress': typeof StudentProgressRoute
-  '/student/tests': typeof StudentTestsRouteWithChildren
-  '/teacher/classes': typeof TeacherClassesRouteWithChildren
-  '/teacher/dashboard': typeof TeacherDashboardRoute
-  '/teacher/materials': typeof TeacherMaterialsRoute
-  '/teacher/question-bank': typeof TeacherQuestionBankRoute
-  '/teacher/students': typeof TeacherStudentsRouteWithChildren
-  '/teacher/tests': typeof TeacherTestsRouteWithChildren
-  '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
-  '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
-  '/teacher/tests/$testId': typeof TeacherTestsTestIdRoute
-  '/student/tests/': typeof StudentTestsIndexRoute
-  '/teacher/classes/': typeof TeacherClassesIndexRoute
-  '/teacher/students/': typeof TeacherStudentsIndexRoute
-  '/teacher/tests/': typeof TeacherTestsIndexRoute
-  '/student/tests/$testId/results': typeof StudentTestsTestIdResultsRoute
+  '/academy_/cohorts': typeof AcademyCohortsRoute
+  '/academy_/curriculum': typeof AcademyCurriculumRoute
+  '/academy_/earnings': typeof AcademyEarningsRoute
+  '/academy_/onboarding': typeof AcademyOnboardingRoute
+  '/academy_/rubrics': typeof AcademyRubricsRoute
+  '/academy_/cohorts_/$cohortId': typeof AcademyCohortsCohortIdRoute
+  '/academy_/curriculum_/$curriculumId': typeof AcademyCurriculumCurriculumIdRoute
+  '/academy_/rubrics_/$rubricId': typeof AcademyRubricsRubricIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/assistant'
+    | '/academy'
     | '/guide'
     | '/help'
     | '/profile'
     | '/sign-in'
-    | '/parent/messages'
-    | '/parent/progress'
-    | '/parent/results'
-    | '/parent/tests'
-    | '/student/lessons'
-    | '/student/progress'
-    | '/student/tests'
-    | '/teacher/classes'
-    | '/teacher/dashboard'
-    | '/teacher/materials'
-    | '/teacher/question-bank'
-    | '/teacher/students'
-    | '/teacher/tests'
-    | '/teacher/classes/$classId'
-    | '/teacher/students/$studentId'
-    | '/teacher/tests/$testId'
-    | '/student/tests/'
-    | '/teacher/classes/'
-    | '/teacher/students/'
-    | '/teacher/tests/'
-    | '/student/tests/$testId/results'
+    | '/academy/cohorts'
+    | '/academy/curriculum'
+    | '/academy/earnings'
+    | '/academy/onboarding'
+    | '/academy/rubrics'
+    | '/academy/cohorts/$cohortId'
+    | '/academy/curriculum/$curriculumId'
+    | '/academy/rubrics/$rubricId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/assistant'
+    | '/academy'
     | '/guide'
     | '/help'
     | '/profile'
     | '/sign-in'
-    | '/parent/messages'
-    | '/parent/progress'
-    | '/parent/results'
-    | '/parent/tests'
-    | '/student/lessons'
-    | '/student/progress'
-    | '/teacher/dashboard'
-    | '/teacher/materials'
-    | '/teacher/question-bank'
-    | '/teacher/classes/$classId'
-    | '/teacher/students/$studentId'
-    | '/teacher/tests/$testId'
-    | '/student/tests'
-    | '/teacher/classes'
-    | '/teacher/students'
-    | '/teacher/tests'
-    | '/student/tests/$testId/results'
+    | '/academy/cohorts'
+    | '/academy/curriculum'
+    | '/academy/earnings'
+    | '/academy/onboarding'
+    | '/academy/rubrics'
+    | '/academy/cohorts/$cohortId'
+    | '/academy/curriculum/$curriculumId'
+    | '/academy/rubrics/$rubricId'
   id:
     | '__root__'
     | '/'
-    | '/assistant'
+    | '/academy'
     | '/guide'
     | '/help'
     | '/profile'
     | '/sign-in'
-    | '/parent/messages'
-    | '/parent/progress'
-    | '/parent/results'
-    | '/parent/tests'
-    | '/student/lessons'
-    | '/student/progress'
-    | '/student/tests'
-    | '/teacher/classes'
-    | '/teacher/dashboard'
-    | '/teacher/materials'
-    | '/teacher/question-bank'
-    | '/teacher/students'
-    | '/teacher/tests'
-    | '/teacher/classes/$classId'
-    | '/teacher/students/$studentId'
-    | '/teacher/tests/$testId'
-    | '/student/tests/'
-    | '/teacher/classes/'
-    | '/teacher/students/'
-    | '/teacher/tests/'
-    | '/student/tests/$testId/results'
+    | '/academy_/cohorts'
+    | '/academy_/curriculum'
+    | '/academy_/earnings'
+    | '/academy_/onboarding'
+    | '/academy_/rubrics'
+    | '/academy_/cohorts_/$cohortId'
+    | '/academy_/curriculum_/$curriculumId'
+    | '/academy_/rubrics_/$rubricId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AssistantRoute: typeof AssistantRoute
+  AcademyRoute: typeof AcademyRoute
   GuideRoute: typeof GuideRoute
   HelpRoute: typeof HelpRoute
   ProfileRoute: typeof ProfileRoute
   SignInRoute: typeof SignInRoute
-  ParentMessagesRoute: typeof ParentMessagesRoute
-  ParentProgressRoute: typeof ParentProgressRoute
-  ParentResultsRoute: typeof ParentResultsRoute
-  ParentTestsRoute: typeof ParentTestsRoute
-  StudentLessonsRoute: typeof StudentLessonsRoute
-  StudentProgressRoute: typeof StudentProgressRoute
-  StudentTestsRoute: typeof StudentTestsRouteWithChildren
-  TeacherClassesRoute: typeof TeacherClassesRouteWithChildren
-  TeacherDashboardRoute: typeof TeacherDashboardRoute
-  TeacherMaterialsRoute: typeof TeacherMaterialsRoute
-  TeacherQuestionBankRoute: typeof TeacherQuestionBankRoute
-  TeacherStudentsRoute: typeof TeacherStudentsRouteWithChildren
-  TeacherTestsRoute: typeof TeacherTestsRouteWithChildren
+  AcademyCohortsRoute: typeof AcademyCohortsRoute
+  AcademyCurriculumRoute: typeof AcademyCurriculumRoute
+  AcademyEarningsRoute: typeof AcademyEarningsRoute
+  AcademyOnboardingRoute: typeof AcademyOnboardingRoute
+  AcademyRubricsRoute: typeof AcademyRubricsRoute
+  AcademyCohortsCohortIdRoute: typeof AcademyCohortsCohortIdRoute
+  AcademyCurriculumCurriculumIdRoute: typeof AcademyCurriculumCurriculumIdRoute
+  AcademyRubricsRubricIdRoute: typeof AcademyRubricsRubricIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -376,11 +222,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/assistant': {
-      id: '/assistant'
-      path: '/assistant'
-      fullPath: '/assistant'
-      preLoaderRoute: typeof AssistantRouteImport
+    '/academy': {
+      id: '/academy'
+      path: '/academy'
+      fullPath: '/academy'
+      preLoaderRoute: typeof AcademyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/guide': {
@@ -411,232 +257,80 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/parent/messages': {
-      id: '/parent/messages'
-      path: '/parent/messages'
-      fullPath: '/parent/messages'
-      preLoaderRoute: typeof ParentMessagesRouteImport
+    '/academy_/cohorts': {
+      id: '/academy_/cohorts'
+      path: '/academy/cohorts'
+      fullPath: '/academy/cohorts'
+      preLoaderRoute: typeof AcademyCohortsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/parent/progress': {
-      id: '/parent/progress'
-      path: '/parent/progress'
-      fullPath: '/parent/progress'
-      preLoaderRoute: typeof ParentProgressRouteImport
+    '/academy_/curriculum': {
+      id: '/academy_/curriculum'
+      path: '/academy/curriculum'
+      fullPath: '/academy/curriculum'
+      preLoaderRoute: typeof AcademyCurriculumRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/parent/results': {
-      id: '/parent/results'
-      path: '/parent/results'
-      fullPath: '/parent/results'
-      preLoaderRoute: typeof ParentResultsRouteImport
+    '/academy_/earnings': {
+      id: '/academy_/earnings'
+      path: '/academy/earnings'
+      fullPath: '/academy/earnings'
+      preLoaderRoute: typeof AcademyEarningsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/parent/tests': {
-      id: '/parent/tests'
-      path: '/parent/tests'
-      fullPath: '/parent/tests'
-      preLoaderRoute: typeof ParentTestsRouteImport
+    '/academy_/onboarding': {
+      id: '/academy_/onboarding'
+      path: '/academy/onboarding'
+      fullPath: '/academy/onboarding'
+      preLoaderRoute: typeof AcademyOnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/student/lessons': {
-      id: '/student/lessons'
-      path: '/student/lessons'
-      fullPath: '/student/lessons'
-      preLoaderRoute: typeof StudentLessonsRouteImport
+    '/academy_/rubrics': {
+      id: '/academy_/rubrics'
+      path: '/academy/rubrics'
+      fullPath: '/academy/rubrics'
+      preLoaderRoute: typeof AcademyRubricsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/student/progress': {
-      id: '/student/progress'
-      path: '/student/progress'
-      fullPath: '/student/progress'
-      preLoaderRoute: typeof StudentProgressRouteImport
+    '/academy_/cohorts_/$cohortId': {
+      id: '/academy_/cohorts_/$cohortId'
+      path: '/academy/cohorts/$cohortId'
+      fullPath: '/academy/cohorts/$cohortId'
+      preLoaderRoute: typeof AcademyCohortsCohortIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/student/tests': {
-      id: '/student/tests'
-      path: '/student/tests'
-      fullPath: '/student/tests'
-      preLoaderRoute: typeof StudentTestsRouteImport
+    '/academy_/curriculum_/$curriculumId': {
+      id: '/academy_/curriculum_/$curriculumId'
+      path: '/academy/curriculum/$curriculumId'
+      fullPath: '/academy/curriculum/$curriculumId'
+      preLoaderRoute: typeof AcademyCurriculumCurriculumIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/teacher/classes': {
-      id: '/teacher/classes'
-      path: '/teacher/classes'
-      fullPath: '/teacher/classes'
-      preLoaderRoute: typeof TeacherClassesRouteImport
+    '/academy_/rubrics_/$rubricId': {
+      id: '/academy_/rubrics_/$rubricId'
+      path: '/academy/rubrics/$rubricId'
+      fullPath: '/academy/rubrics/$rubricId'
+      preLoaderRoute: typeof AcademyRubricsRubricIdRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/teacher/dashboard': {
-      id: '/teacher/dashboard'
-      path: '/teacher/dashboard'
-      fullPath: '/teacher/dashboard'
-      preLoaderRoute: typeof TeacherDashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/teacher/materials': {
-      id: '/teacher/materials'
-      path: '/teacher/materials'
-      fullPath: '/teacher/materials'
-      preLoaderRoute: typeof TeacherMaterialsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/teacher/question-bank': {
-      id: '/teacher/question-bank'
-      path: '/teacher/question-bank'
-      fullPath: '/teacher/question-bank'
-      preLoaderRoute: typeof TeacherQuestionBankRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/teacher/students': {
-      id: '/teacher/students'
-      path: '/teacher/students'
-      fullPath: '/teacher/students'
-      preLoaderRoute: typeof TeacherStudentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/teacher/tests': {
-      id: '/teacher/tests'
-      path: '/teacher/tests'
-      fullPath: '/teacher/tests'
-      preLoaderRoute: typeof TeacherTestsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/student/tests/': {
-      id: '/student/tests/'
-      path: '/'
-      fullPath: '/student/tests/'
-      preLoaderRoute: typeof StudentTestsIndexRouteImport
-      parentRoute: typeof StudentTestsRoute
-    }
-    '/teacher/classes/': {
-      id: '/teacher/classes/'
-      path: '/'
-      fullPath: '/teacher/classes/'
-      preLoaderRoute: typeof TeacherClassesIndexRouteImport
-      parentRoute: typeof TeacherClassesRoute
-    }
-    '/teacher/classes/$classId': {
-      id: '/teacher/classes/$classId'
-      path: '/$classId'
-      fullPath: '/teacher/classes/$classId'
-      preLoaderRoute: typeof TeacherClassesClassIdRouteImport
-      parentRoute: typeof TeacherClassesRoute
-    }
-    '/teacher/students/': {
-      id: '/teacher/students/'
-      path: '/'
-      fullPath: '/teacher/students/'
-      preLoaderRoute: typeof TeacherStudentsIndexRouteImport
-      parentRoute: typeof TeacherStudentsRoute
-    }
-    '/teacher/students/$studentId': {
-      id: '/teacher/students/$studentId'
-      path: '/$studentId'
-      fullPath: '/teacher/students/$studentId'
-      preLoaderRoute: typeof TeacherStudentsStudentIdRouteImport
-      parentRoute: typeof TeacherStudentsRoute
-    }
-    '/teacher/tests/': {
-      id: '/teacher/tests/'
-      path: '/'
-      fullPath: '/teacher/tests/'
-      preLoaderRoute: typeof TeacherTestsIndexRouteImport
-      parentRoute: typeof TeacherTestsRoute
-    }
-    '/teacher/tests/$testId': {
-      id: '/teacher/tests/$testId'
-      path: '/$testId'
-      fullPath: '/teacher/tests/$testId'
-      preLoaderRoute: typeof TeacherTestsTestIdRouteImport
-      parentRoute: typeof TeacherTestsRoute
-    }
-    '/student/tests/$testId/results': {
-      id: '/student/tests/$testId/results'
-      path: '/$testId/results'
-      fullPath: '/student/tests/$testId/results'
-      preLoaderRoute: typeof StudentTestsTestIdResultsRouteImport
-      parentRoute: typeof StudentTestsRoute
     }
   }
 }
 
-interface StudentTestsRouteChildren {
-  StudentTestsIndexRoute: typeof StudentTestsIndexRoute
-  StudentTestsTestIdResultsRoute: typeof StudentTestsTestIdResultsRoute
-}
-
-const StudentTestsRouteChildren: StudentTestsRouteChildren = {
-  StudentTestsIndexRoute: StudentTestsIndexRoute,
-  StudentTestsTestIdResultsRoute: StudentTestsTestIdResultsRoute,
-}
-
-const StudentTestsRouteWithChildren = StudentTestsRoute._addFileChildren(
-  StudentTestsRouteChildren,
-)
-
-interface TeacherClassesRouteChildren {
-  TeacherClassesClassIdRoute: typeof TeacherClassesClassIdRoute
-  TeacherClassesIndexRoute: typeof TeacherClassesIndexRoute
-}
-
-const TeacherClassesRouteChildren: TeacherClassesRouteChildren = {
-  TeacherClassesClassIdRoute: TeacherClassesClassIdRoute,
-  TeacherClassesIndexRoute: TeacherClassesIndexRoute,
-}
-
-const TeacherClassesRouteWithChildren = TeacherClassesRoute._addFileChildren(
-  TeacherClassesRouteChildren,
-)
-
-interface TeacherStudentsRouteChildren {
-  TeacherStudentsStudentIdRoute: typeof TeacherStudentsStudentIdRoute
-  TeacherStudentsIndexRoute: typeof TeacherStudentsIndexRoute
-}
-
-const TeacherStudentsRouteChildren: TeacherStudentsRouteChildren = {
-  TeacherStudentsStudentIdRoute: TeacherStudentsStudentIdRoute,
-  TeacherStudentsIndexRoute: TeacherStudentsIndexRoute,
-}
-
-const TeacherStudentsRouteWithChildren = TeacherStudentsRoute._addFileChildren(
-  TeacherStudentsRouteChildren,
-)
-
-interface TeacherTestsRouteChildren {
-  TeacherTestsTestIdRoute: typeof TeacherTestsTestIdRoute
-  TeacherTestsIndexRoute: typeof TeacherTestsIndexRoute
-}
-
-const TeacherTestsRouteChildren: TeacherTestsRouteChildren = {
-  TeacherTestsTestIdRoute: TeacherTestsTestIdRoute,
-  TeacherTestsIndexRoute: TeacherTestsIndexRoute,
-}
-
-const TeacherTestsRouteWithChildren = TeacherTestsRoute._addFileChildren(
-  TeacherTestsRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AssistantRoute: AssistantRoute,
+  AcademyRoute: AcademyRoute,
   GuideRoute: GuideRoute,
   HelpRoute: HelpRoute,
   ProfileRoute: ProfileRoute,
   SignInRoute: SignInRoute,
-  ParentMessagesRoute: ParentMessagesRoute,
-  ParentProgressRoute: ParentProgressRoute,
-  ParentResultsRoute: ParentResultsRoute,
-  ParentTestsRoute: ParentTestsRoute,
-  StudentLessonsRoute: StudentLessonsRoute,
-  StudentProgressRoute: StudentProgressRoute,
-  StudentTestsRoute: StudentTestsRouteWithChildren,
-  TeacherClassesRoute: TeacherClassesRouteWithChildren,
-  TeacherDashboardRoute: TeacherDashboardRoute,
-  TeacherMaterialsRoute: TeacherMaterialsRoute,
-  TeacherQuestionBankRoute: TeacherQuestionBankRoute,
-  TeacherStudentsRoute: TeacherStudentsRouteWithChildren,
-  TeacherTestsRoute: TeacherTestsRouteWithChildren,
+  AcademyCohortsRoute: AcademyCohortsRoute,
+  AcademyCurriculumRoute: AcademyCurriculumRoute,
+  AcademyEarningsRoute: AcademyEarningsRoute,
+  AcademyOnboardingRoute: AcademyOnboardingRoute,
+  AcademyRubricsRoute: AcademyRubricsRoute,
+  AcademyCohortsCohortIdRoute: AcademyCohortsCohortIdRoute,
+  AcademyCurriculumCurriculumIdRoute: AcademyCurriculumCurriculumIdRoute,
+  AcademyRubricsRubricIdRoute: AcademyRubricsRubricIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
