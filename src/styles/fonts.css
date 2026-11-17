@@ -16,25 +16,28 @@
  */
 
 /*
- * Thmanyah Arabic — refinement branch (PENDING OWNER ASSET).
+ * Thmanyah — C13 / C41 (BUILD-BUNDLED, owner decision 2026-11-14).
  *
- * The refinement moves Arabic to the Thmanyah family. The repo is PUBLIC, so the
- * Thmanyah font files are deliberately NOT committed here: no files, no download
- * links, no archives. Instead the UI requests the Thmanyah family names first and
- * falls back to the current Arabic fonts (Alexandria / Baloo Bhaijaan 2) already
- * bundled above, so nothing breaks while the files are pending.
+ * The three woff2 files ship through the Vite build: they belong under
+ * src/assets/fonts/ and are hashed into the bundle. They are NEVER placed under
+ * public/, dist/ or .output, and the zip / OTFs / licence PDFs never enter the
+ * repo. This is the shipping decision — not a pending-asset placeholder.
  *
- * Requested family names (proposed mapping — confirm with the owner):
- *   thmanyahserifdisplay  display / headings
- *   thmanyahsans          UI, labels and short body text
- *   thmanyahseriftext     long reading (body paragraphs)
+ * Batch 0 status: the owner's three files were not present in the session, so
+ * the @font-face rules that would activate them are not written yet and the
+ * stacks in tokens.css resolve to the bundled Sora / Nunito / Alexandria faces
+ * below. Part B is recorded as BLOCKED in the delivery note; nothing is
+ * substituted for a missing Thmanyah face.
  *
- * Pending owner asset (not in this repo):
- *   Thmanyah-Serif-Display, Thmanyah-Sans, Thmanyah-Serif-Text (woff2 preferred).
- * When supplied, add one @font-face per family here (family name exactly as
- * requested above, Arabic `unicode-range`) and the stacks in app.css light up
- * automatically. Latin glyphs already fall through to Sora / Nunito via the
- * per-script unicode-range faces below.
+ * Roles when the files arrive:
+ *   thmanyahserifdisplay  Display 44 hero (Black 900) / Hero 32 · H1 · H2 · H3
+ *                         (Bold 700)
+ *   thmanyahseriftext     Body 16 / small 14 (Regular 400)
+ *   Bridgio Label         Label 15 / buttons / active nav / table headers (600)
+ *   Bridgio Label 400     Caption 13 / input text (Alexandria Regular 400)
+ *
+ * `thmanyahsans` is not part of the LTH stack (no Sans file was supplied); the
+ * UI stack in tokens.css deliberately omits it.
  */
 
 /* Latin text ranges (Nunito/Sora files cover basic Latin + punctuation). */
@@ -125,6 +128,27 @@
   font-display: swap;
   unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF,
     U+FE70-FEFF;
+}
+
+/* C41 caption 13 / input text = Alexandria Regular 400 on the Label family.
+   Both files already exist in public/fonts/; nothing new is downloaded. */
+@font-face {
+  font-family: 'Bridgio Label';
+  src: url('/fonts/Alexandria-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF,
+    U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'Bridgio Label';
+  src: url('/fonts/Nunito-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122;
 }
 
 /* Arabic UI labels are set in Alexandria. The pack has no Alexandria

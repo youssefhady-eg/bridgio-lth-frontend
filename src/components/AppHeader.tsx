@@ -88,7 +88,11 @@ export function AppHeader({
             href={hrefWithLang(pathname, searchStr, nextLang)}
             lang={nextLang}
             hrefLang={nextLang}
-            aria-label={`${strings.header.langLabel}: ${
+            aria-label={`${
+              nextLang === 'en'
+                ? strings.header.langGlyphEnglish
+                : strings.header.langGlyphArabic
+            } ${
               nextLang === 'en'
                 ? strings.header.langToEnglish
                 : strings.header.langToArabic

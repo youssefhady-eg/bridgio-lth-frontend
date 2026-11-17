@@ -1,0 +1,43 @@
+BRIDGIO LTH — 390 px overflow gate (Batch 0, C39)
+Base URL: http://localhost:3001
+Viewport: 390 × 844, mobile emulation, both themes, EN + AR
+Routes: 9, runs: 36
+
+PASS  dashboard  en/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  dashboard  en/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  dashboard  ar/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  dashboard  ar/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  cohorts  en/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  cohorts  en/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  cohorts  ar/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  cohorts  ar/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  roster  en/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  roster  en/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  roster  ar/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  roster  ar/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  curriculum-list  en/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  curriculum-list  en/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  curriculum-list  ar/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  curriculum-list  ar/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  curriculum-builder  en/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  curriculum-builder  en/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  curriculum-builder  ar/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  curriculum-builder  ar/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  rubric-list  en/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  rubric-list  en/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  rubric-list  ar/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  rubric-list  ar/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  rubric  en/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  rubric  en/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  rubric  ar/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  rubric  ar/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  earnings  en/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  earnings  en/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  earnings  ar/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  earnings  ar/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  onboarding  en/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  onboarding  en/dark  scrollWidth=390 (viewport 390), offenders=0
+PASS  onboarding  ar/light  scrollWidth=390 (viewport 390), offenders=0
+PASS  onboarding  ar/dark  scrollWidth=390 (viewport 390), offenders=0
+
+Summary: 36/36 runs clean.

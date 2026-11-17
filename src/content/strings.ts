@@ -153,8 +153,8 @@ export const ar = {
     navLabel: 'التنقّل الرئيس',
     openLabel: 'افتح قائمة التنقّل',
     closeLabel: 'إغلاق القائمة',
-    collapseLabel: 'طيّ القائمة الجانبية',
-    expandLabel: 'توسيع القائمة الجانبية',
+    collapseLabel: 'طيّ',
+    expandLabel: 'توسيع',
     utilitiesLabel: 'روابط مساعدة',
     helpLabel: 'المساعدة',
     guideLabel: 'الدليل',
@@ -561,7 +561,7 @@ export const ar = {
     mohsen: {
       heading: `مسودة من ${M}`,
       lead:
-        `يقدّم ${M} مخططًا مبدئيًا للوحدة من عنوانها وعدد الدروس. المخطط اقتراح لا يُحفظ حتى تضيفه.`,
+        `${M} هو المساعد الذكي: يقدّم مخططًا مبدئيًا للوحدة من عنوانها وعدد الدروس. المخطط اقتراح لا يُحفظ حتى تضيفه.`,
       unitTitle: 'عنوان الوحدة',
       lessonCount: 'عدد الدروس',
       submit: 'اطلب مسودة',
@@ -569,7 +569,7 @@ export const ar = {
       resultHeading: 'المخطط المقترح',
       grounding: 'المراجع',
       addUnit: 'أضف هذه الوحدة',
-      disclaimer: 'مسودة من محسن — راجعها قبل إضافتها إلى المنهج.',
+      disclaimer: 'مسودة من محسن، المساعد الذكي — راجعها قبل إضافتها إلى المنهج.',
       error: 'تعذّر إعداد المسودة. أعد المحاولة.',
     },
     emptyTitle: 'لا مناهج بعد',
@@ -827,12 +827,12 @@ export const ar = {
       },
       'academy-curriculum': {
         category: 'academy',
-        title: 'ابنِ منهجًا واطلب مسودة من محسن',
+        title: 'ابنِ منهجًا واطلب مسودة من محسن، المساعد الذكي',
         body: 'المنهج وحدات ودروس، ولكل درس لغة محتوى مستقلة.',
         steps: [
           'افتح المناهج واختر المنهج.',
           'أضف وحدة ثم أضف دروسها.',
-          'استخدم مسودة محسن كمقترح، ثم راجعها قبل الإضافة.',
+          'استخدم مسودة محسن، المساعد الذكي، كمقترح ثم راجعها قبل الإضافة.',
           'انشر المنهج بعد وجود درس واحد على الأقل.',
         ],
         link: 'curriculum',
@@ -1041,8 +1041,8 @@ export const en: Strings = {
     navLabel: 'Primary navigation',
     openLabel: 'Open the navigation menu',
     closeLabel: 'Close the menu',
-    collapseLabel: 'Collapse the sidebar',
-    expandLabel: 'Expand the sidebar',
+    collapseLabel: 'Collapse',
+    expandLabel: 'Expand',
     utilitiesLabel: 'Help links',
     helpLabel: 'Help',
     guideLabel: 'Guide',
@@ -1414,7 +1414,7 @@ export const en: Strings = {
     mohsen: {
       heading: `${assistant.name} draft`,
       lead:
-        `${assistant.name} suggests a unit outline from the unit title and lesson count. The outline is a suggestion and is not saved until you add it.`,
+        `${assistant.name} is the AI assistant. ${assistant.name} suggests a unit outline from the unit title and lesson count; the outline is a suggestion and is not saved until you add it.`,
       unitTitle: 'Unit title',
       lessonCount: 'Lesson count',
       submit: 'Draft an outline',
@@ -1423,7 +1423,7 @@ export const en: Strings = {
       grounding: 'References',
       addUnit: 'Add this unit',
       disclaimer:
-        `${assistant.name} draft — review it before adding it to the curriculum.`,
+        `${assistant.name} AI draft — review it before adding it to the curriculum.`,
       error: 'The draft could not be prepared. Try again.',
     },
     emptyTitle: 'No curricula yet',
@@ -1670,12 +1670,12 @@ export const en: Strings = {
       },
       'academy-curriculum': {
         category: 'academy',
-        title: 'Build a curriculum and ask Mohsen for a draft',
+        title: 'Build a curriculum and ask Mohsen, the AI assistant, for a draft',
         body: 'A curriculum holds units and lessons, and every lesson has its own content language.',
         steps: [
           'Open Curriculum and choose the curriculum.',
           'Add a unit, then add its lessons.',
-          'Use a Mohsen draft as a suggestion and review it before adding it.',
+          'Use a Mohsen, the AI assistant, draft as a suggestion and review it before adding it.',
           'Publish the curriculum once it has at least one lesson.',
         ],
         link: 'curriculum',

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { academyDashboardQueryOptions } from '~/api/queries'
 import { formatCount, formatDate, formatTime } from '~/components/dashboard/format'
+import { Block, BlockGrid } from '~/components/ds'
 import { EmptyNote } from '~/components/dashboard/EmptyNote'
 import { StatusChip, type StatusTone } from '~/components/dashboard/StatusChip'
 import { AcademyPage, ErrorNote, LoadingNote, MoneyText, Section, Stat } from './ui'
@@ -56,71 +57,81 @@ export function AcademyDashboardScreen() {
         </span>
       </p>
 
-      <div className="academy-stats">
-        <Stat
-          label={copy.totals.cohorts}
-          value={formatCount(data.totals.activeCohorts, lang)}
-          hint={copy.cohortsCount(data.totals.activeCohorts)}
-        />
-        <Stat
-          label={copy.totals.learners}
-          value={formatCount(data.totals.activeLearners, lang)}
-          hint={copy.learnersCount(data.totals.activeLearners)}
-        />
-        <Stat
-          label={copy.totals.sessions}
-          value={formatCount(data.totals.sessionsThisWeek, lang)}
-          hint={copy.sessionsCount(data.totals.sessionsThisWeek)}
-        />
-      </div>
-
-      <div className="academy-two-col">
-        <Section id="dashboard-calibration" title={copy.calibration.heading}>
-          <StatusChip
-            tone={data.calibration.status === 'calibrated' ? 'success' : 'warning'}
-            label={strings.status.calibration[data.calibration.status]}
-            icon={data.calibration.status === 'calibrated' ? 'check' : 'clock'}
+      <BlockGrid className="academy-dashboard-stats">
+        <Block span={4}>
+          <Stat
+            label={copy.totals.cohorts}
+            value={formatCount(data.totals.activeCohorts, lang)}
+            hint={copy.cohortsCount(data.totals.activeCohorts)}
           />
-          <p className="academy-section__lead">
-            {copy.calibration.samples(
-              data.calibration.sampleLessonsReviewed,
-              data.calibration.sampleLessonsRequired,
-            )}
-          </p>
-          {role === 'academy' ? (
-            <Link
-              to="/academy/onboarding"
-              search={{ as: role, lang }}
-              className="button button--secondary button--small"
-              preload={false}
-            >
-              {copy.calibration.open}
-            </Link>
-          ) : null}
-        </Section>
+        </Block>
+        <Block span={4}>
+          <Stat
+            label={copy.totals.learners}
+            value={formatCount(data.totals.activeLearners, lang)}
+            hint={copy.learnersCount(data.totals.activeLearners)}
+          />
+        </Block>
+        <Block span={4}>
+          <Stat
+            label={copy.totals.sessions}
+            value={formatCount(data.totals.sessionsThisWeek, lang)}
+            hint={copy.sessionsCount(data.totals.sessionsThisWeek)}
+          />
+        </Block>
+      </BlockGrid>
 
-        <Section id="dashboard-alerts" title={copy.alerts.heading} lead={copy.alerts.lead}>
-          {data.alerts.length === 0 ? (
-            <EmptyNote
-              title={copy.alerts.emptyTitle}
-              body={copy.alerts.emptyBody}
-              icon="check"
-              tone="success"
+      <BlockGrid className="academy-dashboard-split">
+        <Block span={6}>
+          <Section id="dashboard-calibration" title={copy.calibration.heading}>
+            <StatusChip
+              tone={data.calibration.status === 'calibrated' ? 'success' : 'warning'}
+              label={strings.status.calibration[data.calibration.status]}
+              icon={data.calibration.status === 'calibrated' ? 'check' : 'clock'}
             />
-          ) : (
-            <ul className="academy-alert-list">
-              {data.alerts.map((alert) => (
-                <li key={alert.id} className="academy-alert">
-                  <span className="academy-alert__count">
-                    {copy.alerts.count(alert.count)}
-                  </span>
-                  <span>{strings.status.alert[alert.kind]}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Section>
-      </div>
+            <p className="academy-section__lead">
+              {copy.calibration.samples(
+                data.calibration.sampleLessonsReviewed,
+                data.calibration.sampleLessonsRequired,
+              )}
+            </p>
+            {role === 'academy' ? (
+              <Link
+                to="/academy/onboarding"
+                search={{ as: role, lang }}
+                className="button button--secondary button--small"
+                preload={false}
+              >
+                {copy.calibration.open}
+              </Link>
+            ) : null}
+          </Section>
+        </Block>
+
+        <Block span={6}>
+          <Section id="dashboard-alerts" title={copy.alerts.heading} lead={copy.alerts.lead}>
+            {data.alerts.length === 0 ? (
+              <EmptyNote
+                title={copy.alerts.emptyTitle}
+                body={copy.alerts.emptyBody}
+                icon="check"
+                tone="success"
+              />
+            ) : (
+              <ul className="academy-alert-list">
+                {data.alerts.map((alert) => (
+                  <li key={alert.id} className="academy-alert">
+                    <span className="academy-alert__count">
+                      {copy.alerts.count(alert.count)}
+                    </span>
+                    <span>{strings.status.alert[alert.kind]}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Section>
+        </Block>
+      </BlockGrid>
 
       <Section id="dashboard-sessions" title={copy.upcoming.heading} lead={copy.upcoming.lead}>
         {data.upcomingSessions.length === 0 ? (

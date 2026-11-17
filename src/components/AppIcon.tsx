@@ -1,4 +1,5 @@
 import type { SVGProps } from 'react'
+import { Icon as DsIcon } from '~/components/ds/Icon'
 import {
   BookOpen,
   ChevronLeft,
@@ -75,17 +76,7 @@ interface AppIconProps extends Omit<SVGProps<SVGSVGElement>, 'name'> {
 }
 
 export function AppIcon({ name, size = 20, ...rest }: AppIconProps) {
-  const Icon = icons[name]
-
-  return (
-    <Icon
-      size={size}
-      strokeWidth={1.8}
-      aria-hidden="true"
-      focusable="false"
-      {...rest}
-    />
-  )
+  return <DsIcon icon={icons[name]} size={size} {...rest} />
 }
 
 /** Map a nav destination id to the closest icon. */

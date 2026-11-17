@@ -1,0 +1,38 @@
+BRIDGIO LTH — collapsed rail measurement (Batch 0, R3)
+Base URL: http://localhost:3001
+
+EN @ 1024px — rail 72px
+  nav icon centres:     35.5, 35.5, 35.5, 35.5, 35.5, 35.5
+  utility icon centres: 35.5, 35.5, 35.5
+  toggle centre:        35.5
+  one centre line: YES
+
+AR @ 1024px — rail 72px
+  nav icon centres:     988.5, 988.5, 988.5, 988.5, 988.5, 988.5
+  utility icon centres: 988.5, 988.5, 988.5
+  toggle centre:        988.5
+  one centre line: YES
+
+EN @ 1440px — rail 72px
+  nav icon centres:     35.5, 35.5, 35.5, 35.5, 35.5, 35.5
+  utility icon centres: 35.5, 35.5, 35.5
+  toggle centre:        35.5
+  one centre line: YES
+
+AR @ 1440px — rail 72px
+  nav icon centres:     1404.5, 1404.5, 1404.5, 1404.5, 1404.5, 1404.5
+  utility icon centres: 1404.5, 1404.5, 1404.5
+  toggle centre:        1404.5
+  one centre line: YES
+
+EN @ 1920px — rail 72px
+  nav icon centres:     35.5, 35.5, 35.5, 35.5, 35.5, 35.5
+  utility icon centres: 35.5, 35.5, 35.5
+  toggle centre:        35.5
+  one centre line: YES
+
+AR @ 1920px — rail 72px
+  nav icon centres:     1884.5, 1884.5, 1884.5, 1884.5, 1884.5, 1884.5
+  utility icon centres: 1884.5, 1884.5, 1884.5
+  toggle centre:        1884.5
+  one centre line: YES

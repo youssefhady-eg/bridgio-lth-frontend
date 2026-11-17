@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import type { Money } from '~/api/types'
+import { SkeletonScreen } from '~/components/ds'
 import { formatMoney } from '~/components/dashboard/format'
 import { useLang, useStrings } from '~/shell/useStrings'
 
@@ -106,12 +107,10 @@ export function Notice({
 }
 
 export function LoadingNote() {
-  const strings = useStrings()
-  return (
-    <p className="loading-note" role="status">
-      {strings.common.loading}
-    </p>
-  )
+  // A skeleton that mirrors the page shape replaces the old text spinner.
+  // SkeletonScreen keeps the visible copy minimal and announces "Loading"
+  // once through a visually hidden status line.
+  return <SkeletonScreen />
 }
 
 export function ErrorNote({ body }: { body: string }) {

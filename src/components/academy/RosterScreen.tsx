@@ -127,46 +127,48 @@ export function RosterScreen({ cohortId }: { cohortId: string }) {
         </Link>
       </p>
 
-      <Notice tone="provisional">{copy.proposedNotice}</Notice>
+      <div className="academy-summary">
+        <Notice tone="provisional">{copy.proposedNotice}</Notice>
 
-      <div className="academy-stats">
-        <div className="academy-stat">
-          <p className="academy-stat__label">{strings.common.cohort}</p>
-          <p className="academy-stat__value">{roster.cohort.label}</p>
-          <p className="academy-stat__hint">
-            {roster.cohort.language.label} · {roster.cohort.level.label} ·{' '}
-            {roster.cohort.schedule}
-          </p>
-        </div>
-        <div className="academy-stat">
-          <p className="academy-stat__label">{copy.attendanceRate}</p>
-          <p className="academy-stat__value">
-            {roster.attendanceRate === null
-              ? copy.noRate
-              : copy.attendanceRateValue(roster.attendanceRate)}
-          </p>
-          <p className="academy-stat__hint">
-            {copy.recordedSessions(
-              sessions.filter((session) => session.attendanceRecorded).length,
-            )}
-          </p>
-        </div>
-        <div className="academy-stat">
-          <p className="academy-stat__label">{strings.common.seats}</p>
-          <p className="academy-stat__value">
-            {strings.cohorts.seatsLabel(
-              roster.cohort.seatsFilled,
-              roster.cohort.capacity,
-            )}
-          </p>
-          <p className="academy-stat__hint">
-            {formatPercent(
-              roster.cohort.capacity === 0
-                ? 0
-                : (roster.cohort.seatsFilled / roster.cohort.capacity) * 100,
-              lang,
-            )}
-          </p>
+        <div className="academy-stats">
+          <div className="academy-stat">
+            <p className="academy-stat__label">{strings.common.cohort}</p>
+            <p className="academy-stat__value">{roster.cohort.label}</p>
+            <p className="academy-stat__hint">
+              {roster.cohort.language.label} · {roster.cohort.level.label} ·{' '}
+              {roster.cohort.schedule}
+            </p>
+          </div>
+          <div className="academy-stat">
+            <p className="academy-stat__label">{copy.attendanceRate}</p>
+            <p className="academy-stat__value">
+              {roster.attendanceRate === null
+                ? copy.noRate
+                : copy.attendanceRateValue(roster.attendanceRate)}
+            </p>
+            <p className="academy-stat__hint">
+              {copy.recordedSessions(
+                sessions.filter((session) => session.attendanceRecorded).length,
+              )}
+            </p>
+          </div>
+          <div className="academy-stat">
+            <p className="academy-stat__label">{strings.common.seats}</p>
+            <p className="academy-stat__value">
+              {strings.cohorts.seatsLabel(
+                roster.cohort.seatsFilled,
+                roster.cohort.capacity,
+              )}
+            </p>
+            <p className="academy-stat__hint">
+              {formatPercent(
+                roster.cohort.capacity === 0
+                  ? 0
+                  : (roster.cohort.seatsFilled / roster.cohort.capacity) * 100,
+                lang,
+              )}
+            </p>
+          </div>
         </div>
       </div>
 

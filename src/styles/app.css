@@ -45,7 +45,7 @@ body {
   min-height: 100dvh;
   background: var(--bridgio-cream); /* LOCKED app background */
   color: var(--text-primary); /* maroon on cream, 15.8:1 */
-  font-family: 'thmanyahseriftext', 'Bridgio Body', sans-serif;
+  font-family: var(--font-stack-reading);
   line-height: 1.55; /* body 16px scale */
   font-kerning: normal;
   text-rendering: optimizeLegibility;
@@ -56,7 +56,7 @@ body {
 h1,
 h2,
 h3 {
-  font-family: 'thmanyahserifdisplay', 'Bridgio Display', sans-serif;
+  font-family: var(--font-stack-display);
   color: var(--text-primary);
   margin: 0;
   overflow-wrap: break-word;
@@ -86,7 +86,7 @@ p {
 }
 
 code {
-  font-family: 'thmanyahseriftext', 'Bridgio Body', sans-serif;
+  font-family: var(--font-stack-reading);
   font-weight: 600;
 }
 
@@ -120,7 +120,7 @@ summary:focus-visible,
   border-radius: var(--radius-pill);
   background: var(--bridgio-maroon);
   color: var(--bridgio-cream);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-label-size);
   font-weight: 600;
   text-decoration: none;
@@ -220,7 +220,7 @@ summary:focus-visible,
   border-radius: var(--radius-pill);
   background: transparent;
   color: var(--band-text);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-label-size);
   font-weight: 600;
   line-height: 1.4;
@@ -395,7 +395,7 @@ summary:focus-visible,
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-input);
   color: var(--text-primary);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-label-size);
   font-weight: 600;
   text-decoration: none;
@@ -513,7 +513,7 @@ summary:focus-visible,
   border: 1.5px solid var(--bridgio-maroon);
   border-radius: var(--radius-pill);
   color: var(--text-primary);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
 }
@@ -621,7 +621,7 @@ summary:focus-visible,
 .dashboard__greeting {
   margin-block: var(--space-3) 0;
   color: var(--text-muted);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-body-small-size);
   font-weight: 600;
 }
@@ -659,7 +659,7 @@ summary:focus-visible,
   border: var(--outline-hairline) solid var(--border-strong);
   border-radius: var(--radius-pill);
   color: var(--text-secondary);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
 }
@@ -705,7 +705,7 @@ summary:focus-visible,
 
 .total-card__value {
   margin: 0;
-  font-family: 'thmanyahserifdisplay', 'Bridgio Display', sans-serif;
+  font-family: var(--font-stack-display);
   font-size: var(--font-display-size-h1);
   font-weight: 700;
   line-height: 1.1;
@@ -714,7 +714,7 @@ summary:focus-visible,
 .total-card__label {
   margin: var(--space-1) 0 0;
   color: var(--text-secondary);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
   line-height: 1.45;
@@ -743,7 +743,7 @@ summary:focus-visible,
   border-radius: var(--radius-card);
   color: var(--text-primary);
   text-decoration: none;
-  transition: background-color 0.15s ease;
+  transition: background-color var(--motion-base) var(--motion-ease);
 }
 
 .quick-action:hover {
@@ -767,7 +767,7 @@ summary:focus-visible,
 }
 
 .quick-action__title {
-  font-family: 'thmanyahserifdisplay', 'Bridgio Display', sans-serif;
+  font-family: var(--font-stack-display);
   font-size: var(--font-display-size-h3);
   font-weight: 600;
   line-height: 1.3;
@@ -835,14 +835,14 @@ summary:focus-visible,
 
 .class-card__stats dt {
   color: var(--text-muted);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
 }
 
 .class-card__stats dd {
   margin: 0;
-  font-family: 'thmanyahserifdisplay', 'Bridgio Display', sans-serif;
+  font-family: var(--font-stack-display);
   font-size: var(--font-display-size-h3);
   font-weight: 700;
   line-height: 1.2;
@@ -911,7 +911,7 @@ h3 + .row-meta {
   padding: 2px var(--space-3);
   border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-pill);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
   line-height: 1.45;
@@ -928,7 +928,13 @@ h3 + .row-meta {
   /* Warning is fill only, with maroon text (token sheet §1). */
   background: var(--bridgio-warning-fill);
   border-color: var(--bridgio-maroon);
-  color: var(--text-primary);
+  color: var(--bridgio-maroon);
+}
+
+:root[data-theme='dark'] .status-chip--warning {
+  /* Maroon flips to cream in dark; keep dark text on the amber fill. */
+  color: var(--bridgio-cream);
+  border-color: var(--bridgio-cream);
 }
 
 .status-chip--neutral {
@@ -952,7 +958,7 @@ h3 + .row-meta {
   gap: var(--space-3);
   margin-block-end: var(--space-2);
   color: var(--text-secondary);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
 }
@@ -1026,7 +1032,7 @@ h3 + .row-meta {
 .empty-note__text .empty-note__title {
   margin: 0 0 var(--space-1);
   color: var(--text-primary);
-  font-family: 'thmanyahserifdisplay', 'Bridgio Display', sans-serif;
+  font-family: var(--font-stack-display);
   font-size: var(--font-display-size-h3);
   font-weight: 600;
   line-height: 1.35;
@@ -1113,7 +1119,7 @@ h3 + .row-meta {
   border: var(--outline-hairline) solid var(--border-strong);
   border-radius: var(--radius-pill);
   color: var(--text-secondary);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
   line-height: 1.45;
@@ -1134,7 +1140,7 @@ h3 + .row-meta {
   height: 1.6rem;
   border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-pill);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 700;
 }
@@ -1215,7 +1221,7 @@ h3 + .row-meta {
 .field legend.field__label {
   padding: 0;
   color: var(--text-primary);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-label-size);
   font-weight: 600;
   line-height: 1.4;
@@ -1245,7 +1251,7 @@ h3 + .row-meta {
   border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-input);
   color: var(--text-primary);
-  font-family: 'thmanyahseriftext', 'Bridgio Body', sans-serif;
+  font-family: var(--font-stack-reading);
   font-size: var(--font-body-size);
   line-height: 1.5;
 }
@@ -1349,7 +1355,7 @@ h3 + .row-meta {
 
 .source-banner__label {
   color: var(--text-muted);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
 }
@@ -1372,7 +1378,7 @@ h3 + .row-meta {
   padding: var(--space-2) var(--space-4);
   border: 1.5px solid transparent;
   border-radius: var(--radius-pill);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-label-size);
   font-weight: 600;
   line-height: 1.4;
@@ -1469,7 +1475,7 @@ h3 + .row-meta {
 
 .summary-list dt {
   color: var(--text-muted);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
 }
@@ -1519,14 +1525,16 @@ h3 + .row-meta {
 .draft-card__number {
   margin: 0;
   color: var(--text-muted);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
 }
 
+/* Batch 0 audit: an h4 at body size is a reading role, not a display role.
+   The display face is reserved for hero / h1–h3 (C13). */
 .draft-card h4 {
   margin: 0;
-  font-family: 'thmanyahserifdisplay', 'Bridgio Display', sans-serif;
+  font-family: var(--font-stack-reading);
   font-size: var(--font-body-size);
   font-weight: 600;
   line-height: 1.5;
@@ -1569,7 +1577,7 @@ h3 + .row-meta {
 
 .question-card__number {
   margin: 0;
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 700;
 }
@@ -1595,7 +1603,7 @@ h3 + .row-meta {
   border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-pill);
   color: var(--text-primary);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 700;
 }
@@ -1686,7 +1694,7 @@ h3 + .row-meta {
 .grounding__title {
   margin: 0;
   color: var(--text-muted);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
 }
@@ -1713,7 +1721,7 @@ h3 + .row-meta {
   border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-pill);
   color: var(--text-secondary);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
   line-height: 1.45;
@@ -1913,7 +1921,7 @@ h3 + .row-meta {
   width: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'thmanyahserifdisplay', 'Bridgio Display', sans-serif;
+  font-family: var(--font-stack-display);
   font-size: var(--font-display-size-h3);
   font-weight: 700;
   line-height: 1.5;
@@ -2075,7 +2083,7 @@ h3 + .row-meta {
 .mohsen-qa__label {
   margin: 0;
   color: var(--text-muted);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-caption-size);
   font-weight: 600;
 }
@@ -2346,7 +2354,7 @@ h3 + .row-meta {
   border-radius: var(--radius-pill);
   background: var(--bridgio-maroon);
   color: var(--bridgio-cream);
-  font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+  font-family: var(--font-stack-ui);
   font-size: var(--font-label-size);
   font-weight: 600;
   cursor: pointer;
@@ -2564,7 +2572,10 @@ h3 + .summary-list {
   .app-sidebar__link {
     min-height: 48px;
     padding: var(--space-3) var(--space-4);
-    font-size: var(--font-body-size);
+    /* Batch 0 audit: nav items are UI labels, not body copy. The Batch 1
+       desktop block set them to body size (17 px); C41's label step is 16 px,
+       so the token wins and the measured set now matches the type ladder. */
+    font-size: var(--font-label-size);
   }
 
   /* Class cards: stats spread across the card, not bunched at one edge. */
@@ -2672,7 +2683,7 @@ h3 + .summary-list {
     border-radius: var(--radius-input);
     background: transparent;
     color: var(--text-secondary);
-    font-family: 'thmanyahsans', 'Bridgio Label', sans-serif;
+    font-family: var(--font-stack-ui);
     font-size: var(--font-label-size);
     font-weight: 600;
     cursor: pointer;

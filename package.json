@@ -13,7 +13,17 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "docs:tokens": "node scripts/generate-token-reference.mjs",
+    "gate:contrast": "node scripts/gate/contrast.mjs",
+    "gate:axe": "node scripts/gate/axe.mjs",
+    "gate:overflow": "node scripts/gate/overflow-390.mjs",
+    "gate:hit-area": "node scripts/gate/hit-area-44.mjs",
+    "gate:type": "node scripts/gate/type-measure.mjs",
+    "gate:rail": "node scripts/gate/rail-measure.mjs",
+    "gate:screenshots": "node scripts/gate/screenshots.mjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.105.1",
@@ -27,10 +37,14 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "^10.6.7",
+    "@storybook/addon-docs": "^10.6.7",
+    "@storybook/react-vite": "^10.6.7",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "storybook": "^10.6.7",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
     "vitest": "^5.0.5"

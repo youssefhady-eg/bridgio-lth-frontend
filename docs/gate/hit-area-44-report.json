@@ -1,0 +1,169 @@
+{
+  "generatedAt": "2026-11-17T06:58:43.159Z",
+  "base": "http://localhost:3001",
+  "min": 44,
+  "rows": [
+    {
+      "route": "dashboard",
+      "path": "/academy",
+      "width": 1920,
+      "controls": 8,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "dashboard",
+      "path": "/academy",
+      "width": 390,
+      "controls": 8,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "cohorts",
+      "path": "/academy/cohorts",
+      "width": 1920,
+      "controls": 19,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "cohorts",
+      "path": "/academy/cohorts",
+      "width": 390,
+      "controls": 19,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "roster",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "width": 1920,
+      "controls": 69,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "roster",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "width": 390,
+      "controls": 69,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "curriculum-list",
+      "path": "/academy/curriculum",
+      "width": 1920,
+      "controls": 13,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "curriculum-list",
+      "path": "/academy/curriculum",
+      "width": 390,
+      "controls": 13,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "curriculum-builder",
+      "path": "/academy/curriculum/cur_de_a2_workplace",
+      "width": 1920,
+      "controls": 20,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "curriculum-builder",
+      "path": "/academy/curriculum/cur_de_a2_workplace",
+      "width": 390,
+      "controls": 20,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "rubric-list",
+      "path": "/academy/rubrics",
+      "width": 1920,
+      "controls": 8,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "rubric-list",
+      "path": "/academy/rubrics",
+      "width": 390,
+      "controls": 8,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "rubric",
+      "path": "/academy/rubrics/rub_de_a2_workplace",
+      "width": 1920,
+      "controls": 17,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "rubric",
+      "path": "/academy/rubrics/rub_de_a2_workplace",
+      "width": 390,
+      "controls": 17,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "earnings",
+      "path": "/academy/earnings",
+      "width": 1920,
+      "controls": 5,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "earnings",
+      "path": "/academy/earnings",
+      "width": 390,
+      "controls": 5,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "onboarding",
+      "path": "/academy/onboarding",
+      "width": 1920,
+      "controls": 8,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    },
+    {
+      "route": "onboarding",
+      "path": "/academy/onboarding",
+      "width": 390,
+      "controls": 8,
+      "failures": [],
+      "exceptions": [],
+      "pass": true
+    }
+  ]
+}
