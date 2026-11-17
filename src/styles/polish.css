@@ -272,6 +272,18 @@ body {
     flex: none;
     margin: 0;
   }
+
+  /* Collapsed rail must never scroll: tighten vertical rhythm so the whole
+     nav + utilities + foot fit inside the rail height. */
+  .app-sidebar.is-collapsed .app-sidebar__nav {
+    padding-block-start: 12px;
+    overflow-y: hidden;
+  }
+
+  .app-sidebar.is-collapsed .app-sidebar__list,
+  .app-sidebar.is-collapsed .utility-links {
+    gap: 4px;
+  }
 }
 
 @media (max-width: 1023.98px) {
@@ -287,6 +299,16 @@ body {
   max-width: var(--content-max);
   margin-inline: auto;
   padding: var(--space-8) var(--space-4) var(--space-16);
+}
+
+/* Content inline-start padding follows the sidebar state so the page title
+   never sits on top of the rail. Expanded rail = 240px, collapsed rail = 72px. */
+.app-content {
+  padding-inline-start: var(--space-8);
+}
+
+.app-body--collapsed .app-content {
+  padding-inline-start: var(--space-12);
 }
 
 @media (min-width: 768px) {

@@ -14,6 +14,7 @@ import { Route as AcademyRouteImport } from './routes/academy'
 import { Route as GuideRouteImport } from './routes/guide'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as AcademyCohortsRouteImport } from './routes/academy_.cohorts'
 import { Route as AcademyCurriculumRouteImport } from './routes/academy_.curriculum'
@@ -47,6 +48,11 @@ const HelpRoute = HelpRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignInRoute = SignInRouteImport.update({
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/guide': typeof GuideRoute
   '/help': typeof HelpRoute
   '/profile': typeof ProfileRoute
+  '/search': typeof SearchRoute
   '/sign-in': typeof SignInRoute
   '/academy/cohorts': typeof AcademyCohortsRoute
   '/academy/curriculum': typeof AcademyCurriculumRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/guide': typeof GuideRoute
   '/help': typeof HelpRoute
   '/profile': typeof ProfileRoute
+  '/search': typeof SearchRoute
   '/sign-in': typeof SignInRoute
   '/academy/cohorts': typeof AcademyCohortsRoute
   '/academy/curriculum': typeof AcademyCurriculumRoute
@@ -135,6 +143,7 @@ export interface FileRoutesById {
   '/guide': typeof GuideRoute
   '/help': typeof HelpRoute
   '/profile': typeof ProfileRoute
+  '/search': typeof SearchRoute
   '/sign-in': typeof SignInRoute
   '/academy_/cohorts': typeof AcademyCohortsRoute
   '/academy_/curriculum': typeof AcademyCurriculumRoute
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/guide'
     | '/help'
     | '/profile'
+    | '/search'
     | '/sign-in'
     | '/academy/cohorts'
     | '/academy/curriculum'
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/guide'
     | '/help'
     | '/profile'
+    | '/search'
     | '/sign-in'
     | '/academy/cohorts'
     | '/academy/curriculum'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/guide'
     | '/help'
     | '/profile'
+    | '/search'
     | '/sign-in'
     | '/academy_/cohorts'
     | '/academy_/curriculum'
@@ -202,6 +214,7 @@ export interface RootRouteChildren {
   GuideRoute: typeof GuideRoute
   HelpRoute: typeof HelpRoute
   ProfileRoute: typeof ProfileRoute
+  SearchRoute: typeof SearchRoute
   SignInRoute: typeof SignInRoute
   AcademyCohortsRoute: typeof AcademyCohortsRoute
   AcademyCurriculumRoute: typeof AcademyCurriculumRoute
@@ -248,6 +261,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sign-in': {
@@ -322,6 +342,7 @@ const rootRouteChildren: RootRouteChildren = {
   GuideRoute: GuideRoute,
   HelpRoute: HelpRoute,
   ProfileRoute: ProfileRoute,
+  SearchRoute: SearchRoute,
   SignInRoute: SignInRoute,
   AcademyCohortsRoute: AcademyCohortsRoute,
   AcademyCurriculumRoute: AcademyCurriculumRoute,

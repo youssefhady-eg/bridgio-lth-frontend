@@ -13,6 +13,7 @@ import {
   Menu,
   MessageSquare,
   Moon,
+  Search,
   Sun,
   User,
   Users,
@@ -32,6 +33,7 @@ import {
 
 export type AppIconName =
   | 'menu'
+  | 'search'
   | 'close'
   | 'globe'
   | 'chat'
@@ -52,6 +54,7 @@ export type AppIconName =
 /** AppIconName → Lucide component. */
 const icons: Record<AppIconName, LucideIcon> = {
   menu: Menu,
+  search: Search,
   close: X,
   globe: Globe,
   chat: MessageSquare,

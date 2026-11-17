@@ -141,6 +141,20 @@ export function AppHeader({
             </span>
           </a>
 
+          <Link
+            to="/search"
+            search={{ as: role, lang }}
+            className="app-utility__button"
+            aria-label={strings.header.searchOpenLabel ?? 'Search'}
+            title={strings.header.searchLabel ?? 'Search'}
+            preload={false}
+          >
+            <AppIcon name="search" size={20} />
+            <span className="app-utility__label">
+              {strings.header.searchLabel ?? 'Search'}
+            </span>
+          </Link>
+
           <button
             type="button"
             className="app-utility__button app-utility__button--theme"
