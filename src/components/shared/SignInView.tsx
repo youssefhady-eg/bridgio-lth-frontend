@@ -3,39 +3,54 @@ import { PageHero } from '~/components/shared/PageHero'
 import { useLang } from '~/shell/useStrings'
 import { useStrings } from '~/shell/useStrings'
 
-const ROLES = [
-  { key: 'academy', label: 'Academy', to: '/academy', as: 'academy', enabled: true },
-  { key: 'instructor', label: 'Instructor', to: '/academy', as: 'instructor', enabled: true },
-  { key: 'learner', label: 'Learner', to: null, as: null, enabled: false },
-  { key: 'assessor', label: 'Assessor', to: null, as: null, enabled: false },
-  { key: 'desk', label: 'Desk', to: null, as: null, enabled: false },
-] as const
+const ROLE_KEYS = ['academy', 'instructor', 'learner', 'assessor', 'desk'] as const
 
 export function SignInView() {
   const strings = useStrings()
   const lang = useLang()
   const copy = strings.auth
 
+  const roleLabel = (key: (typeof ROLE_KEYS)[number]) => {
+    switch (key) {
+      case 'academy':
+        return copy.academyRole
+      case 'instructor':
+        return copy.instructorRole
+      case 'learner':
+        return copy.learnerRole
+      case 'assessor':
+        return copy.assessorRole
+      case 'desk':
+        return copy.deskRole
+    }
+  }
+
+  const enabled = (key: (typeof ROLE_KEYS)[number]) =>
+    key === 'academy' || key === 'instructor'
+
   return (
     <div className="auth-card">
       <PageHero badge={copy.badge} title={copy.title} lead={copy.lead} />
 
       <ul className="signin-roles" aria-label={copy.badge}>
-        {ROLES.map((role) => (
-          <li key={role.key}>
-            {role.enabled ? (
+        {ROLE_KEYS.map((key) => (
+          <li key={key}>
+            {enabled(key) ? (
               <Link
-                to={role.to!}
-                search={{ as: role.as!, lang }}
+                to="/academy"
+                search={{
+                  as: key === 'instructor' ? 'instructor' : 'academy',
+                  lang,
+                }}
                 className="signin-role signin-role--enabled"
               >
-                <span className="signin-role__label">{role.label}</span>
-                <span className="signin-role__hint">Enter preview</span>
+                <span className="signin-role__label">{roleLabel(key)}</span>
+                <span className="signin-role__hint">{copy.enterPreview}</span>
               </Link>
             ) : (
               <div className="signin-role signin-role--disabled" aria-disabled="true">
-                <span className="signin-role__label">{role.label}</span>
-                <span className="signin-role__hint">Lands in a later wave</span>
+                <span className="signin-role__label">{roleLabel(key)}</span>
+                <span className="signin-role__hint">{copy.landsLater}</span>
               </div>
             )}
           </li>
@@ -47,7 +62,7 @@ export function SignInView() {
         search={{ as: 'academy', lang, guest: '1' }}
         className="button button--secondary signin-guest"
       >
-        Continue as a guest
+        {copy.guestButton}
       </Link>
 
       <p className="finish-note" role="status">

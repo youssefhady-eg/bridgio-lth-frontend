@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import { academyDashboardQueryOptions } from '~/api/queries'
 import { formatCount, formatDate, formatTime } from '~/components/dashboard/format'
 import { Block, BlockGrid } from '~/components/ds'
 import { EmptyNote } from '~/components/dashboard/EmptyNote'
 import { StatusChip, type StatusTone } from '~/components/dashboard/StatusChip'
-import { AcademyPage, ErrorNote, LoadingNote, MoneyText, Section, Stat } from './ui'
+import { AcademyPage, ErrorNote, LoadingNote, MoneyText, Notice, Section, Stat } from './ui'
 import { useLang, useStrings } from '~/shell/useStrings'
 import { usePreviewRole } from '~/shell/usePreviewRole'
 
@@ -28,6 +28,9 @@ export function AcademyDashboardScreen() {
   const copy = strings.dashboard
   const lang = useLang()
   const role = usePreviewRole()
+  const isGuest = useRouterState({
+    select: (state) => state.location.search?.guest === '1',
+  })
   const query = useQuery(academyDashboardQueryOptions())
 
   if (query.isPending) {
@@ -50,6 +53,9 @@ export function AcademyDashboardScreen() {
 
   return (
     <AcademyPage badge={copy.badge} title={copy.title} lead={copy.lead}>
+      {isGuest ? (
+        <Notice tone="provisional">Guest session — read-only preview</Notice>
+      ) : null}
       <p className="academy-greeting">
         {copy.greeting(data.academy.name)} ·{' '}
         <span className="academy-muted">
@@ -95,7 +101,7 @@ export function AcademyDashboardScreen() {
                 data.calibration.sampleLessonsRequired,
               )}
             </p>
-            {role === 'academy' ? (
+            {role === 'academy' && !isGuest ? (
               <Link
                 to="/academy/onboarding"
                 search={{ as: role, lang }}
@@ -175,14 +181,16 @@ export function AcademyDashboardScreen() {
         id="dashboard-cohorts"
         title={copy.cohorts.heading}
         actions={
-          <Link
-            to="/academy/cohorts"
-            search={{ as: role, lang }}
-            className="button button--secondary button--small"
-            preload={false}
-          >
-            {copy.cohorts.open}
-          </Link>
+          isGuest ? null : (
+            <Link
+              to="/academy/cohorts"
+              search={{ as: role, lang }}
+              className="button button--secondary button--small"
+              preload={false}
+            >
+              {copy.cohorts.open}
+            </Link>
+          )
         }
       >
         {data.cohorts.length === 0 ? (

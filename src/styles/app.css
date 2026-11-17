@@ -2150,7 +2150,7 @@ h3 + .row-meta {
   inset-inline-end: var(--space-4);
   display: flex;
   flex-direction: column;
-  width: min(30rem, calc(100vw - 2rem));
+  width: min(32rem, calc(100vw - 2rem));
   height: min(36rem, calc(100dvh - 2rem));
   overflow: hidden;
   background: var(--bridgio-paper);

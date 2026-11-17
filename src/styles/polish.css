@@ -726,6 +726,12 @@ select.input {
   justify-self: start;
 }
 
+@media (min-width: 1024px) {
+  .chat-popup__panel {
+    width: min(clamp(22rem, 37.78vw, 32rem), calc(100vw - 2rem));
+  }
+}
+
 /* ---- Phone: never overflow horizontally ---------------------------------- */
 
 html,

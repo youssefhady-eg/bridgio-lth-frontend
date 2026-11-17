@@ -696,6 +696,14 @@ export const ar = {
     submit: 'دخول',
     status:
       'تسجيل الدخول غير متاح حاليًا. المصادقة مملوكة لـ Mentingo ولم تُربط بعد.',
+    academyRole: 'Academy',
+    instructorRole: 'Instructor',
+    learnerRole: 'Learner',
+    assessorRole: 'Assessor',
+    deskRole: 'Desk',
+    enterPreview: 'Enter preview',
+    landsLater: 'Lands in a later wave',
+    guestButton: 'Continue as a guest',
   },
   /** Profile / settings — session display + UI settings. */
   profile: {
@@ -1544,6 +1552,14 @@ export const en: Strings = {
     submit: 'Sign in',
     status:
       'Sign-in is not available yet. Authentication is owned by Mentingo and is not connected.',
+    academyRole: 'Academy',
+    instructorRole: 'Instructor',
+    learnerRole: 'Learner',
+    assessorRole: 'Assessor',
+    deskRole: 'Desk',
+    enterPreview: 'Enter preview',
+    landsLater: 'Lands in a later wave',
+    guestButton: 'Continue as a guest',
   },
   profile: {
     headTitle: `Profile and settings — ${B}`,
