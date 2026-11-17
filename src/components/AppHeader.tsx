@@ -1,4 +1,5 @@
 import { Link, useRouterState } from '@tanstack/react-router'
+import { useEffect, useRef, useState } from 'react'
 import { AppIcon } from '~/components/AppIcon'
 import { hrefWithLang } from '~/shell/lang'
 import { usePreviewRole } from '~/shell/usePreviewRole'
@@ -28,6 +29,7 @@ interface AppHeaderProps {
   onOpenChat: () => void
   theme: Theme
   onToggleTheme: () => void
+  sidebarCollapsed?: boolean
 }
 
 export function AppHeader({
@@ -35,6 +37,7 @@ export function AppHeader({
   onOpenChat,
   theme,
   onToggleTheme,
+  sidebarCollapsed = false,
 }: AppHeaderProps) {
   const { pathname, href } = useRouterState({ select: (state) => state.location })
   const searchStr = href.slice(pathname.length).split('#')[0] ?? ''
@@ -43,8 +46,31 @@ export function AppHeader({
   const strings = useStrings()
   const nextLang = lang === 'en' ? 'ar' : 'en'
 
+  const [accountOpen, setAccountOpen] = useState(false)
+  const accountRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!accountOpen) return
+    function onPointerDown(event: PointerEvent) {
+      if (
+        accountRef.current &&
+        !accountRef.current.contains(event.target as Node)
+      ) {
+        setAccountOpen(false)
+      }
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') setAccountOpen(false)
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [accountOpen])
+
   return (
-    <header className="app-header">
+    <header className={`app-header${sidebarCollapsed ? ' app-header--collapsed' : ''}`}>
       <div className="app-header__inner">
         <button
           type="button"
@@ -55,7 +81,12 @@ export function AppHeader({
           <AppIcon name="menu" size={22} />
         </button>
 
-        <div className="app-header__brand">
+        <Link
+          to="/academy"
+          search={{ as: role, lang }}
+          className="app-header__brand"
+          aria-label={strings.header.wordmarkAlt}
+        >
           {/* C14 LOCKED — Alexandria Bold lockup. Fills are baked in the files
               and are never recoloured. One of the two is visible per
               breakpoint/theme (see app.css): cream on dark surfaces, maroon on
@@ -76,7 +107,7 @@ export function AppHeader({
             height={66}
             decoding="async"
           />
-        </div>
+        </Link>
 
         <div
           className="app-header__utilities"
@@ -140,18 +171,69 @@ export function AppHeader({
             </span>
           </button>
 
-          <Link
-            to="/profile"
-            search={{ as: role, lang }}
-            className="app-utility__button app-utility__button--account"
-            aria-label={strings.header.accountLabel}
-            preload={false}
-          >
-            <AppIcon name="user" size={20} />
-            <span className="app-utility__label">
-              {strings.header.accountLabel}
-            </span>
-          </Link>
+          <div className="account-menu" ref={accountRef}>
+            <button
+              type="button"
+              className="app-utility__button app-utility__button--account"
+              aria-label={strings.header.accountLabel}
+              aria-haspopup="menu"
+              aria-expanded={accountOpen}
+              aria-controls="account-menu-panel"
+              onClick={() => setAccountOpen((current) => !current)}
+            >
+              <AppIcon name="user" size={20} />
+              <span className="app-utility__label">
+                {strings.header.accountLabel}
+              </span>
+            </button>
+
+            {accountOpen ? (
+              <div
+                className="account-menu__panel"
+                id="account-menu-panel"
+                role="menu"
+                aria-label={strings.header.accountLabel}
+              >
+                <Link
+                  to="/profile"
+                  search={{ as: role, lang }}
+                  className="account-menu__item"
+                  role="menuitem"
+                  preload={false}
+                  onClick={() => setAccountOpen(false)}
+                >
+                  <AppIcon name="user" size={18} />
+                  {strings.sidebar.profileLabel}
+                </Link>
+                <button
+                  type="button"
+                  className="account-menu__item account-menu__item--theme"
+                  role="menuitemcheckbox"
+                  aria-checked={theme === 'dark'}
+                  onClick={onToggleTheme}
+                >
+                  <AppIcon name={theme === 'dark' ? 'sun' : 'moon'} size={18} />
+                  <span className="account-menu__item-label">
+                    {strings.header.themeLabel}
+                  </span>
+                  <span className="account-menu__switch" aria-hidden="true">
+                    <span className="account-menu__switch-thumb" />
+                  </span>
+                </button>
+                <Link
+                  to="/sign-in"
+                  search={{ lang }}
+                  className="account-menu__item"
+                  role="menuitem"
+                  preload={false}
+                  onClick={() => setAccountOpen(false)}
+                >
+                  <AppIcon name="user" size={18} />
+                  Sign in
+                </Link>
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     </header>

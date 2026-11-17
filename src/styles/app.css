@@ -187,6 +187,7 @@ summary:focus-visible,
 .app-header__brand {
   display: flex;
   align-items: center;
+  text-decoration: none;
 }
 
 /* Brand artwork slot — exactly one wordmark visible per breakpoint/theme. */

@@ -4,6 +4,7 @@ import {
   Outlet,
   Scripts,
   createRootRouteWithContext,
+  useRouterState,
 } from '@tanstack/react-router'
 import { useEffect, useState, type ReactNode } from 'react'
 import { AppHeader } from '~/components/AppHeader'
@@ -28,13 +29,14 @@ import finishCss from '~/styles/finish.css?url'
 import fontsCss from '~/styles/fonts.css?url'
 import polishCss from '~/styles/polish.css?url'
 import tokensCss from '~/styles/tokens.css?url'
+import thmanyahDisplayBoldUrl from '~/assets/fonts/thmanyahserifdisplay-Bold.woff2?url'
 
 /**
  * Root search params for the whole shell:
  *   `?as=academy|instructor` — preview role, diagnostic UI only, never auth.
  *   `?lang=ar|en` — active language / direction.
  */
-type RootSearch = { as?: AppRole; lang: Lang }
+type RootSearch = { as?: AppRole; lang: Lang; guest?: string }
 
 /** localStorage key for language persistence (see ShellDocument). */
 const LANG_STORAGE_KEY = 'bridgio.lang'
@@ -54,6 +56,7 @@ export const Route = createRootRouteWithContext<{
     // router must not write `?as=academy` into the URL of a shared screen.
     as: parseAppRole(search.as),
     lang: parseLang(search.lang) ?? defaultLang,
+    guest: typeof search.guest === 'string' ? search.guest : undefined,
   }),
   head: ({ match }) => {
     const strings = stringsFor(match.search.lang)
@@ -108,6 +111,13 @@ export const Route = createRootRouteWithContext<{
           type: 'font/ttf',
           crossOrigin: 'anonymous',
         },
+        {
+          rel: 'preload',
+          as: 'font',
+          href: thmanyahDisplayBoldUrl,
+          type: 'font/woff2',
+          crossOrigin: 'anonymous',
+        },
         { rel: 'stylesheet', href: fontsCss },
         { rel: 'stylesheet', href: tokensCss },
         { rel: 'stylesheet', href: appCss },
@@ -155,12 +165,12 @@ function ErrorScreen() {
   )
 }
 
+const AUTH_ROUTE_PATHS = new Set(['/sign-in'])
+
 function RootComponent() {
   return (
     <ShellDocument>
-      <main className="app-main" id="app-main">
-        <Outlet />
-      </main>
+      <Outlet />
     </ShellDocument>
   )
 }
@@ -169,6 +179,11 @@ function ShellDocument({ children }: Readonly<{ children: ReactNode }>) {
   const lang = useLang()
   const dir = dirFor(lang)
   const strings = useStrings()
+
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  })
+  const isAuthRoute = AUTH_ROUTE_PATHS.has(pathname)
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { collapsed: sidebarCollapsed, toggle: toggleSidebarCollapsed } =
@@ -216,36 +231,45 @@ function ShellDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body>
-        <a className="skip-link" href="#app-main">
-          {strings.header.skipToMain}
-        </a>
-        <AppHeader
-          onOpenSidebar={() => setSidebarOpen(true)}
-          onOpenChat={() => setChatOpen(true)}
-          theme={theme}
-          onToggleTheme={toggleTheme}
-        />
-        <div
-          className={`app-body${sidebarCollapsed ? ' app-body--collapsed' : ''}`}
-        >
-          <AppSidebar
-            open={sidebarOpen}
-            onClose={() => setSidebarOpen(false)}
-            collapsed={sidebarCollapsed}
-            onToggleCollapsed={toggleSidebarCollapsed}
-          />
-          <button
-            type="button"
-            className={`sidebar-backdrop${sidebarOpen ? ' is-open' : ''}`}
-            aria-label={strings.header.menuCloseLabel}
-            tabIndex={sidebarOpen ? 0 : -1}
-            onClick={() => setSidebarOpen(false)}
-          />
-          <div className="app-content">
+        {isAuthRoute ? (
+          <main className="auth-main" id="app-main">
             {children}
-          </div>
-        </div>
-        <ChatPopup open={chatOpen} onClose={() => setChatOpen(false)} />
+          </main>
+        ) : (
+          <>
+            <a className="skip-link" href="#app-main">
+              {strings.header.skipToMain}
+            </a>
+            <AppHeader
+              onOpenSidebar={() => setSidebarOpen(true)}
+              onOpenChat={() => setChatOpen(true)}
+              theme={theme}
+              onToggleTheme={toggleTheme}
+              sidebarCollapsed={sidebarCollapsed}
+            />
+            <div
+              className={`app-body${sidebarCollapsed ? ' app-body--collapsed' : ''}`}
+            >
+              <AppSidebar
+                open={sidebarOpen}
+                onClose={() => setSidebarOpen(false)}
+                collapsed={sidebarCollapsed}
+                onToggleCollapsed={toggleSidebarCollapsed}
+              />
+              <button
+                type="button"
+                className={`sidebar-backdrop${sidebarOpen ? ' is-open' : ''}`}
+                aria-label={strings.header.menuCloseLabel}
+                tabIndex={sidebarOpen ? 0 : -1}
+                onClick={() => setSidebarOpen(false)}
+              />
+              <div className="app-content">
+                {children}
+              </div>
+            </div>
+            <ChatPopup open={chatOpen} onClose={() => setChatOpen(false)} />
+          </>
+        )}
         <Scripts />
       </body>
     </html>

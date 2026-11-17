@@ -52,6 +52,7 @@ body {
   min-height: var(--header-min);
   padding: var(--space-2) var(--space-4);
   gap: var(--space-2);
+  flex-wrap: nowrap;
 }
 
 .app-utility__button,
@@ -100,7 +101,15 @@ body {
   .app-header__inner {
     min-height: calc(var(--header-h) - var(--outline-sticker));
     padding-block: 0;
-    padding-inline: 32px;
+    /* Expanded sidebar: wordmark aligns with the sidebar nav label column
+       (nav pad 16 + link pad 14 + icon 22 + gap 12 = 64 px). */
+    padding-inline: 64px 32px;
+  }
+
+  .app-header--collapsed .app-header__inner {
+    /* Collapsed rail: wordmark aligns with the icon chip's inline-start edge
+       (40 px chip centred in the 72 px rail = 16 px inset). */
+    padding-inline-start: 16px;
   }
 }
 
@@ -190,11 +199,21 @@ body {
   .app-sidebar {
     top: var(--header-h);
     height: calc(100dvh - var(--header-h));
+    /* The sidebar box never scrolls: the nav scrolls inside it and the foot
+       (with the collapse toggle) stays pinned to the bottom edge. */
+    overflow: hidden;
   }
 
   /* The designed 24 px gap between the header and the first nav item. */
   .app-sidebar__nav {
     padding-block-start: 24px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .app-sidebar__foot {
+    flex: 0 0 auto;
   }
 
   /* 48 px rows (32 px icon chip + 8 px block padding), 8 px gap, 16 px radius,
@@ -563,6 +582,148 @@ select.input {
 
 .chat-thread.is-active {
   border-radius: 12px;
+}
+
+/* ---- Account menu (header avatar) ---------------------------------------- */
+
+.account-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.app-utility__button--account {
+  width: var(--touch-target);
+  padding: 0;
+  border-radius: var(--radius-pill);
+  justify-content: center;
+}
+
+.app-utility__button--account .app-utility__label {
+  display: none;
+}
+
+.account-menu__panel {
+  position: absolute;
+  inset-block-start: calc(100% + var(--space-2));
+  inset-inline-end: 0;
+  z-index: 95;
+  display: grid;
+  gap: 2px;
+  min-width: 12rem;
+  padding: var(--space-2);
+  background: var(--bridgio-paper);
+  border: var(--outline-sticker) solid var(--bridgio-maroon);
+  border-radius: var(--radius-input);
+}
+
+.account-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-input);
+  color: var(--text-primary);
+  font-family: var(--font-stack-ui);
+  font-size: var(--font-label-size);
+  font-weight: 600;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.account-menu__item:hover {
+  background: var(--hover-bg);
+}
+
+.account-menu__item:disabled {
+  color: var(--disabled-text);
+  cursor: not-allowed;
+}
+
+.account-menu__item-label {
+  flex: 1;
+}
+
+.account-menu__switch {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  width: 34px;
+  height: 20px;
+  padding: 2px;
+  background: var(--disabled-overlay);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  transition: background-color var(--motion-base) var(--motion-ease),
+    border-color var(--motion-base) var(--motion-ease);
+}
+
+.account-menu__switch-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--bridgio-maroon);
+  border-radius: 50%;
+  transition: background-color var(--motion-base) var(--motion-ease),
+    margin-inline-start var(--motion-base) var(--motion-ease);
+}
+
+.account-menu__item--theme[aria-checked='true'] .account-menu__switch {
+  background: var(--bridgio-maroon);
+  border-color: var(--bridgio-maroon);
+}
+
+.account-menu__item--theme[aria-checked='true'] .account-menu__switch-thumb {
+  margin-inline-start: auto;
+  background: var(--bridgio-cream);
+}
+
+/* ---- Auth routes (centred, no shell) ------------------------------------- */
+
+.auth-main {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-8) var(--space-4);
+  background: var(--bridgio-cream);
+}
+
+.auth-card {
+  width: min(32rem, 100%);
+  display: grid;
+  gap: var(--space-4);
+}
+
+.signin-roles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.signin-role {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--touch-target);
+  padding: var(--space-3) var(--space-4);
+  border: var(--outline-sticker) solid var(--bridgio-maroon);
+  border-radius: var(--radius-input);
+  text-decoration: none;
+  color: var(--text-primary);
+  background: var(--bridgio-paper);
+}
+
+.signin-role--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.signin-guest {
+  justify-self: start;
 }
 
 /* ---- Phone: never overflow horizontally ---------------------------------- */

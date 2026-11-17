@@ -23,11 +23,9 @@
  * public/, dist/ or .output, and the zip / OTFs / licence PDFs never enter the
  * repo. This is the shipping decision — not a pending-asset placeholder.
  *
- * Batch 0 status: the owner's three files were not present in the session, so
- * the @font-face rules that would activate them are not written yet and the
- * stacks in tokens.css resolve to the bundled Sora / Nunito / Alexandria faces
- * below. Part B is recorded as BLOCKED in the delivery note; nothing is
- * substituted for a missing Thmanyah face.
+ * INSTALLED (Batch 2): the three woff2 files are present under src/assets/fonts/
+ * and the @font-face rules above activate them. Stacks in tokens.css now
+ * resolve to Thmanyah for Arabic; fallbacks remain for load failure.
  *
  * Roles when the files arrive:
  *   thmanyahserifdisplay  Display 44 hero (Black 900) / Hero 32 · H1 · H2 · H3
@@ -124,6 +122,39 @@
   font-family: 'Bridgio Body';
   src: url('/fonts/BalooBhaijaan2-Bold.ttf') format('truetype');
   font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF,
+    U+FE70-FEFF;
+}
+
+/* Thmanyah (build-bundled, C13/C41). Arabic-only unicode-range so Latin stays
+   Sora/Nunito. Weights confirmed from font metadata: Black 900, Bold 700,
+   Regular 400. Files live under src/assets/fonts/ and are hashed by Vite. */
+@font-face {
+  font-family: 'thmanyahserifdisplay';
+  src: url('../assets/fonts/thmanyahserifdisplay-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF,
+    U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'thmanyahserifdisplay';
+  src: url('../assets/fonts/thmanyahserifdisplay-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF,
+    U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: 'thmanyahseriftext';
+  src: url('../assets/fonts/thmanyahseriftext-Regular.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+200C-200F, U+FB50-FDFF,

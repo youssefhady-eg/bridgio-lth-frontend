@@ -177,7 +177,7 @@
 
 .academy-table {
   width: 100%;
-  min-width: 46rem;
+  min-width: 38rem;
   border-collapse: collapse;
   text-align: start;
   font-size: var(--font-body-small-size);
@@ -185,7 +185,7 @@
 
 .academy-table th,
 .academy-table td {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-3);
   border-block-end: var(--outline-hairline) solid var(--border);
   text-align: start;
   vertical-align: top;

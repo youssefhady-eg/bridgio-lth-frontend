@@ -1049,11 +1049,11 @@ export const en: Strings = {
     profileLabel: 'Profile',
   },
   nav: {
-    'academy-dashboard': 'Academy dashboard',
+    'academy-dashboard': 'Dashboard',
     'academy-onboarding': 'Onboarding',
     'academy-cohorts': 'Cohorts',
     'academy-curriculum': 'Curriculum',
-    'academy-rubrics': 'Grading rubrics',
+    'academy-rubrics': 'Rubrics',
     'academy-earnings': 'Earnings',
   } as Record<NavScreenId, string>,
   common: {
