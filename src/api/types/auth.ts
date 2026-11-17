@@ -1,8 +1,9 @@
 import type { IsoDateTime, UserId, UserRole } from './common'
 
 /**
- * A Mentingo user. BRIDGIO does not own a user model, auth system or role system.
- * Teacher and student are Mentingo roles reached through Mentingo auth.
+ * A Mentingo user. BRIDGIO does not own a user model, auth system or role
+ * system. Academy owner and instructor are Mentingo roles reached through
+ * Mentingo auth.
  *
  * PROPOSED — Mentingo to implement on restore/rebuild.
  */

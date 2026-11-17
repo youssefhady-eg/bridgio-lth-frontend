@@ -22,6 +22,8 @@ import { useTheme } from '~/shell/useTheme'
 import { useLang, useStrings, stringsFor } from '~/shell/useStrings'
 import { useSidebarCollapsed } from '~/shell/useSidebarCollapsed'
 import appCss from '~/styles/app.css?url'
+import academyCss from '~/styles/academy.css?url'
+import dsCss from '~/styles/ds.css?url'
 import finishCss from '~/styles/finish.css?url'
 import fontsCss from '~/styles/fonts.css?url'
 import polishCss from '~/styles/polish.css?url'
@@ -29,8 +31,8 @@ import tokensCss from '~/styles/tokens.css?url'
 
 /**
  * Root search params for the whole shell:
- *   `?as=teacher|student|assistant|parent` — preview role, diagnostic UI only.
- *   `?lang=ar|en` — active language / direction. Neither is auth.
+ *   `?as=academy|instructor` — preview role, diagnostic UI only, never auth.
+ *   `?lang=ar|en` — active language / direction.
  */
 type RootSearch = { as?: AppRole; lang: Lang }
 
@@ -49,7 +51,7 @@ export const Route = createRootRouteWithContext<{
 }>()({
   validateSearch: (search: Record<string, unknown>): RootSearch => ({
     // Optional on purpose: when absent the role follows the route area, so the
-    // router must not write `?as=teacher` into the URL of a student screen.
+    // router must not write `?as=academy` into the URL of a shared screen.
     as: parseAppRole(search.as),
     lang: parseLang(search.lang) ?? defaultLang,
   }),
@@ -82,11 +84,37 @@ export const Route = createRootRouteWithContext<{
         // Interim internal placeholder favicon (Sora "B" on a red card). The
         // adopted wordmark and the full lockup are never used as a favicon.
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        // First-paint faces only: the Arabic UI label (default), the Arabic
+        // reading body and the Latin body. Display faces load with their
+        // headings, so they are not preloaded.
+        {
+          rel: 'preload',
+          as: 'font',
+          href: '/fonts/Alexandria-Bold.ttf',
+          type: 'font/ttf',
+          crossOrigin: 'anonymous',
+        },
+        {
+          rel: 'preload',
+          as: 'font',
+          href: '/fonts/BalooBhaijaan2-Regular.ttf',
+          type: 'font/ttf',
+          crossOrigin: 'anonymous',
+        },
+        {
+          rel: 'preload',
+          as: 'font',
+          href: '/fonts/Nunito-Regular.ttf',
+          type: 'font/ttf',
+          crossOrigin: 'anonymous',
+        },
         { rel: 'stylesheet', href: fontsCss },
         { rel: 'stylesheet', href: tokensCss },
         { rel: 'stylesheet', href: appCss },
         { rel: 'stylesheet', href: polishCss },
         { rel: 'stylesheet', href: finishCss },
+        { rel: 'stylesheet', href: dsCss },
+        { rel: 'stylesheet', href: academyCss },
       ],
     }
   },

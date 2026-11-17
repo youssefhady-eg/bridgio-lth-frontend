@@ -1,0 +1,491 @@
+{
+  "generatedAt": "2026-11-17T07:00:39.678Z",
+  "shots": [
+    {
+      "name": "dashboard-en-light-1920",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\dashboard-en-light-1920.png",
+      "path": "/academy",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "dashboard-en-light-390",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\dashboard-en-light-390.png",
+      "path": "/academy",
+      "lang": "en",
+      "theme": "light",
+      "width": 390,
+      "collapsed": false
+    },
+    {
+      "name": "dashboard-en-dark-1920",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\dashboard-en-dark-1920.png",
+      "path": "/academy",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "dashboard-en-dark-390",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\dashboard-en-dark-390.png",
+      "path": "/academy",
+      "lang": "en",
+      "theme": "dark",
+      "width": 390,
+      "collapsed": false
+    },
+    {
+      "name": "dashboard-ar-light-1920",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\dashboard-ar-light-1920.png",
+      "path": "/academy",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "dashboard-ar-light-390",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\dashboard-ar-light-390.png",
+      "path": "/academy",
+      "lang": "ar",
+      "theme": "light",
+      "width": 390,
+      "collapsed": false
+    },
+    {
+      "name": "dashboard-ar-dark-1920",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\dashboard-ar-dark-1920.png",
+      "path": "/academy",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "dashboard-ar-dark-390",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\dashboard-ar-dark-390.png",
+      "path": "/academy",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 390,
+      "collapsed": false
+    },
+    {
+      "name": "roster-en-light-1920",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\roster-en-light-1920.png",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "roster-en-light-390",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\roster-en-light-390.png",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "lang": "en",
+      "theme": "light",
+      "width": 390,
+      "collapsed": false
+    },
+    {
+      "name": "roster-en-dark-1920",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\roster-en-dark-1920.png",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "roster-en-dark-390",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\roster-en-dark-390.png",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "lang": "en",
+      "theme": "dark",
+      "width": 390,
+      "collapsed": false
+    },
+    {
+      "name": "roster-ar-light-1920",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\roster-ar-light-1920.png",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "roster-ar-light-390",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\roster-ar-light-390.png",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "lang": "ar",
+      "theme": "light",
+      "width": 390,
+      "collapsed": false
+    },
+    {
+      "name": "roster-ar-dark-1920",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\roster-ar-dark-1920.png",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "roster-ar-dark-390",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\roster-ar-dark-390.png",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 390,
+      "collapsed": false
+    },
+    {
+      "name": "rail-collapsed-en-1024",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\rail-collapsed-en-1024.png",
+      "path": "/academy",
+      "lang": "en",
+      "theme": "light",
+      "width": 1024,
+      "collapsed": true
+    },
+    {
+      "name": "rail-collapsed-ar-1024",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\rail-collapsed-ar-1024.png",
+      "path": "/academy",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1024,
+      "collapsed": true
+    },
+    {
+      "name": "rail-collapsed-en-1440",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\rail-collapsed-en-1440.png",
+      "path": "/academy",
+      "lang": "en",
+      "theme": "light",
+      "width": 1440,
+      "collapsed": true
+    },
+    {
+      "name": "rail-collapsed-ar-1440",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\rail-collapsed-ar-1440.png",
+      "path": "/academy",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1440,
+      "collapsed": true
+    },
+    {
+      "name": "rail-collapsed-en-1920",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\rail-collapsed-en-1920.png",
+      "path": "/academy",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": true
+    },
+    {
+      "name": "rail-collapsed-ar-1920",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\rail-collapsed-ar-1920.png",
+      "path": "/academy",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": true
+    },
+    {
+      "name": "ds-buttons-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-buttons-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--buttons&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-buttons-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-buttons-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--buttons&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-fields-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-fields-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--fields&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-fields-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-fields-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--fields&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-dialogs-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-dialogs-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--dialogs&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-dialogs-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-dialogs-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--dialogs&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-dialog-open-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-dialog-open-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--dialog-open&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-dialog-open-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-dialog-open-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--dialog-open&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-drawer-open-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-drawer-open-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--drawer-open&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-drawer-open-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-drawer-open-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--drawer-open&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-toasts-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-toasts-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--toasts&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-toasts-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-toasts-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--toasts&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-toasts-open-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-toasts-open-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--toasts-open&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-toasts-open-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-toasts-open-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--toasts-open&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-avatars-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-avatars-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--avatars&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-avatars-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-avatars-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--avatars&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-breadcrumbs-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-breadcrumbs-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--breadcrumbs&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-breadcrumbs-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-breadcrumbs-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--breadcrumbs&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-tabs-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-tabs-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--tabs&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-tabs-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-tabs-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--tabs&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-logos-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-logos-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--logos&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-logos-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-logos-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--logos&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-grid-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-grid-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--grid&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-grid-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-grid-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--grid&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-skeletons-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-skeletons-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--skeletons&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-skeletons-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-skeletons-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--skeletons&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-score-cards-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-score-cards-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--score-cards&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-score-cards-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-score-cards-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--score-cards&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-typography-ar-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-typography-ar-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--typography-ar&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-typography-ar-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-typography-ar-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--typography-ar&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-icons-light",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-icons-light.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--icons&globals=theme:light;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "collapsed": false
+    },
+    {
+      "name": "ds-icons-dark",
+      "file": "C:\\Users\\Youssef Hady\\.local\\share\\opencode\\worktree\\f714a9\\proud-cactus\\docs\\screenshots\\batch-0\\ds-icons-dark.png",
+      "path": "http://localhost:6100/iframe.html?id=design-system-overview--icons&globals=theme:dark;direction:ltr&viewMode=story",
+      "lang": "en",
+      "theme": "dark",
+      "width": 1920,
+      "collapsed": false
+    }
+  ]
+}

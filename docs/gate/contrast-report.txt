@@ -1,0 +1,59 @@
+BRIDGIO LTH — contrast report (Batch 0)
+Token source: src/styles/tokens.css (light :root, dark :root[data-theme='dark'])
+Threshold: 4.5:1 for normal text (WCAG 2.2 AA); 3:1 for large text / UI
+
+Part 1 — token pairs
+PASS  light --text-primary on --bridgio-cream  15.81:1 (min 4.5)  Body / headings on the page
+PASS  light --text-primary on --bridgio-paper  17.19:1 (min 4.5)  Body on cards and surfaces
+PASS  light --text-secondary on --bridgio-cream  6.63:1 (min 4.5)  Secondary copy on the page
+PASS  light --text-secondary on --bridgio-paper  6.91:1 (min 4.5)  Secondary copy on cards
+PASS  light --text-muted on --bridgio-paper  5.59:1 (min 4.5)  Caption 13 / hints
+PASS  light --bridgio-cream on --bridgio-maroon  15.81:1 (min 4.5)  Primary button label
+PASS  light --bridgio-maroon on --bridgio-paper  17.19:1 (min 4.5)  Links and ink on cards
+PASS  light --bridgio-success on --bridgio-paper  4.92:1 (min 4.5)  Success text
+PASS  light --bridgio-info on --bridgio-paper  5.64:1 (min 4.5)  Info text
+PASS  light --bridgio-error on --bridgio-paper  9.47:1 (min 4.5)  Error text
+PASS  dark  --text-primary on --bridgio-cream  15.81:1 (min 4.5)  Body / headings on the page
+PASS  dark  --text-primary on --bridgio-paper  12.27:1 (min 4.5)  Body on cards and surfaces
+PASS  dark  --text-secondary on --bridgio-cream  8.43:1 (min 4.5)  Secondary copy on the page
+PASS  dark  --text-secondary on --bridgio-paper  7.05:1 (min 4.5)  Secondary copy on cards
+PASS  dark  --text-muted on --bridgio-paper  5.89:1 (min 4.5)  Caption 13 / hints
+PASS  dark  --bridgio-cream on --bridgio-maroon  15.81:1 (min 4.5)  Primary button label
+PASS  dark  --bridgio-maroon on --bridgio-paper  12.27:1 (min 4.5)  Links and ink on cards
+PASS  dark  --bridgio-success on --bridgio-paper  5.27:1 (min 4.5)  Success text
+PASS  dark  --bridgio-info on --bridgio-paper  4.89:1 (min 4.5)  Info text
+PASS  dark  --bridgio-error on --bridgio-paper  5.59:1 (min 4.5)  Error text
+
+Part 1 summary: 20/20 pairs pass.
+
+Part 2 — C10 link visibility in the running app (no underline at rest)
+Base URL: http://localhost:3001
+Links are distinguished by weight and by the hover/focus underline, not by
+colour alone. Where colour differs from surrounding text by < 3:1 the weight
+step (600/700 vs 400) is the required non-colour cue (WCAG 1.4.1).
+  dashboard light: no inline links on this surface
+  dashboard dark: no inline links on this surface
+  cohorts light: no inline links on this surface
+  cohorts dark: no inline links on this surface
+  roster light: no inline links on this surface
+  roster dark: no inline links on this surface
+  curriculum-list light: no inline links on this surface
+  curriculum-list dark: no inline links on this surface
+  curriculum-builder light: no inline links on this surface
+  curriculum-builder dark: no inline links on this surface
+  rubric-list light: no inline links on this surface
+  rubric-list dark: no inline links on this surface
+  rubric light: no inline links on this surface
+  rubric dark: no inline links on this surface
+  earnings light: no inline links on this surface
+  earnings dark: no inline links on this surface
+  onboarding light: no inline links on this surface
+  onboarding dark: no inline links on this surface
+  profile light: "العربية" screen-link — colour rgb(44, 7, 6) vs surrounding rgb(44, 7, 6), weight 600 vs 400, decoration none
+  profile dark: "العربية" screen-link — colour rgb(249, 236, 217) vs surrounding rgb(249, 236, 217), weight 600 vs 400, decoration none
+  help light: no inline links on this surface
+  help dark: no inline links on this surface
+  guide light: no inline links on this surface
+  guide dark: no inline links on this surface
+  sign-in light: no inline links on this surface
+  sign-in dark: no inline links on this surface

@@ -63,6 +63,17 @@
   --font-label-size: 15px; /* 1.4, weight 600 */
   --font-caption-size: 13px; /* 1.45 */
 
+  /* ---- Font stacks — C13 / C41 LOCKED roles ------------------------------ *
+   * One token per role. No CSS file outside tokens.css / fonts.css may name a
+   * family; the literal-ban test in src/styles/font-stacks.test.ts enforces it.
+   * `thmanyahserifdisplay` / `thmanyahseriftext` are requested first and fall
+   * back to the bundled Latin + Arabic faces while the three woff2 files are
+   * pending (Part B blocked — see the Batch 0 delivery note). The UI stack
+   * drops `thmanyahsans` entirely: UI labels are Bridgio Label.              */
+  --font-stack-display: 'thmanyahserifdisplay', 'Bridgio Display', sans-serif;
+  --font-stack-reading: 'thmanyahseriftext', 'Bridgio Body', sans-serif;
+  --font-stack-ui: 'Bridgio Label', sans-serif;
+
   /* ---- PROPOSED FOR UI — spacing (base 4 px) ---------------------------- */
   --space-1: 4px;
   --space-2: 8px;
@@ -81,6 +92,18 @@
   --outline-sticker: 2px; /* sticker style: solid surface + 1–2 px maroon
                              outline instead of drop shadows */
   --outline-hairline: 1.5px;
+
+  /* ---- Motion — C22 LOCKED ---------------------------------------------- *
+   * Phi ladder around the shipped 250 ms sidebar transition (250 × 0.618 ≈
+   * 155, 155 × 0.618 ≈ 96 → 100; 250 ÷ 0.618 ≈ 405; 405 ÷ 0.618 ≈ 655).
+   * Rounded to whole milliseconds on purpose. Reduced motion is honoured by
+   * the global `prefers-reduced-motion: reduce` rule in app.css.             */
+  --motion-fast: 100ms;
+  --motion-base: 155ms;
+  --motion-standard: 250ms;
+  --motion-slow: 405ms;
+  --motion-slower: 655ms;
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
 
   /* ---- PROPOSED FOR UI — interaction ------------------------------------ */
   --focus-ring-width: 2px;

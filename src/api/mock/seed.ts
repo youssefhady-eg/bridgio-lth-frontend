@@ -1,960 +1,1114 @@
 import type {
-  Attempt,
-  ClassroomId,
-  CurriculumSubject,
-  CurriculumUnit,
-  Material,
+  Academy,
+  AttendanceMark,
+  AttendanceRecord,
+  AttendanceSummary,
+  Cohort,
+  CohortId,
+  CohortSession,
+  Curriculum,
+  EarningsLedger,
+  InstructorSummary,
+  Language,
+  LearnerId,
+  Lesson,
+  Level,
   Message,
   MessageThread,
-  NavCapability,
-  Question,
-  QuestionOption,
-  TestSource,
-  UnitId,
+  Money,
+  Rubric,
+  RubricDescriptor,
+  RubricDimension,
+  RosterMember,
+  SessionId,
   User,
-  UserId,
 } from '../types'
 
 /**
- * Mock seed data for the BRIDGIO MVP.
+ * Mock seed data for the BRIDGIO Learn-to-Hire academy surface.
  *
- * This is DEMO DATA, not product copy and not real teacher/student data.
- * All Arabic wording here is DRAFT and centralised for later replacement; it must
- * not be treated as approved final copy. No endpoint, ID or shape here is a
- * confirmed Mentingo record.
+ * This is DEMO DATA, not product copy and not real academy, learner or payment
+ * data. No academy brand, BPO name, salary or counter here is a claim. Every
+ * money value is a placeholder; dates are generated relative to now so the demo
+ * never hard-codes a date. All Arabic wording is DRAFT and centralised for later
+ * replacement.
  */
+
+const DAY = 24 * 60 * 60 * 1000
+const now = new Date()
+
+function isoDate(offsetDays: number): string {
+  const date = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + offsetDays),
+  )
+  return date.toISOString().slice(0, 10)
+}
+
+function isoAt(offsetDays: number, hour = 9): string {
+  const date = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + offsetDays),
+  )
+  date.setUTCHours(hour, 0, 0, 0)
+  return date.toISOString()
+}
+
+function placeholderMoney(): Money {
+  return { amount: null, currency: 'XXX', isPlaceholder: true }
+}
 
 export const seedIds = {
-  teacher: 'usr_teacher_mona',
-  assistant: 'usr_assistant_hala',
-  parent: 'usr_parent_adel',
-  studentSara: 'usr_student_sara',
-  studentOmar: 'usr_student_omar',
-  studentYoussef: 'usr_student_youssef',
-  classMath: 'class_math_3a',
-  classPhysics: 'class_physics_3b',
-  subjectMath: 'subj_math_3',
-  subjectPhysics: 'subj_physics_3',
-  unitDerivatives: 'unit_math_derivatives',
-  unitIntegration: 'unit_math_integration',
-  unitMotion: 'unit_physics_motion',
-  materialDerivatives: 'mat_math_deriv_notes',
-  materialPhysics: 'mat_physics_motion_notes',
-  testDerivatives: 'test_math_deriv_1',
-  testIntegration: 'test_math_integration_1',
-  testIntegrationDraft: 'test_math_integration_draft',
-  testPhysics: 'test_physics_motion_1',
-  threadTeacher: 'thread_parent_teacher',
-  threadAssistant: 'thread_parent_assistant',
-  threadTeacherAssistant: 'thread_teacher_assistant',
+  owner: 'usr_demo_owner',
+  instructorKarim: 'usr_demo_instructor_karim',
+  instructorLina: 'usr_demo_instructor_lina',
+  instructorJonas: 'usr_demo_instructor_jonas',
+  academy: 'acad_demo',
+  cohortGermanA2: 'coh_de_a2_evening',
+  cohortDutchB1: 'coh_nl_b1_morning',
+  cohortItalianA1: 'coh_it_a1_evening',
+  cohortGermanB2: 'coh_de_b2_intensive',
+  curriculumGermanA2: 'cur_de_a2_workplace',
+  curriculumDutchB1: 'cur_nl_b1_support',
+  curriculumItalianA1: 'cur_it_a1_arrival',
+  rubricGermanA2: 'rub_de_a2_workplace',
+  rubricDutchB1: 'rub_nl_b1_support',
+  rubricItalianA1: 'rub_it_a1_arrival',
+  threadSupport: 'thr_support',
+  threadInstructor: 'thr_instructor',
 } as const
 
-/** Internal storage model. Adapter methods map these to the public contract types. */
-export interface MockClassroom {
-  id: ClassroomId
-  teacherId: UserId
-  name: string
-  subjectId: string
-  gradeLevel: string
-  description: string | null
-  certificateNote: string | null
-  createdAt: string
-  unitIds: UnitId[]
+export const seedLanguages: Language[] = [
+  {
+    id: 'lang_de',
+    code: 'de',
+    label: 'German',
+    nativeLabel: 'Deutsch',
+    direction: 'ltr',
+    script: 'Latin',
+    numeralSystem: 'western',
+    appealOwnerReady: true,
+  },
+  {
+    id: 'lang_nl',
+    code: 'nl',
+    label: 'Dutch',
+    nativeLabel: 'Nederlands',
+    direction: 'ltr',
+    script: 'Latin',
+    numeralSystem: 'western',
+    appealOwnerReady: false,
+  },
+  {
+    id: 'lang_it',
+    code: 'it',
+    label: 'Italian',
+    nativeLabel: 'Italiano',
+    direction: 'ltr',
+    script: 'Latin',
+    numeralSystem: 'western',
+    appealOwnerReady: false,
+  },
+  {
+    id: 'lang_ar',
+    code: 'ar',
+    label: 'Arabic',
+    nativeLabel: 'العربية',
+    direction: 'rtl',
+    script: 'Arabic',
+    numeralSystem: 'arabic-indic',
+    appealOwnerReady: true,
+  },
+]
+
+export const seedLevels: Level[] = [
+  { id: 'lvl_a1', label: 'A1', order: 1, framework: 'CEFR' },
+  { id: 'lvl_a2', label: 'A2', order: 2, framework: 'CEFR' },
+  { id: 'lvl_b1', label: 'B1', order: 3, framework: 'CEFR' },
+  { id: 'lvl_b2', label: 'B2', order: 4, framework: 'CEFR' },
+]
+
+export const seedOwner: User = {
+  id: seedIds.owner,
+  role: 'academy_owner',
+  displayName: 'Yara Mansour',
+  email: 'owner@example.test',
+  avatarUrl: null,
 }
 
-export interface MockUnitProgress {
-  progressPercent: number
-  lessonsCompleted: number
+export const seedInstructorUser: User = {
+  id: seedIds.instructorKarim,
+  role: 'instructor',
+  displayName: 'Karim Adel',
+  email: 'instructor@example.test',
+  avatarUrl: null,
 }
 
-export interface MockEnrollment {
-  classroomId: ClassroomId
-  studentId: UserId
-  progressByUnit: Record<UnitId, MockUnitProgress>
-  lastActiveAt: string | null
+export const seedInstructors: InstructorSummary[] = [
+  { id: seedIds.instructorKarim, displayName: 'Karim Adel', email: 'karim@example.test' },
+  { id: seedIds.instructorLina, displayName: 'Lina Haddad', email: 'lina@example.test' },
+  { id: seedIds.instructorJonas, displayName: 'Jonas Weber', email: 'jonas@example.test' },
+]
+
+const learnerNames = [
+  'Layla Hassan',
+  'Omar Khaled',
+  'Nour El-Sayed',
+  'Youssef Ibrahim',
+  'Salma Adel',
+  'Ahmed Samir',
+  'Farida Mostafa',
+  'Hassan Ali',
+  'Mariam Tarek',
+  'Ziad Nabil',
+  'Rana Hany',
+  'Khaled Magdy',
+  'Aya Fathy',
+  'Tamer Sherif',
+  'Dina Sameh',
+  'Mahmoud Ezz',
+  'Sara Gamal',
+  'Ali Refaat',
+  'Hana Fawzy',
+  'Mohamed Ashraf',
+  'Yasmin Nader',
+  'Adham Salah',
+  'Nada Hosny',
+  'Bassem Rami',
+] as const
+
+interface LearnerRecord {
+  id: LearnerId
+  displayName: string
+  email: string
 }
 
-export interface MockTest {
+const learners: LearnerRecord[] = learnerNames.map((displayName, index) => ({
+  id: `usr_learner_${String(index + 1).padStart(2, '0')}`,
+  displayName,
+  email: `learner${String(index + 1).padStart(2, '0')}@example.test`,
+}))
+
+function languageById(id: string): Language {
+  const language = seedLanguages.find((item) => item.id === id)
+  if (!language) throw new Error(`Seed language missing: ${id}`)
+  return language
+}
+
+function levelById(id: string): Level {
+  const level = seedLevels.find((item) => item.id === id)
+  if (!level) throw new Error(`Seed level missing: ${id}`)
+  return level
+}
+
+export const seedAcademy: Academy = {
+  id: seedIds.academy,
+  name: 'Demo Academy',
+  status: 'active',
+  languageIds: seedLanguages.map((language) => language.id),
+  contactEmail: 'academy@example.test',
+  createdAt: isoAt(-180, 9),
+}
+
+function makeCohort(input: {
   id: string
-  teacherId: UserId
-  classroomId: ClassroomId
-  title: string
-  description: string | null
-  status: 'draft' | 'published'
-  source: TestSource
-  createdAt: string
-  updatedAt: string
-  publishedAt: string | null
-}
-
-export interface MockDatabase {
-  users: User[]
-  subjects: CurriculumSubject[]
-  units: CurriculumUnit[]
-  classrooms: MockClassroom[]
-  enrollments: MockEnrollment[]
-  materials: Material[]
-  tests: MockTest[]
-  questions: Question[]
-  attempts: MockAttempt[]
-  /** RBAC grants by user (assistant permissions are backend-owned). */
-  capabilities: Record<UserId, NavCapability[]>
-  /** Parent → child links. */
-  parentLinks: Record<UserId, UserId[]>
-  threads: MessageThread[]
-  messages: Message[]
-  /** Backend-supplied result scores by attempt id (never computed by the UI). */
-  resultScores: Record<string, number | null>
-  sessionUserId: UserId | null
-}
-
-/**
- * Attempt as the mock stores it. The score is NOT stored on the attempt: it is
- * a backend-supplied value (`MockDatabase.resultScores`), exactly like the
- * parent projection reads it, so the mock has one source of truth and the
- * adapters map it on the way out.
- */
-export type MockAttempt = Omit<Attempt, 'scorePercent'>
-
-export interface MockQuestionBankItem {
-  prompt: string
-  options: string[]
-  correctIndex: number
-  excerpt: string
-}
-
-/** Grounded draft bank. Keyed by `material:<id>` or `unit:<id>`. */
-export const mockQuestionBank: Record<string, MockQuestionBankItem[]> = {
-  [`material:${seedIds.materialDerivatives}`]: [
-    {
-      prompt: 'ما مشتقة الدالة f(x) = x²؟',
-      options: ['2x', 'x', 'x³', '2'],
-      correctIndex: 0,
-      excerpt: 'مشتقة الدالة x^n هي n·x^(n−1).',
-    },
-    {
-      prompt: 'ما مشتقة أي دالة ثابتة؟',
-      options: ['1', '0', 'الدالة نفسها', 'لا يمكن حسابها'],
-      correctIndex: 1,
-      excerpt: 'مشتقة أي دالة ثابتة تساوي صفرًا.',
-    },
-    {
-      prompt: 'أي قاعدة نستخدمها لاشتقاق حاصل ضرب دالتين؟',
-      options: ['قاعدة الجمع', 'قاعدة الضرب', 'قاعدة القسمة'],
-      correctIndex: 1,
-      excerpt: 'عند اشتقاق حاصل ضرب دالتين نستخدم قاعدة الضرب.',
-    },
-    {
-      prompt: 'ما هي المشتقة الثانية؟',
-      options: [
-        'مشتقة المشتقة الأولى',
-        'مربع المشتقة الأولى',
-        'تكامل المشتقة الأولى',
-      ],
-      correctIndex: 0,
-      excerpt: 'المشتقة الثانية هي مشتقة المشتقة الأولى.',
-    },
-  ],
-  [`unit:${seedIds.unitDerivatives}`]: [
-    {
-      prompt: 'ما الذي تقيسه المشتقة؟',
-      options: [
-        'معدل التغير اللحظي للدالة',
-        'المساحة تحت المنحنى',
-        'قيمة الدالة عند الصفر',
-      ],
-      correctIndex: 0,
-      excerpt: 'المشتقة تقيس معدل التغير اللحظي للدالة.',
-    },
-    {
-      prompt: 'ما مشتقة x^n؟',
-      options: ['n·x^(n−1)', 'x^(n+1)', 'n·x^n'],
-      correctIndex: 0,
-      excerpt: 'مشتقة الدالة x^n هي n·x^(n−1).',
-    },
-  ],
-  [`unit:${seedIds.unitIntegration}`]: [
-    {
-      prompt: 'ما العلاقة بين التكامل والاشتقاق؟',
-      options: [
-        'التكامل هو العملية العكسية للاشتقاق',
-        'التكامل هو ضرب المشتقة في الدالة',
-        'لا توجد علاقة بينهما',
-      ],
-      correctIndex: 0,
-      excerpt: 'التكامل هو العملية العكسية للاشتقاق.',
-    },
-    {
-      prompt: 'ما تكامل x^n بالنسبة لـ x؟',
-      options: [
-        'x^(n+1)/(n+1) + C',
-        'n·x^(n−1) + C',
-        'x^n + C',
-      ],
-      correctIndex: 0,
-      excerpt: 'تكامل x^n هو x^(n+1)/(n+1) + C.',
-    },
-  ],
-  [`unit:${seedIds.unitMotion}`]: [
-    {
-      prompt: 'كيف نحسب السرعة المتوسطة؟',
-      options: [
-        'الإزاحة مقسومة على الزمن',
-        'الزمن مقسومًا على الإزاحة',
-        'العجلة مضروبة في الزمن',
-      ],
-      correctIndex: 0,
-      excerpt: 'السرعة المتوسطة تساوي الإزاحة مقسومة على الزمن.',
-    },
-    {
-      prompt: 'ما العجلة؟',
-      options: [
-        'معدل تغير السرعة بالنسبة للزمن',
-        'المسافة الكلية المقطوعة',
-        'السرعة القياسية في لحظة معينة',
-      ],
-      correctIndex: 0,
-      excerpt: 'العجلة هي معدل تغير السرعة بالنسبة للزمن.',
-    },
-    {
-      prompt: 'أي كمية من التالي كمية متجهة؟',
-      options: ['السرعة', 'الزمن', 'الكتلة'],
-      correctIndex: 0,
-      excerpt: 'السرعة كمية متجهة.',
-    },
-  ],
-  [`material:${seedIds.materialPhysics}`]: [
-    {
-      prompt: 'ما الفرق بين السرعة والسرعة القياسية؟',
-      options: [
-        'السرعة كمية متجهة، والسرعة القياسية مقدار دون اتجاه',
-        'لا يوجد فرق بينهما',
-        'السرعة القياسية كمية متجهة أيضًا',
-      ],
-      correctIndex: 0,
-      excerpt: 'السرعة كمية متجهة، أما السرعة القياسية فهي مقدار السرعة دون اتجاه.',
-    },
-  ],
-}
-
-const createdAt = '2026-10-24T09:15:00.000Z'
-const updatedAt = '2026-10-30T12:40:00.000Z'
-const publishedAt = '2026-10-30T12:45:00.000Z'
-
-/** Mock convenience: which seeded user is signed in (never real auth). */
-function sessionUserIdFor(
-  session: 'teacher' | 'student' | 'assistant' | 'parent' | 'none',
-): UserId | null {
-  switch (session) {
-    case 'teacher':
-      return seedIds.teacher
-    case 'student':
-      return seedIds.studentSara
-    case 'assistant':
-      return seedIds.assistant
-    case 'parent':
-      return seedIds.parent
-    default:
-      return null
-  }
-}
-
-function option(questionId: string, index: number, text: string): QuestionOption {
-  return { id: `${questionId}_opt_${index + 1}`, text }
-}
-
-function question(input: {
-  id: string
-  testId: string
-  order: number
-  prompt: string
-  options: string[]
-  correctIndex: number
-  grounding: Question['grounding']
-  origin: Question['origin']
-  at?: string
-}): Question {
+  label: string
+  languageId: string
+  levelId: string
+  schedule: string
+  capacity: number
+  seatsFilled: number
+  status: Cohort['status']
+  instructorId: string
+  startOffset: number
+  endOffset: number
+}): Cohort {
+  const instructor = seedInstructors.find((item) => item.id === input.instructorId) ?? null
   return {
     id: input.id,
-    testId: input.testId,
-    order: input.order,
-    prompt: input.prompt,
-    options: input.options.map((text, index) =>
-      option(input.id, index, text),
-    ),
-    correctOptionId: `${input.id}_opt_${input.correctIndex + 1}`,
-    grounding: input.grounding,
-    origin: input.origin,
-    createdAt: input.at ?? createdAt,
-    updatedAt: input.at ?? updatedAt,
+    academyId: seedIds.academy,
+    label: input.label,
+    language: languageById(input.languageId),
+    level: levelById(input.levelId),
+    schedule: input.schedule,
+    capacity: input.capacity,
+    seatsFilled: input.seatsFilled,
+    seatsAvailable: input.capacity - input.seatsFilled,
+    status: input.status,
+    instructor,
+    startDate: isoDate(input.startOffset),
+    endDate: isoDate(input.endOffset),
+    price: placeholderMoney(),
+    attendanceModel: 'proposed',
   }
 }
 
-export function createSeedDatabase(options: {
-  scenario: 'seeded' | 'empty'
-  session: 'teacher' | 'student' | 'assistant' | 'parent' | 'none'
-}): MockDatabase {
-  const users: User[] = [
-    {
-      id: seedIds.teacher,
-      role: 'teacher',
-      displayName: 'أ. منى عبد الرحمن',
-      email: 'mona.teacher@bridgio.test',
-      avatarUrl: null,
-    },
-    {
-      id: seedIds.assistant,
-      role: 'assistant',
-      displayName: 'هالة محمود — مساعدة المعلم',
-      email: 'hala.assistant@bridgio.test',
-      avatarUrl: null,
-    },
-    {
-      id: seedIds.parent,
-      role: 'parent',
-      displayName: 'أ. عادل حسن — ولي أمر',
-      email: 'adel.parent@bridgio.test',
-      avatarUrl: null,
-    },
-    {
-      id: seedIds.studentSara,
-      role: 'student',
-      displayName: 'سارة محمد',
-      email: 'sara.student@bridgio.test',
-      avatarUrl: null,
-    },
-    {
-      id: seedIds.studentOmar,
-      role: 'student',
-      displayName: 'عمر خالد',
-      email: 'omar.student@bridgio.test',
-      avatarUrl: null,
-    },
-    {
-      id: seedIds.studentYoussef,
-      role: 'student',
-      displayName: 'يوسف علي',
-      email: 'youssef.student@bridgio.test',
-      avatarUrl: null,
-    },
-  ]
+export const seedCohorts: Cohort[] = [
+  makeCohort({
+    id: seedIds.cohortGermanA2,
+    label: 'German A2 — Evening',
+    languageId: 'lang_de',
+    levelId: 'lvl_a2',
+    schedule: 'Sun & Tue · 18:00–19:30',
+    capacity: 18,
+    seatsFilled: 14,
+    status: 'active',
+    instructorId: seedIds.instructorKarim,
+    startOffset: -28,
+    endOffset: 56,
+  }),
+  makeCohort({
+    id: seedIds.cohortDutchB1,
+    label: 'Dutch B1 — Morning',
+    languageId: 'lang_nl',
+    levelId: 'lvl_b1',
+    schedule: 'Mon & Wed · 09:00–10:30',
+    capacity: 16,
+    seatsFilled: 16,
+    status: 'published',
+    instructorId: seedIds.instructorLina,
+    startOffset: 14,
+    endOffset: 112,
+  }),
+  makeCohort({
+    id: seedIds.cohortItalianA1,
+    label: 'Italian A1 — Evening',
+    languageId: 'lang_it',
+    levelId: 'lvl_a1',
+    schedule: 'Tue & Thu · 19:00–20:30',
+    capacity: 20,
+    seatsFilled: 9,
+    status: 'draft',
+    instructorId: seedIds.instructorJonas,
+    startOffset: 28,
+    endOffset: 126,
+  }),
+  makeCohort({
+    id: seedIds.cohortGermanB2,
+    label: 'German B2 — Intensive',
+    languageId: 'lang_de',
+    levelId: 'lvl_b2',
+    schedule: 'Daily · 10:00–12:00',
+    capacity: 12,
+    seatsFilled: 12,
+    status: 'completed',
+    instructorId: seedIds.instructorKarim,
+    startOffset: -84,
+    endOffset: -28,
+  }),
+]
 
-  /**
-   * RBAC grants. The assistant is deliberately granted some teacher
-   * capabilities and NOT others, so the sidebar can prove it hides the rest.
-   */
-  const capabilities: Record<UserId, NavCapability[]> = {
-    [seedIds.teacher]: ['dashboard', 'classes', 'tests', 'students'],
-    [seedIds.assistant]: ['dashboard', 'tests'],
-    [seedIds.parent]: [],
-    [seedIds.studentSara]: [],
-    [seedIds.studentOmar]: [],
-    [seedIds.studentYoussef]: [],
-  }
+const attendancePatterns: AttendanceMark[][] = [
+  [
+    'present',
+    'present',
+    'present',
+    'present',
+    'present',
+    'present',
+    'present',
+    'present',
+    'present',
+    'present',
+    'present',
+    'present',
+  ],
+  [
+    'present',
+    'late',
+    'present',
+    'present',
+    'absent',
+    'present',
+    'present',
+    'excused',
+    'present',
+    'present',
+    'present',
+    'present',
+  ],
+  [
+    'late',
+    'present',
+    'present',
+    'excused',
+    'present',
+    'absent',
+    'present',
+    'present',
+    'present',
+    'late',
+    'present',
+    'present',
+  ],
+]
 
-  /** Parent → child links (demo only). */
-  const parentLinks: Record<UserId, UserId[]> = {
-    [seedIds.parent]: [seedIds.studentSara, seedIds.studentOmar],
-  }
+function statusFor(memberIndex: number, sessionIndex: number): AttendanceMark {
+  const pattern = attendancePatterns[sessionIndex % attendancePatterns.length]
+  if (!pattern) return 'present'
+  return pattern[memberIndex % pattern.length] ?? 'present'
+}
 
-  const subjects: CurriculumSubject[] = [
-    {
-      id: seedIds.subjectMath,
-      name: 'الرياضيات',
-      gradeLevel: 'الصف الثالث الثانوي',
-      unitCount: 2,
-    },
-    {
-      id: seedIds.subjectPhysics,
-      name: 'الفيزياء',
-      gradeLevel: 'الصف الثالث الثانوي',
-      unitCount: 1,
-    },
-  ]
-
-  const units: CurriculumUnit[] = [
-    {
-      id: seedIds.unitDerivatives,
-      subjectId: seedIds.subjectMath,
-      subjectName: 'الرياضيات',
-      title: 'التفاضل: المشتقات',
-      description:
-        'تعريف المشتقة وقواعد الاشتقاق وتطبيقاتها. المشتقة تقيس معدل التغير اللحظي للدالة. مشتقة الدالة x^n هي n·x^(n−1). مشتقة أي دالة ثابتة تساوي صفرًا. عند اشتقاق حاصل ضرب دالتين نستخدم قاعدة الضرب.',
-      order: 1,
-      lessonCount: 4,
-    },
-    {
-      id: seedIds.unitIntegration,
-      subjectId: seedIds.subjectMath,
-      subjectName: 'الرياضيات',
-      title: 'التكامل',
-      description:
-        'التكامل هو العملية العكسية للاشتقاق. تكامل x^n هو x^(n+1)/(n+1) + C. التكامل المحدد يحسب المساحة تحت المنحنى.',
-      order: 2,
-      lessonCount: 3,
-    },
-    {
-      id: seedIds.unitMotion,
-      subjectId: seedIds.subjectPhysics,
-      subjectName: 'الفيزياء',
-      title: 'الحركة في خط مستقيم',
-      description:
-        'السرعة المتوسطة تساوي الإزاحة مقسومة على الزمن. السرعة كمية متجهة، أما السرعة القياسية فهي مقدار السرعة دون اتجاه. العجلة هي معدل تغير السرعة بالنسبة للزمن. في الحركة بعجلة ثابتة نستخدم معادلات الحركة الثلاث.',
-      order: 1,
-      lessonCount: 4,
-    },
-  ]
-
-  const classrooms: MockClassroom[] = [
-    {
-      id: seedIds.classMath,
-      teacherId: seedIds.teacher,
-      name: 'الصف الثالث الثانوي — أ',
-      subjectId: seedIds.subjectMath,
-      gradeLevel: 'الصف الثالث الثانوي',
-      description: 'فصل الرياضيات — مراجعة التفاضل والتكامل.',
-      certificateNote: null,
-      createdAt,
-      unitIds: [seedIds.unitDerivatives, seedIds.unitIntegration],
-    },
-    {
-      id: seedIds.classPhysics,
-      teacherId: seedIds.teacher,
-      name: 'الصف الثالث الثانوي — ب',
-      subjectId: seedIds.subjectPhysics,
-      gradeLevel: 'الصف الثالث الثانوي',
-      description: 'فصل الفيزياء — الحركة في خط مستقيم.',
-      certificateNote: null,
-      createdAt,
-      unitIds: [seedIds.unitMotion],
-    },
-  ]
-
-  if (options.scenario === 'empty') {
-    return {
-      users,
-      subjects,
-      units,
-      classrooms: [],
-      enrollments: [],
-      materials: [],
-      tests: [],
-      questions: [],
-      attempts: [],
-      capabilities,
-      parentLinks,
-      threads: [],
-      messages: [],
-      resultScores: {},
-      sessionUserId: sessionUserIdFor(options.session),
-    }
-  }
-
-  const materials: Material[] = [
-    {
-      id: seedIds.materialDerivatives,
-      teacherId: seedIds.teacher,
-      classroomId: seedIds.classMath,
-      unitId: seedIds.unitDerivatives,
-      title: 'مذكرة التفاضل — قواعد الاشتقاق',
-      kind: 'text',
-      status: 'ready',
-      textContent:
-        'المشتقة تقيس معدل التغير اللحظي للدالة. مشتقة الدالة x^n هي n·x^(n−1). مشتقة أي دالة ثابتة تساوي صفرًا. عند اشتقاق حاصل ضرب دالتين نستخدم قاعدة الضرب: (f·g)′ = f′·g + f·g′. عند اشتقاق خارج قسمة دالتين نستخدم قاعدة القسمة. المشتقة الثانية هي مشتقة المشتقة الأولى.',
-      sourceUrl: null,
-      wordCount: 43,
-      createdAt,
-    },
-    {
-      id: seedIds.materialPhysics,
-      teacherId: seedIds.teacher,
-      classroomId: seedIds.classPhysics,
-      unitId: seedIds.unitMotion,
-      title: 'مذكرة الفيزياء — الحركة',
-      kind: 'text',
-      status: 'ready',
-      textContent:
-        'السرعة المتوسطة تساوي الإزاحة مقسومة على الزمن. السرعة كمية متجهة، أما السرعة القياسية فهي مقدار السرعة دون اتجاه. العجلة هي معدل تغير السرعة بالنسبة للزمن. في الحركة بعجلة ثابتة نستخدم معادلات الحركة الثلاث.',
-      sourceUrl: null,
-      wordCount: 34,
-      createdAt,
-    },
-  ]
-
-  const tests: MockTest[] = [
-    {
-      id: seedIds.testDerivatives,
-      teacherId: seedIds.teacher,
-      classroomId: seedIds.classMath,
-      title: 'اختبار قواعد الاشتقاق',
-      description: 'اختبار قصير على قواعد الاشتقاق الأساسية.',
-      status: 'published',
-      source: {
-        kind: 'material',
-        materialId: seedIds.materialDerivatives,
-        unitId: seedIds.unitDerivatives,
-        label: 'مذكرة التفاضل — قواعد الاشتقاق',
-      },
-      createdAt,
-      updatedAt,
-      publishedAt,
-    },
-    {
-      id: seedIds.testIntegration,
-      teacherId: seedIds.teacher,
-      classroomId: seedIds.classMath,
-      title: 'اختبار التكامل — الوحدة الثانية',
-      description: 'اختبار قصير على التكامل كعملية عكسية للاشتقاق.',
-      status: 'published',
-      source: {
-        kind: 'curriculum_unit',
-        materialId: null,
-        unitId: seedIds.unitIntegration,
-        label: 'التكامل',
-      },
-      createdAt: '2026-11-02T16:20:00.000Z',
-      updatedAt: '2026-11-02T16:30:00.000Z',
-      publishedAt: '2026-11-02T16:30:00.000Z',
-    },
-    {
-      id: seedIds.testIntegrationDraft,
-      teacherId: seedIds.teacher,
-      classroomId: seedIds.classMath,
-      title: 'مراجعة التكامل',
-      description: null,
-      status: 'draft',
-      source: {
-        kind: 'curriculum_unit',
-        materialId: null,
-        unitId: seedIds.unitIntegration,
-        label: 'التكامل',
-      },
-      createdAt: updatedAt,
-      updatedAt,
-      publishedAt: null,
-    },
-    {
-      id: seedIds.testPhysics,
-      teacherId: seedIds.teacher,
-      classroomId: seedIds.classPhysics,
-      title: 'اختبار الحركة — الوحدة الأولى',
-      description: 'اختبار على مفاهيم السرعة والعجلة.',
-      status: 'published',
-      source: {
-        kind: 'material',
-        materialId: seedIds.materialPhysics,
-        unitId: seedIds.unitMotion,
-        label: 'مذكرة الفيزياء — الحركة',
-      },
-      createdAt,
-      updatedAt,
-      publishedAt,
-    },
-  ]
-
-  const derivativesGrounding: Question['grounding'] = [
-    {
-      kind: 'material',
-      materialId: seedIds.materialDerivatives,
-      unitId: seedIds.unitDerivatives,
-      label: 'مذكرة التفاضل — قواعد الاشتقاق',
-      excerpt: 'مشتقة الدالة x^n هي n·x^(n−1).',
-    },
-  ]
-
-  const physicsGrounding: Question['grounding'] = [
-    {
-      kind: 'material',
-      materialId: seedIds.materialPhysics,
-      unitId: seedIds.unitMotion,
-      label: 'مذكرة الفيزياء — الحركة',
-      excerpt: 'السرعة المتوسطة تساوي الإزاحة مقسومة على الزمن.',
-    },
-  ]
-
-  const integrationGrounding: Question['grounding'] = [
-    {
-      kind: 'curriculum_unit',
-      materialId: null,
-      unitId: seedIds.unitIntegration,
-      label: 'التكامل',
-      excerpt: 'التكامل هو العملية العكسية للاشتقاق.',
-    },
-  ]
-
-  const questions: Question[] = [
-    question({
-      id: 'q_deriv_1',
-      testId: seedIds.testDerivatives,
-      order: 1,
-      prompt: 'ما مشتقة الدالة f(x) = x²؟',
-      options: ['2x', 'x', 'x³', '2'],
-      correctIndex: 0,
-      grounding: derivativesGrounding,
-      origin: 'mohsen',
-    }),
-    question({
-      id: 'q_deriv_2',
-      testId: seedIds.testDerivatives,
-      order: 2,
-      prompt: 'ما مشتقة أي دالة ثابتة؟',
-      options: ['1', '0', 'الدالة نفسها', 'لا يمكن حسابها'],
-      correctIndex: 1,
-      grounding: derivativesGrounding,
-      origin: 'mohsen',
-    }),
-    question({
-      id: 'q_deriv_3',
-      testId: seedIds.testDerivatives,
-      order: 3,
-      prompt: 'أي قاعدة نستخدمها لاشتقاق حاصل ضرب دالتين؟',
-      options: ['قاعدة الجمع', 'قاعدة الضرب', 'قاعدة القسمة'],
-      correctIndex: 1,
-      grounding: [],
-      origin: 'teacher',
-    }),
-    question({
-      id: 'q_integration_1',
-      testId: seedIds.testIntegrationDraft,
-      order: 1,
-      prompt: 'ما العلاقة بين التكامل والاشتقاق؟',
-      options: [
-        'التكامل هو العملية العكسية للاشتقاق',
-        'التكامل هو ضرب المشتقة في الدالة',
-        'لا توجد علاقة بينهما',
-      ],
-      correctIndex: 0,
-      grounding: integrationGrounding,
-      origin: 'mohsen',
-    }),
-    question({
-      id: 'q_integ_1',
-      testId: seedIds.testIntegration,
-      order: 1,
-      prompt: 'ما العلاقة بين التكامل والاشتقاق؟',
-      options: [
-        'التكامل هو العملية العكسية للاشتقاق',
-        'التكامل هو ضرب المشتقة في الدالة',
-        'لا توجد علاقة بينهما',
-      ],
-      correctIndex: 0,
-      grounding: [
-        {
-          kind: 'curriculum_unit',
-          materialId: null,
-          unitId: seedIds.unitIntegration,
-          label: 'التكامل',
-          excerpt: 'التكامل هو العملية العكسية للاشتقاق.',
-        },
-      ],
-      origin: 'mohsen',
-      at: '2026-11-02T16:24:00.000Z',
-    }),
-    question({
-      id: 'q_integ_2',
-      testId: seedIds.testIntegration,
-      order: 2,
-      prompt: 'ما تكامل x^n بالنسبة لـ x؟',
-      options: ['x^(n+1)/(n+1) + C', 'n·x^(n−1) + C', 'x^n + C'],
-      correctIndex: 0,
-      grounding: [
-        {
-          kind: 'curriculum_unit',
-          materialId: null,
-          unitId: seedIds.unitIntegration,
-          label: 'التكامل',
-          excerpt: 'تكامل x^n هو x^(n+1)/(n+1) + C.',
-        },
-      ],
-      origin: 'mohsen',
-      at: '2026-11-02T16:25:00.000Z',
-    }),
-    question({
-      id: 'q_integ_3',
-      testId: seedIds.testIntegration,
-      order: 3,
-      prompt: 'ما الذي يحسبه التكامل المحدد؟',
-      options: [
-        'المساحة تحت المنحنى',
-        'ميل المماس عند نقطة',
-        'قيمة الدالة عند الصفر',
-      ],
-      correctIndex: 0,
-      grounding: [],
-      origin: 'teacher',
-      at: '2026-11-02T16:27:00.000Z',
-    }),
-    question({
-      id: 'q_physics_1',
-      testId: seedIds.testPhysics,
-      order: 1,
-      prompt: 'كيف نحسب السرعة المتوسطة؟',
-      options: [
-        'الإزاحة مقسومة على الزمن',
-        'الزمن مقسومًا على الإزاحة',
-        'العجلة مضروبة في الزمن',
-      ],
-      correctIndex: 0,
-      grounding: physicsGrounding,
-      origin: 'mohsen',
-    }),
-    question({
-      id: 'q_physics_2',
-      testId: seedIds.testPhysics,
-      order: 2,
-      prompt: 'ما العجلة؟',
-      options: [
-        'معدل تغير السرعة بالنسبة للزمن',
-        'المسافة الكلية المقطوعة',
-        'السرعة القياسية في لحظة معينة',
-      ],
-      correctIndex: 0,
-      grounding: physicsGrounding,
-      origin: 'mohsen',
-    }),
-  ]
-
-  // Per-unit progress is one basis: `progressPercent` is exactly
-  // `lessonsCompleted / lessonCount`, so a unit only reads as complete when all
-  // of its lessons are done, and the class percent (the mean of these values)
-  // lines up with the completed-units count next to it.
-  const enrollments: MockEnrollment[] = [
-    {
-      classroomId: seedIds.classMath,
-      studentId: seedIds.studentSara,
-      progressByUnit: {
-        // 4 of 4 lessons — the one completed unit.
-        [seedIds.unitDerivatives]: { progressPercent: 100, lessonsCompleted: 4 },
-        // 1 of 3 lessons.
-        [seedIds.unitIntegration]: { progressPercent: 33, lessonsCompleted: 1 },
-      },
-      lastActiveAt: '2026-10-31T18:20:00.000Z',
-    },
-    {
-      classroomId: seedIds.classMath,
-      studentId: seedIds.studentOmar,
-      progressByUnit: {
-        // 1 of 4 lessons.
-        [seedIds.unitDerivatives]: { progressPercent: 25, lessonsCompleted: 1 },
-        [seedIds.unitIntegration]: { progressPercent: 0, lessonsCompleted: 0 },
-      },
-      lastActiveAt: '2026-10-29T08:05:00.000Z',
-    },
-    {
-      classroomId: seedIds.classPhysics,
-      studentId: seedIds.studentYoussef,
-      progressByUnit: {
-        // 1 of 4 lessons.
-        [seedIds.unitMotion]: { progressPercent: 25, lessonsCompleted: 1 },
-      },
-      lastActiveAt: '2026-10-30T20:10:00.000Z',
-    },
-  ]
-
-  const findQuestionIds = (testId: string) =>
-    questions
-      .filter((item) => item.testId === testId)
-      .sort((a, b) => a.order - b.order)
-
-  const saraAttemptQuestions = findQuestionIds(seedIds.testDerivatives)
-  const saraAnswers = saraAttemptQuestions.map((item, index) => ({
-    questionId: item.id,
-    optionId: index === 0 ? (item.options[0]?.id ?? null) : null,
-    answeredAt: index === 0 ? '2026-10-31T18:20:00.000Z' : null,
-  }))
-
-  const omarAttemptQuestions = findQuestionIds(seedIds.testDerivatives)
-  const omarAnswers = omarAttemptQuestions.map((item) => ({
-    questionId: item.id,
-    optionId: item.options[0]?.id ?? null,
-    answeredAt: '2026-10-29T08:05:00.000Z',
-  }))
-
-  const youssefAttemptQuestions = findQuestionIds(seedIds.testPhysics)
-  const youssefAnswers = youssefAttemptQuestions.map((item) => ({
-    questionId: item.id,
-    optionId: null,
-    answeredAt: null,
-  }))
-
-  /**
-   * Sara's submitted attempt on the published integration test — the demo row
-   * for a scored result. The score itself is NOT here: it comes from
-   * `resultScores` below, and nothing in this build marks an answer or derives a
-   * score from these picks. They are demo content only.
-   */
-  const saraIntegrationQuestions = findQuestionIds(seedIds.testIntegration)
-  const saraIntegrationPicks = [0, 1, 0]
-  const saraIntegrationAnswers = saraIntegrationQuestions.map((item, index) => ({
-    questionId: item.id,
-    optionId: item.options[saraIntegrationPicks[index] ?? 0]?.id ?? null,
-    answeredAt: '2026-11-02T17:52:00.000Z',
-  }))
-
-  const attempts: MockAttempt[] = [
-    {
-      id: 'attempt_sara_deriv',
-      testId: seedIds.testDerivatives,
-      testTitle: 'اختبار قواعد الاشتقاق',
-      classroomId: seedIds.classMath,
-      classroomName: 'الصف الثالث الثانوي — أ',
-      studentId: seedIds.studentSara,
-      status: 'in_progress',
-      answeredCount: saraAnswers.filter((answer) => answer.optionId !== null).length,
-      questionCount: saraAttemptQuestions.length,
-      answers: saraAnswers,
-      startedAt: '2026-10-31T18:10:00.000Z',
-      submittedAt: null,
-    },
-    {
-      id: 'attempt_omar_deriv',
-      testId: seedIds.testDerivatives,
-      testTitle: 'اختبار قواعد الاشتقاق',
-      classroomId: seedIds.classMath,
-      classroomName: 'الصف الثالث الثانوي — أ',
-      studentId: seedIds.studentOmar,
-      status: 'submitted',
-      answeredCount: omarAnswers.length,
-      questionCount: omarAttemptQuestions.length,
-      answers: omarAnswers,
-      startedAt: '2026-10-29T07:55:00.000Z',
-      submittedAt: '2026-10-29T08:05:00.000Z',
-    },
-    {
-      id: 'attempt_sara_integration',
-      testId: seedIds.testIntegration,
-      testTitle: 'اختبار التكامل — الوحدة الثانية',
-      classroomId: seedIds.classMath,
-      classroomName: 'الصف الثالث الثانوي — أ',
-      studentId: seedIds.studentSara,
-      status: 'submitted',
-      answeredCount: saraIntegrationAnswers.filter(
-        (answer) => answer.optionId !== null,
-      ).length,
-      questionCount: saraIntegrationQuestions.length,
-      answers: saraIntegrationAnswers,
-      startedAt: '2026-11-02T17:40:00.000Z',
-      submittedAt: '2026-11-02T17:58:00.000Z',
-    },
-    {
-      id: 'attempt_youssef_physics',
-      testId: seedIds.testPhysics,
-      testTitle: 'اختبار الحركة — الوحدة الأولى',
-      classroomId: seedIds.classPhysics,
-      classroomName: 'الصف الثالث الثانوي — ب',
-      studentId: seedIds.studentYoussef,
-      status: 'in_progress',
-      answeredCount: 0,
-      questionCount: youssefAttemptQuestions.length,
-      answers: youssefAnswers,
-      startedAt: '2026-10-30T20:10:00.000Z',
-      submittedAt: null,
-    },
-  ]
-
-  /**
-   * Backend-supplied result scores (demo values only). The frontend never
-   * computes these; `null` means the backend has not produced a score yet.
-   */
-  const resultScores: Record<string, number | null> = {
-    attempt_omar_deriv: 67,
-    attempt_sara_integration: 67,
-    attempt_sara_deriv: null,
-    attempt_youssef_physics: null,
-  }
-
-  const teacherParticipant = {
-    role: 'teacher' as const,
-    name: 'أ. منى عبد الرحمن',
-  }
-  const assistantParticipant = {
-    role: 'assistant' as const,
-    name: 'هالة محمود — مساعدة المعلم',
-  }
-  const parentParticipant = {
-    role: 'parent' as const,
-    name: 'أ. عادل حسن — ولي أمر',
-  }
-
-  const threads: MessageThread[] = [
-    {
-      id: seedIds.threadTeacher,
-      title: `${teacherParticipant.name}`,
-      participant: teacherParticipant,
-      lastMessageAt: '2026-10-31T19:05:00.000Z',
-    },
-    {
-      id: seedIds.threadAssistant,
-      title: `${assistantParticipant.name}`,
-      participant: assistantParticipant,
-      lastMessageAt: '2026-10-30T17:40:00.000Z',
-    },
-    {
-      id: seedIds.threadTeacherAssistant,
-      title: `${assistantParticipant.name}`,
-      participant: assistantParticipant,
-      lastMessageAt: '2026-10-30T15:20:00.000Z',
-    },
-  ]
-
-  const messages: Message[] = [
-    {
-      id: 'msg_parent_teacher_1',
-      threadId: seedIds.threadTeacher,
-      author: parentParticipant,
-      fromMe: false,
-      body: 'مساء الخير، عايز أطمّن على مستوى سارة في اختبار الاشتقاق.',
-      sentAt: '2026-10-31T18:50:00.000Z',
-    },
-    {
-      id: 'msg_parent_teacher_2',
-      threadId: seedIds.threadTeacher,
-      author: teacherParticipant,
-      fromMe: false,
-      body: 'أهلًا بيك. سارة بتابع معاها أول بأول، والنتيجة هتظهر عندك في تبويب النتائج بمجرد ما التصحيح يخلص.',
-      sentAt: '2026-10-31T19:05:00.000Z',
-    },
-    {
-      id: 'msg_parent_assistant_1',
-      threadId: seedIds.threadAssistant,
-      author: parentParticipant,
-      fromMe: false,
-      body: 'ممكن أعرف مواعيد المراجعة الجاية؟',
-      sentAt: '2026-10-30T17:30:00.000Z',
-    },
-    {
-      id: 'msg_parent_assistant_2',
-      threadId: seedIds.threadAssistant,
-      author: assistantParticipant,
-      fromMe: false,
-      body: 'المراجعة يوم الأربع القادم. هبلغك لو الموعد اتغيّر.',
-      sentAt: '2026-10-30T17:40:00.000Z',
-    },
-    {
-      id: 'msg_teacher_assistant_1',
-      threadId: seedIds.threadTeacherAssistant,
-      author: assistantParticipant,
-      fromMe: false,
-      body: 'جهّزت مذكرة التفاضل للنشر على الصف.',
-      sentAt: '2026-10-30T15:20:00.000Z',
-    },
-  ]
-
+function emptySummary(): AttendanceSummary {
   return {
-    users,
-    subjects,
-    units,
-    classrooms,
-    enrollments,
-    materials,
-    tests,
-    questions,
-    attempts,
-    capabilities,
-    parentLinks,
-    threads,
-    messages,
-    resultScores,
-    sessionUserId: sessionUserIdFor(options.session),
+    present: 0,
+    late: 0,
+    absent: 0,
+    excused: 0,
+    recordedSessions: 0,
+    attendanceRate: null,
   }
 }
+
+function attendanceRate(summary: AttendanceSummary): number | null {
+  const counted = summary.present + summary.late + summary.absent
+  if (counted === 0) return null
+  return Math.round(((summary.present + summary.late) / counted) * 100)
+}
+
+function rosterFor(cohort: Cohort, offset: number): RosterMember[] {
+  return learners.slice(offset, offset + cohort.seatsFilled).map((learner) => ({
+    learnerId: learner.id,
+    displayName: learner.displayName,
+    email: learner.email,
+    status: cohort.status === 'draft' ? 'invited' : 'active',
+    joinedAt: isoAt(-30 + offset, 9),
+    attendance: emptySummary(),
+  }))
+}
+
+function sessionsFor(cohort: Cohort, index: number): CohortSession[] {
+  const pastCount = cohort.status === 'draft' ? 0 : cohort.status === 'completed' ? 5 : 3
+  const upcomingCount = cohort.status === 'completed' ? 0 : 2
+  const sessions: CohortSession[] = []
+  for (let i = pastCount; i > 0; i -= 1) {
+    sessions.push({
+      id: `${cohort.id}_sess_past_${i}`,
+      cohortId: cohort.id,
+      topic: `Session ${pastCount - i + 1}: ${
+        cohort.language.label
+      } ${cohort.level.label} practice`,
+      startsAt: isoAt(-7 * i, 18),
+      durationMinutes: 90,
+      status: 'completed',
+      attendanceRecorded: true,
+    })
+  }
+  for (let i = 1; i <= upcomingCount; i += 1) {
+    sessions.push({
+      id: `${cohort.id}_sess_next_${i}`,
+      cohortId: cohort.id,
+      topic: `Session ${pastCount + i}: ${cohort.language.label} ${
+        cohort.level.label
+      } practice`,
+      startsAt: isoAt(i * 7 + index, 18),
+      durationMinutes: 90,
+      status: 'scheduled',
+      attendanceRecorded: false,
+    })
+  }
+  return sessions
+}
+
+function buildRostersAndAttendance(): {
+  rosters: Record<CohortId, RosterMember[]>
+  sessions: Record<CohortId, CohortSession[]>
+  attendance: Record<SessionId, AttendanceRecord[]>
+} {
+  const rosters: Record<CohortId, RosterMember[]> = {}
+  const sessions: Record<CohortId, CohortSession[]> = {}
+  const attendance: Record<SessionId, AttendanceRecord[]> = {}
+
+  seedCohorts.forEach((cohort, cohortIndex) => {
+    const members = rosterFor(cohort, cohortIndex * 3)
+    const cohortSessions = sessionsFor(cohort, cohortIndex)
+    sessions[cohort.id] = cohortSessions
+
+    for (const session of cohortSessions) {
+      if (!session.attendanceRecorded) continue
+      const records: AttendanceRecord[] = members.map((member, memberIndex) => ({
+        learnerId: member.learnerId,
+        status: statusFor(memberIndex + cohortIndex, cohortSessions.indexOf(session)),
+        note: null,
+      }))
+      attendance[session.id] = records
+      records.forEach((record, memberIndex) => {
+        const summary = members[memberIndex]?.attendance
+        if (!summary) return
+        summary.recordedSessions += 1
+        if (record.status === 'not_recorded') return
+        summary[record.status] += 1
+      })
+    }
+
+    members.forEach((member) => {
+      member.attendance.attendanceRate = attendanceRate(member.attendance)
+    })
+    rosters[cohort.id] = members
+  })
+
+  return { rosters, sessions, attendance }
+}
+
+const rosterData = buildRostersAndAttendance()
+
+export const seedRosters = rosterData.rosters
+export const seedSessions = rosterData.sessions
+export const seedAttendance = rosterData.attendance
+
+function descriptorSet(
+  emerging: string,
+  developing: string,
+  competent: string,
+  strong: string,
+): RubricDescriptor[] {
+  return [
+    { band: 1, label: 'Emerging', descriptor: emerging },
+    { band: 2, label: 'Developing', descriptor: developing },
+    { band: 3, label: 'Competent', descriptor: competent },
+    { band: 4, label: 'Strong', descriptor: strong },
+  ]
+}
+
+function dimension(
+  id: string,
+  key: RubricDimension['key'],
+  weightPercent: number,
+  descriptors: RubricDescriptor[],
+  assessed = true,
+): RubricDimension {
+  return { id, key, assessed, weightPercent, descriptors }
+}
+
+const standardDimensions = (prefix: string): RubricDimension[] => [
+  dimension(
+    `${prefix}_pron`,
+    'pronunciation',
+    20,
+    descriptorSet(
+      'Frequent errors make the message hard to follow.',
+      'Understandable with noticeable effort for the listener.',
+      'Clear and understandable with minor errors.',
+      'Clear, natural and easy to follow throughout.',
+    ),
+  ),
+  dimension(
+    `${prefix}_flu`,
+    'fluency',
+    20,
+    descriptorSet(
+      'Long pauses and fragmented answers.',
+      'Steady with some hesitation and repair.',
+      'Mostly steady with occasional hesitation.',
+      'Steady, connected and confident delivery.',
+    ),
+  ),
+  dimension(
+    `${prefix}_emp`,
+    'empathy',
+    20,
+    descriptorSet(
+      'Does not recognise the customer concern.',
+      'Acknowledges the concern briefly.',
+      'Acknowledges the concern and responds appropriately.',
+      'Acknowledges, reassures and adapts the response.',
+    ),
+  ),
+  dimension(
+    `${prefix}_vocab`,
+    'vocabulary',
+    20,
+    descriptorSet(
+      'Limited range for the task.',
+      'Basic range with repetition.',
+      'Sufficient range for the task.',
+      'Flexible, precise range for the task.',
+    ),
+  ),
+  dimension(
+    `${prefix}_listen`,
+    'listening',
+    20,
+    descriptorSet(
+      'Needs repetition to understand the task.',
+      'Understands simple questions with support.',
+      'Understands the main points at natural speed.',
+      'Understands detail and nuance at natural speed.',
+    ),
+  ),
+]
+
+function lesson(
+  id: string,
+  title: string,
+  objective: string,
+  order: number,
+  durationMinutes: number,
+  kind: Lesson['kind'],
+  languageId: string,
+): Lesson {
+  return {
+    id,
+    title,
+    objective,
+    order,
+    durationMinutes,
+    kind,
+    contentLanguage: languageById(languageId),
+    materials: [
+      {
+        id: `${id}_mat_1`,
+        title: 'Lesson notes',
+        kind: 'text',
+        url: null,
+      },
+      {
+        id: `${id}_mat_2`,
+        title: 'Audio practice',
+        kind: 'audio',
+        url: null,
+      },
+    ],
+  }
+}
+
+export const seedCurricula: Curriculum[] = [
+  {
+    id: seedIds.curriculumGermanA2,
+    academyId: seedIds.academy,
+    title: 'Workplace German — A2',
+    description:
+      'A practical A2 course for shift handovers, customer calls and escalation language.',
+    status: 'published',
+    language: languageById('lang_de'),
+    level: levelById('lvl_a2'),
+    updatedAt: isoAt(-2, 11),
+    units: [
+      {
+        id: 'unit_de_a2_shift',
+        title: 'Starting a shift',
+        objective: 'Hand over a shift clearly and confirm the next task.',
+        order: 1,
+        lessons: [
+          lesson(
+            'les_de_a2_shift_1',
+            'Schichtübergabe',
+            'Die wichtigsten Begriffe für die Schichtübergabe verstehen und anwenden.',
+            1,
+            45,
+            'lesson',
+            'lang_de',
+          ),
+          lesson(
+            'les_de_a2_shift_2',
+            'Dienstplan lesen',
+            'Einen Dienstplan lesen und die eigene Schicht bestätigen.',
+            2,
+            45,
+            'practice',
+            'lang_de',
+          ),
+          lesson(
+            'les_de_a2_shift_3',
+            'Checkpoint: Schichtübergabe',
+            'Eine kurze Übergabe verständlich zusammenfassen.',
+            3,
+            30,
+            'assessment',
+            'lang_de',
+          ),
+        ],
+      },
+      {
+        id: 'unit_de_a2_calls',
+        title: 'Customer calls',
+        objective: 'Open a call, confirm the request and close politely.',
+        order: 2,
+        lessons: [
+          lesson(
+            'les_de_a2_calls_1',
+            'Anruf eröffnen',
+            'Ein Gespräch höflich eröffnen und den Anliegen bestätigen.',
+            1,
+            45,
+            'lesson',
+            'lang_de',
+          ),
+          lesson(
+            'les_de_a2_calls_2',
+            'Anliegen klären',
+            'Rückfragen stellen und das Anliegen korrekt zusammenfassen.',
+            2,
+            45,
+            'practice',
+            'lang_de',
+          ),
+        ],
+      },
+      {
+        id: 'unit_de_a2_escalate',
+        title: 'Escalating an issue',
+        objective: 'Escalate a case with the facts the next team needs.',
+        order: 3,
+        lessons: [
+          lesson(
+            'les_de_a2_escalate_1',
+            'Fall weitergeben',
+            'Einen Fall strukturiert und respektvoll weitergeben.',
+            1,
+            45,
+            'lesson',
+            'lang_de',
+          ),
+        ],
+      },
+    ],
+  },
+  {
+    id: seedIds.curriculumDutchB1,
+    academyId: seedIds.academy,
+    title: 'Customer Support Dutch — B1',
+    description: 'A B1 support course focused on written clarity and call control.',
+    status: 'published',
+    language: languageById('lang_nl'),
+    level: levelById('lvl_b1'),
+    updatedAt: isoAt(-9, 15),
+    units: [
+      {
+        id: 'unit_nl_b1_written',
+        title: 'Written support',
+        objective: 'Write clear, polite replies within the support tone.',
+        order: 1,
+        lessons: [
+          lesson(
+            'les_nl_b1_written_1',
+            'Een duidelijke reactie',
+            'Een duidelijk en vriendelijk antwoord schrijven.',
+            1,
+            45,
+            'lesson',
+            'lang_nl',
+          ),
+          lesson(
+            'les_nl_b1_written_2',
+            'Samenvatten',
+            'Een klantvraag correct samenvatten.',
+            2,
+            45,
+            'practice',
+            'lang_nl',
+          ),
+        ],
+      },
+      {
+        id: 'unit_nl_b1_calls',
+        title: 'Call control',
+        objective: 'Keep a call on track and confirm the next step.',
+        order: 2,
+        lessons: [
+          lesson(
+            'les_nl_b1_calls_1',
+            'Het gesprek sturen',
+            'Een gesprek vriendelijk en doelgericht sturen.',
+            1,
+            45,
+            'lesson',
+            'lang_nl',
+          ),
+        ],
+      },
+    ],
+  },
+  {
+    id: seedIds.curriculumItalianA1,
+    academyId: seedIds.academy,
+    title: 'Italian A1 — Arrival',
+    description: 'Draft A1 course for first contact and everyday workplace phrases.',
+    status: 'draft',
+    language: languageById('lang_it'),
+    level: levelById('lvl_a1'),
+    updatedAt: isoAt(-1, 10),
+    units: [
+      {
+        id: 'unit_it_a1_hello',
+        title: 'First contact',
+        objective: 'Greet a colleague and introduce yourself.',
+        order: 1,
+        lessons: [
+          lesson(
+            'les_it_a1_hello_1',
+            'Ciao, mi presento',
+            'Sich vorstellen und einfache Begrüßungen verwenden.',
+            1,
+            45,
+            'lesson',
+            'lang_it',
+          ),
+        ],
+      },
+    ],
+  },
+]
+
+function rubric(
+  id: string,
+  title: string,
+  languageId: string,
+  levelId: string,
+  version: number,
+  status: Rubric['status'],
+  dimensions: RubricDimension[],
+  coverageNote: string | null,
+): Rubric {
+  return {
+    id,
+    academyId: seedIds.academy,
+    title,
+    version,
+    status,
+    language: languageById(languageId),
+    level: levelById(levelId),
+    dimensions,
+    updatedAt: isoAt(-3, 16),
+    coverageNote,
+  }
+}
+
+const dutchDimensions = standardDimensions('rub_nl')
+const dutchListening = dutchDimensions[4]
+if (dutchListening) {
+  dutchDimensions[4] = {
+    ...dutchListening,
+    assessed: false,
+    weightPercent: 0,
+  }
+}
+
+export const seedRubrics: Rubric[] = [
+  rubric(
+    seedIds.rubricGermanA2,
+    'German A2 — Workplace speaking',
+    'lang_de',
+    'lvl_a2',
+    3,
+    'published',
+    standardDimensions('rub_de'),
+    'Speaking coverage only. Writing and listening coverage are not confirmed.',
+  ),
+  rubric(
+    seedIds.rubricDutchB1,
+    'Dutch B1 — Support calls',
+    'lang_nl',
+    'lvl_b1',
+    1,
+    'draft',
+    dutchDimensions,
+    'Listening is not assessed in this draft.',
+  ),
+  rubric(
+    seedIds.rubricItalianA1,
+    'Italian A1 — First contact',
+    'lang_it',
+    'lvl_a1',
+    1,
+    'draft',
+    standardDimensions('rub_it'),
+    null,
+  ),
+]
+
+export const seedEarnings: EarningsLedger = {
+  summary: {
+    available: placeholderMoney(),
+    pending: placeholderMoney(),
+    held: placeholderMoney(),
+    paidToDate: placeholderMoney(),
+    nextPayoutDate: isoDate(14),
+    payoutAccountStatus: 'pending',
+    provisional: true,
+    updatedAt: isoAt(0, 8),
+  },
+  entries: [
+    {
+      id: 'led_001',
+      date: isoDate(-3),
+      type: 'tuition',
+      status: 'available',
+      description: 'Cohort tuition — German A2 — Evening',
+      amount: placeholderMoney(),
+      cohortId: seedIds.cohortGermanA2,
+      cohortLabel: 'German A2 — Evening',
+      reference: 'INV-DEMO-001',
+    },
+    {
+      id: 'led_002',
+      date: isoDate(-3),
+      type: 'platform_fee',
+      status: 'available',
+      description: 'Platform fee — German A2 — Evening',
+      amount: placeholderMoney(),
+      cohortId: seedIds.cohortGermanA2,
+      cohortLabel: 'German A2 — Evening',
+      reference: 'FEE-DEMO-001',
+    },
+    {
+      id: 'led_003',
+      date: isoDate(-7),
+      type: 'instructor_share',
+      status: 'held',
+      description: 'Instructor share — German A2 — Evening',
+      amount: placeholderMoney(),
+      cohortId: seedIds.cohortGermanA2,
+      cohortLabel: 'German A2 — Evening',
+      reference: 'INS-DEMO-001',
+    },
+    {
+      id: 'led_004',
+      date: isoDate(-7),
+      type: 'escrow_hold',
+      status: 'held',
+      description: 'Escrow hold until session verification',
+      amount: placeholderMoney(),
+      cohortId: seedIds.cohortGermanA2,
+      cohortLabel: 'German A2 — Evening',
+      reference: 'ESC-DEMO-001',
+    },
+    {
+      id: 'led_005',
+      date: isoDate(-14),
+      type: 'tuition',
+      status: 'pending',
+      description: 'Cohort tuition — Dutch B1 — Morning',
+      amount: placeholderMoney(),
+      cohortId: seedIds.cohortDutchB1,
+      cohortLabel: 'Dutch B1 — Morning',
+      reference: 'INV-DEMO-002',
+    },
+    {
+      id: 'led_006',
+      date: isoDate(-28),
+      type: 'payout',
+      status: 'paid',
+      description: 'Payout — previous cycle',
+      amount: placeholderMoney(),
+      cohortId: null,
+      cohortLabel: null,
+      reference: 'PAY-DEMO-001',
+    },
+    {
+      id: 'led_007',
+      date: isoDate(-35),
+      type: 'adjustment',
+      status: 'reversed',
+      description: 'Adjustment — duplicate ledger line',
+      amount: placeholderMoney(),
+      cohortId: null,
+      cohortLabel: null,
+      reference: 'ADJ-DEMO-001',
+    },
+    {
+      id: 'led_008',
+      date: isoDate(-42),
+      type: 'tuition',
+      status: 'paid',
+      description: 'Cohort tuition — German B2 — Intensive',
+      amount: placeholderMoney(),
+      cohortId: seedIds.cohortGermanB2,
+      cohortLabel: 'German B2 — Intensive',
+      reference: 'INV-DEMO-003',
+    },
+  ],
+  payoutSchedule: [
+    {
+      id: 'pay_sched_1',
+      label: 'Next scheduled payout',
+      date: isoDate(14),
+      amount: placeholderMoney(),
+      status: 'scheduled',
+    },
+    {
+      id: 'pay_sched_2',
+      label: 'Following payout',
+      date: isoDate(28),
+      amount: placeholderMoney(),
+      status: 'scheduled',
+    },
+    {
+      id: 'pay_sched_3',
+      label: 'Previous payout',
+      date: isoDate(-28),
+      amount: placeholderMoney(),
+      status: 'paid',
+    },
+  ],
+}
+
+const supportParticipant = {
+  role: 'support' as const,
+  name: 'BRIDGIO Academy Support',
+}
+
+const instructorParticipant = {
+  role: 'instructor' as const,
+  name: 'Karim Adel',
+}
+
+export const seedThreads: MessageThread[] = [
+  {
+    id: seedIds.threadSupport,
+    title: 'Academy support',
+    participant: supportParticipant,
+    lastMessageAt: isoAt(-1, 14),
+  },
+  {
+    id: seedIds.threadInstructor,
+    title: 'German A2 — check-in',
+    participant: instructorParticipant,
+    lastMessageAt: isoAt(0, 8),
+  },
+]
+
+export const seedMessages: Message[] = [
+  {
+    id: 'msg_001',
+    threadId: seedIds.threadSupport,
+    author: supportParticipant,
+    fromMe: false,
+    body: 'Welcome to the academy preview. Calibration and payout steps are demo-only until the BFF is connected.',
+    sentAt: isoAt(-2, 10),
+    lang: 'en',
+    dir: 'ltr',
+  },
+  {
+    id: 'msg_002',
+    threadId: seedIds.threadSupport,
+    author: {
+      role: 'academy_owner',
+      name: seedOwner.displayName,
+    },
+    fromMe: true,
+    body: 'Understood. I am reviewing the cohort roster and attendance sheet now.',
+    sentAt: isoAt(-2, 11),
+    lang: 'en',
+    dir: 'ltr',
+  },
+  {
+    id: 'msg_003',
+    threadId: seedIds.threadSupport,
+    author: supportParticipant,
+    fromMe: false,
+    body: 'The attendance model is marked proposed on the screen. No attendance figure is a claim.',
+    sentAt: isoAt(-1, 14),
+    lang: 'en',
+    dir: 'ltr',
+  },
+  {
+    id: 'msg_004',
+    threadId: seedIds.threadInstructor,
+    author: instructorParticipant,
+    fromMe: false,
+    body: 'أهلًا بك. سجل الحضور للجلسة الأخيرة جاهز للمراجعة.',
+    sentAt: isoAt(0, 7),
+    lang: 'ar',
+    dir: 'rtl',
+  },
+  {
+    id: 'msg_005',
+    threadId: seedIds.threadInstructor,
+    author: {
+      role: 'academy_owner',
+      name: seedOwner.displayName,
+    },
+    fromMe: true,
+    body: 'Thanks. I will review the German A2 roster before the next session.',
+    sentAt: isoAt(0, 8),
+    lang: 'en',
+    dir: 'ltr',
+  },
+]
+
+export interface SeedData {
+  academy: Academy
+  owner: User
+  instructors: InstructorSummary[]
+  languages: Language[]
+  levels: Level[]
+  cohorts: Cohort[]
+  rosters: Record<CohortId, RosterMember[]>
+  sessions: Record<CohortId, CohortSession[]>
+  attendance: Record<SessionId, AttendanceRecord[]>
+  curricula: Curriculum[]
+  rubrics: Rubric[]
+  earnings: EarningsLedger
+  threads: MessageThread[]
+  messages: Message[]
+}
+
+/** A fresh, mutable copy per adapter instance; no data survives a reload. */
+export function createSeed(): SeedData {
+  return {
+    academy: { ...seedAcademy, languageIds: [...seedAcademy.languageIds] },
+    owner: { ...seedOwner },
+    instructors: seedInstructors.map((item) => ({ ...item })),
+    languages: seedLanguages.map((item) => ({ ...item })),
+    levels: seedLevels.map((item) => ({ ...item })),
+    cohorts: seedCohorts.map((item) => ({
+      ...item,
+      language: { ...item.language },
+      level: { ...item.level },
+      instructor: item.instructor ? { ...item.instructor } : null,
+      price: { ...item.price },
+    })),
+    rosters: Object.fromEntries(
+      Object.entries(seedRosters).map(([key, members]) => [
+        key,
+        members.map((member) => ({
+          ...member,
+          attendance: { ...member.attendance },
+        })),
+      ]),
+    ),
+    sessions: Object.fromEntries(
+      Object.entries(seedSessions).map(([key, sessions]) => [
+        key,
+        sessions.map((session) => ({ ...session })),
+      ]),
+    ),
+    attendance: Object.fromEntries(
+      Object.entries(seedAttendance).map(([key, records]) => [
+        key,
+        records.map((record) => ({ ...record })),
+      ]),
+    ),
+    curricula: seedCurricula.map((curriculum) => ({
+      ...curriculum,
+      language: { ...curriculum.language },
+      level: { ...curriculum.level },
+      units: curriculum.units.map((unit) => ({
+        ...unit,
+        lessons: unit.lessons.map((item) => ({
+          ...item,
+          contentLanguage: { ...item.contentLanguage },
+          materials: item.materials.map((material) => ({ ...material })),
+        })),
+      })),
+    })),
+    rubrics: seedRubrics.map((rubricItem) => ({
+      ...rubricItem,
+      language: { ...rubricItem.language },
+      level: { ...rubricItem.level },
+      dimensions: rubricItem.dimensions.map((item) => ({
+        ...item,
+        descriptors: item.descriptors.map((descriptor) => ({ ...descriptor })),
+      })),
+    })),
+    earnings: {
+      summary: { ...seedEarnings.summary },
+      entries: seedEarnings.entries.map((entry) => ({ ...entry })),
+      payoutSchedule: seedEarnings.payoutSchedule.map((item) => ({ ...item })),
+    },
+    threads: seedThreads.map((thread) => ({ ...thread })),
+    messages: seedMessages.map((message) => ({ ...message })),
+  }
+}
+
+/** Exported for tests that need the date helper without re-implementing it. */
+export { DAY }

@@ -1,14 +1,14 @@
-import type { TeacherDashboard } from '../../api/types'
+import type { AcademyDashboard, Money } from '../../api/types'
 import type { Lang } from '~/shell/lang'
 
 /**
- * Display-only formatters for the teacher dashboard and the parent view.
+ * Display-only formatters for the academy screens.
  *
  * These are pure presentation helpers: they never fetch, never hold persistent
- * data, and never invent a value. All counts and dates arrive from the adapter.
- * Arabic renders Arabic-Indic digits and Arabic month names; English renders
- * Western digits and English month names. The underlying numbers stay untouched
- * for the API and for ARIA.
+ * data, and never invent a value. All counts, dates and amounts arrive from the
+ * adapter. Arabic renders Arabic-Indic digits and Arabic month names; English
+ * renders Western digits and English month names. The underlying numbers stay
+ * untouched for the API and for ARIA.
  */
 
 const arabicDate = new Intl.DateTimeFormat('ar-EG', {
@@ -68,20 +68,43 @@ export function formatDate(
   return (lang === 'en' ? englishDate : arabicDate).format(date)
 }
 
+/** Localised time of day, used by the dashboard session list. */
+export function formatTime(iso: string, lang: Lang = 'ar'): string {
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) return ''
+  return new Intl.DateTimeFormat(lang === 'en' ? 'en-GB' : 'ar-EG', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+  }).format(date)
+}
+
 /**
- * True when the dashboard has no classes, no tests and no student progress —
- * the page-level empty state. Section-level empty states are handled separately
- * so one missing list never hides the others.
+ * A money field renders as a placeholder in Batch 1. `amount` is null until the
+ * legal and finance review supplies an approved value; the UI never invents a
+ * figure from a missing number.
  */
-export function isDashboardEmpty(
-  dashboard: Pick<
-    TeacherDashboard,
-    'classes' | 'recentTests' | 'studentProgress'
-  >,
+export function formatMoney(
+  money: Money,
+  placeholder: string,
+  lang: Lang = 'ar',
+): string {
+  if (money.amount === null || money.isPlaceholder) return placeholder
+  const amount = numberFor(lang).format(money.amount)
+  return `${amount} ${money.currency}`
+}
+
+/**
+ * True when the dashboard aggregate holds no cohorts, no scheduled sessions and
+ * no alerts — the page-level empty state. Section-level empty states are handled
+ * separately so one missing list never hides the others.
+ */
+export function isAcademyDashboardEmpty(
+  dashboard: Pick<AcademyDashboard, 'cohorts' | 'upcomingSessions' | 'alerts'>,
 ): boolean {
   return (
-    dashboard.classes.length === 0 &&
-    dashboard.recentTests.length === 0 &&
-    dashboard.studentProgress.length === 0
+    dashboard.cohorts.length === 0 &&
+    dashboard.upcomingSessions.length === 0 &&
+    dashboard.alerts.length === 0
   )
 }

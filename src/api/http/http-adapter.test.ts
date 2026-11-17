@@ -39,6 +39,21 @@ function methodPaths(api: BridgioApi): string[] {
   return paths.sort()
 }
 
+function adapter(fetchImpl: typeof fetch) {
+  return createHttpApi({
+    baseUrl: BASE_URL,
+    requestTimeoutMs: 1_000,
+    fetchImpl,
+  })
+}
+
+function json(body: unknown): Response {
+  return new Response(JSON.stringify(body), {
+    status: 200,
+    headers: { 'content-type': 'application/json' },
+  })
+}
+
 describe('http adapter — interface parity', () => {
   it('implements the same method names as the mock adapter', () => {
     const { fetchImpl } = fakeFetch()
@@ -51,16 +66,25 @@ describe('http adapter — interface parity', () => {
     expect(methodPaths(http)).toEqual(methodPaths(mock))
     expect(http.mode).toBe('http')
   })
+
+  it('reports the same PROPOSED status as the mock adapter', async () => {
+    const { fetchImpl } = fakeFetch()
+    const info = await createHttpApi({
+      baseUrl: BASE_URL,
+      requestTimeoutMs: 1_000,
+      fetchImpl,
+    }).system.getInfo()
+    expect(info).toMatchObject({
+      mode: 'http',
+      endpointStatus: 'PROPOSED',
+      mockScenario: null,
+    })
+  })
 })
 
 describe('http adapter — request construction', () => {
-  it('builds the PROPOSED path, attaches the optional bearer token and parses JSON', async () => {
-    const { fetchImpl, calls } = fakeFetch(() =>
-      new Response(JSON.stringify({ teacher: { id: 't1' } }), {
-        status: 200,
-        headers: { 'content-type': 'application/json' },
-      }),
-    )
+  it('builds a PROPOSED path, attaches the optional bearer token and parses JSON', async () => {
+    const { fetchImpl, calls } = fakeFetch(() => json({ id: 'acad_demo' }))
     const http = createHttpApi({
       baseUrl: BASE_URL,
       requestTimeoutMs: 1_000,
@@ -68,77 +92,207 @@ describe('http adapter — request construction', () => {
       fetchImpl,
     })
 
-    const result = await http.teachers.getDashboard({ teacherId: 't1' })
-    expect(result).toEqual({ teacher: { id: 't1' } })
+    const result = await http.academies.get()
+    expect(result).toEqual({ id: 'acad_demo' })
     expect(calls).toHaveLength(1)
-    expect(calls[0]?.url).toBe(`${BASE_URL}/teachers/t1/dashboard`)
+    expect(calls[0]?.url).toBe(`${BASE_URL}/academies/current`)
     expect(calls[0]?.init?.method).toBe('GET')
     expect(
       (calls[0]?.init?.headers as Record<string, string>).Authorization,
     ).toBe('Bearer demo-token')
   })
 
-  it('serialises query parameters and JSON bodies', async () => {
+  it('encodes path ids and serialises JSON bodies', async () => {
     const { fetchImpl, calls } = fakeFetch(() =>
-      new Response(JSON.stringify({ id: 'test_1' }), {
-        status: 200,
-        headers: { 'content-type': 'application/json' },
-      }),
+      json({ id: 'coh_1', localizations: [] }),
     )
-    const http = createHttpApi({
-      baseUrl: BASE_URL,
-      requestTimeoutMs: 1_000,
-      fetchImpl,
-    })
+    const http = adapter(fetchImpl)
 
-    await http.students.getProgress({
-      studentId: 's1',
-      classroomId: 'c1',
-    })
+    await http.languages.listLevels({ languageId: 'lang de/1' })
     expect(calls[0]?.url).toBe(
-      `${BASE_URL}/students/s1/progress?classroomId=c1`,
+      `${BASE_URL}/languages/lang%20de%2F1/levels`,
     )
 
-    await http.tests.createDraft({
-      teacherId: 't1',
-      classroomId: 'c1',
-      title: 'اختبار',
-      description: null,
-      source: { kind: 'curriculum_unit', unitId: 'u1' },
+    await http.cohorts.get({ cohortId: 'coh 1' })
+    expect(calls[1]?.url).toBe(`${BASE_URL}/cohorts/coh%201`)
+
+    await http.messages.sendMessage({
+      threadId: 'thr_1',
+      body: 'Hello',
     })
-    expect(calls[1]?.init?.method).toBe('POST')
-    expect(JSON.parse(String(calls[1]?.init?.body))).toMatchObject({
-      teacherId: 't1',
-      classroomId: 'c1',
-      source: { kind: 'curriculum_unit', unitId: 'u1' },
+    expect(calls[2]?.init?.method).toBe('POST')
+    expect(calls[2]?.url).toBe(`${BASE_URL}/messages/threads/thr_1/messages`)
+    expect(JSON.parse(String(calls[2]?.init?.body))).toEqual({
+      body: 'Hello',
     })
   })
 
   it('returns undefined for 204 responses', async () => {
     const { fetchImpl } = fakeFetch(() => new Response(null, { status: 204 }))
-    const http = createHttpApi({
-      baseUrl: BASE_URL,
-      requestTimeoutMs: 1_000,
-      fetchImpl,
+    await expect(adapter(fetchImpl).auth.signOut()).resolves.toBeUndefined()
+  })
+})
+
+describe('http adapter — academy and cohort routes', () => {
+  it('reads the academy dashboard and onboarding from the proposal', async () => {
+    const { fetchImpl, calls } = fakeFetch(() => json({}))
+    const http = adapter(fetchImpl)
+
+    await http.academies.getDashboard()
+    await http.academies.getOnboarding()
+    await http.academies.completeOnboardingStep({
+      academyId: 'acad_demo',
+      stepId: 'sample_lesson',
     })
-    await expect(http.auth.signOut()).resolves.toBeUndefined()
+
+    expect(calls.map((call) => [call.init?.method, call.url])).toEqual([
+      ['GET', `${BASE_URL}/academies/current/dashboard`],
+      ['GET', `${BASE_URL}/academies/current/onboarding`],
+      [
+        'POST',
+        `${BASE_URL}/academies/current/onboarding/steps/sample_lesson/complete`,
+      ],
+    ])
+  })
+
+  it('creates and publishes a cohort through the proposal', async () => {
+    const { fetchImpl, calls } = fakeFetch(() => json({ id: 'coh_1' }))
+    const http = adapter(fetchImpl)
+    const input = {
+      languageId: 'lang_de',
+      levelId: 'lvl_a2',
+      label: 'German A2 — Evening',
+      schedule: 'Sun & Tue · 18:00–19:30',
+      capacity: 18,
+      instructorId: 'usr_instructor',
+      startDate: '2027-01-10',
+      endDate: '2027-04-10',
+    }
+
+    await http.cohorts.create(input)
+    await http.cohorts.publish({ cohortId: 'coh_1' })
+
+    expect(calls[0]?.init?.method).toBe('POST')
+    expect(calls[0]?.url).toBe(`${BASE_URL}/cohorts`)
+    expect(JSON.parse(String(calls[0]?.init?.body))).toEqual(input)
+    expect(calls[1]?.url).toBe(`${BASE_URL}/cohorts/coh_1/publish`)
+  })
+
+  it('reads and writes one session attendance sheet on the same path', async () => {
+    const { fetchImpl, calls } = fakeFetch(() => json({ records: [] }))
+    const http = adapter(fetchImpl)
+    const records = [{ learnerId: 'usr_learner_01', status: 'present' as const }]
+
+    await http.cohorts.getAttendanceSheet({
+      cohortId: 'coh_1',
+      sessionId: 'sess_1',
+    })
+    await http.cohorts.markAttendance({
+      cohortId: 'coh_1',
+      sessionId: 'sess_1',
+      records,
+    })
+
+    const path = `${BASE_URL}/cohorts/coh_1/sessions/sess_1/attendance`
+    expect(calls[0]?.init?.method).toBe('GET')
+    expect(calls[0]?.url).toBe(path)
+    expect(calls[1]?.init?.method).toBe('PUT')
+    expect(calls[1]?.url).toBe(path)
+    expect(JSON.parse(String(calls[1]?.init?.body))).toEqual({ records })
+  })
+})
+
+describe('http adapter — curriculum and rubric routes', () => {
+  it('sends units and lessons under their curriculum and unit', async () => {
+    const { fetchImpl, calls } = fakeFetch(() => json({ id: 'cur_1' }))
+    const http = adapter(fetchImpl)
+
+    await http.curricula.addUnit({
+      curriculumId: 'cur_1',
+      title: 'Starting a shift',
+      objective: 'Hand over a shift.',
+    })
+    await http.curricula.addLesson({
+      curriculumId: 'cur_1',
+      unitId: 'unit_1',
+      title: 'Schichtübergabe',
+      objective: 'Hand over clearly.',
+      durationMinutes: 45,
+      contentLanguageId: 'lang_de',
+      kind: 'lesson',
+    })
+    await http.curricula.draftOutline({
+      curriculumId: 'cur_1',
+      unitTitle: 'Handling a complaint',
+      lessonCount: 3,
+    })
+
+    expect(calls[0]?.url).toBe(`${BASE_URL}/curricula/cur_1/units`)
+    expect(calls[1]?.url).toBe(
+      `${BASE_URL}/curricula/cur_1/units/unit_1/lessons`,
+    )
+    expect(JSON.parse(String(calls[1]?.init?.body))).toMatchObject({
+      durationMinutes: 45,
+      contentLanguageId: 'lang_de',
+      kind: 'lesson',
+    })
+    expect(calls[2]?.url).toBe(
+      `${BASE_URL}/curricula/cur_1/draft-outline`,
+    )
+    expect(JSON.parse(String(calls[2]?.init?.body))).toEqual({
+      unitTitle: 'Handling a complaint',
+      lessonCount: 3,
+    })
+  })
+
+  it('patches one rubric dimension and posts the publish action', async () => {
+    const { fetchImpl, calls } = fakeFetch(() => json({ id: 'rub_1' }))
+    const http = adapter(fetchImpl)
+    const descriptors = [
+      { band: 1, label: 'Emerging', descriptor: 'Hard to follow.' },
+    ]
+
+    await http.rubrics.updateDimension({
+      rubricId: 'rub_1',
+      dimensionId: 'dim_1',
+      weightPercent: 20,
+      descriptors,
+    })
+    await http.rubrics.publish({ rubricId: 'rub_1' })
+
+    expect(calls[0]?.init?.method).toBe('PATCH')
+    expect(calls[0]?.url).toBe(
+      `${BASE_URL}/rubrics/rub_1/dimensions/dim_1`,
+    )
+    expect(JSON.parse(String(calls[0]?.init?.body))).toEqual({
+      weightPercent: 20,
+      descriptors,
+    })
+    expect(calls[1]?.url).toBe(`${BASE_URL}/rubrics/rub_1/publish`)
+  })
+})
+
+describe('http adapter — earnings ledger', () => {
+  it('reads the provisional ledger from the proposal', async () => {
+    const { fetchImpl, calls } = fakeFetch(() => json({ entries: [] }))
+    const ledger = await adapter(fetchImpl).earnings.getLedger()
+    expect(ledger).toEqual({ entries: [] })
+    expect(calls[0]?.init?.method).toBe('GET')
+    expect(calls[0]?.url).toBe(`${BASE_URL}/earnings/ledger`)
   })
 })
 
 describe('http adapter — getSession null handling', () => {
-  const adapterFor = (fetchImpl: typeof fetch) =>
-    createHttpApi({ baseUrl: BASE_URL, requestTimeoutMs: 1_000, fetchImpl })
-
   it('returns null, not undefined, for a 204 response', async () => {
     const { fetchImpl } = fakeFetch(() => new Response(null, { status: 204 }))
-    const session = await adapterFor(fetchImpl).auth.getSession()
+    const session = await adapter(fetchImpl).auth.getSession()
     expect(session).toBeNull()
     expect(session).not.toBeUndefined()
   })
 
   it('returns null for a 200 response with an empty body', async () => {
     const { fetchImpl } = fakeFetch(() => new Response('', { status: 200 }))
-    await expect(adapterFor(fetchImpl).auth.getSession()).resolves.toBeNull()
+    await expect(adapter(fetchImpl).auth.getSession()).resolves.toBeNull()
   })
 
   it('returns null for a 200 response with a JSON null body', async () => {
@@ -149,73 +303,21 @@ describe('http adapter — getSession null handling', () => {
           headers: { 'content-type': 'application/json' },
         }),
     )
-    await expect(adapterFor(fetchImpl).auth.getSession()).resolves.toBeNull()
+    await expect(adapter(fetchImpl).auth.getSession()).resolves.toBeNull()
   })
 
   it('still returns the session when the backend sends one', async () => {
-    const payload = { user: { id: 't1', role: 'teacher' } }
-    const { fetchImpl } = fakeFetch(
-      () =>
-        new Response(JSON.stringify(payload), {
-          status: 200,
-          headers: { 'content-type': 'application/json' },
-        }),
-    )
-    await expect(adapterFor(fetchImpl).auth.getSession()).resolves.toEqual(
+    const payload = { user: { id: 'usr_1', role: 'academy_owner' } }
+    const { fetchImpl } = fakeFetch(() => json(payload))
+    await expect(adapter(fetchImpl).auth.getSession()).resolves.toEqual(
       payload,
     )
   })
 
   it('leaves void methods such as signOut resolving undefined, not null', async () => {
     const { fetchImpl } = fakeFetch(() => new Response(null, { status: 204 }))
-    const result = await adapterFor(fetchImpl).auth.signOut()
+    const result = await adapter(fetchImpl).auth.signOut()
     expect(result).toBeUndefined()
-  })
-})
-
-describe('http adapter — student question list', () => {
-  it('uses a PROPOSED student route that is separate from the teacher route', async () => {
-    const { fetchImpl, calls } = fakeFetch(
-      () =>
-        new Response('[]', {
-          status: 200,
-          headers: { 'content-type': 'application/json' },
-        }),
-    )
-    const http = createHttpApi({
-      baseUrl: BASE_URL,
-      requestTimeoutMs: 1_000,
-      fetchImpl,
-    })
-
-    await http.questions.listForStudentTest({ testId: 't1' })
-    await http.questions.listForTest({ testId: 't1' })
-
-    expect(calls[0]?.init?.method).toBe('GET')
-    expect(calls[0]?.url).toBe(`${BASE_URL}/tests/t1/student-questions`)
-    expect(calls[1]?.url).toBe(`${BASE_URL}/tests/t1/questions`)
-  })
-})
-
-describe('http adapter — teacher test attempts', () => {
-  it('uses the PROPOSED per-test attempts route', async () => {
-    const { fetchImpl, calls } = fakeFetch(
-      () =>
-        new Response('[]', {
-          status: 200,
-          headers: { 'content-type': 'application/json' },
-        }),
-    )
-    const http = createHttpApi({
-      baseUrl: BASE_URL,
-      requestTimeoutMs: 1_000,
-      fetchImpl,
-    })
-
-    await http.attempts.listForTest({ testId: 'test_1' })
-
-    expect(calls[0]?.init?.method).toBe('GET')
-    expect(calls[0]?.url).toBe(`${BASE_URL}/tests/test_1/attempts`)
   })
 })
 
@@ -223,25 +325,22 @@ describe('http adapter — errors', () => {
   it('maps backend errors to ApiError with the shared code', async () => {
     const { fetchImpl } = fakeFetch(() =>
       new Response(
-        JSON.stringify({ code: 'NOT_FOUND', message: 'Test not found.' }),
+        JSON.stringify({ code: 'NOT_FOUND', message: 'Cohort not found.' }),
         {
           status: 404,
           headers: { 'content-type': 'application/json' },
         },
       ),
     )
-    const http = createHttpApi({
-      baseUrl: BASE_URL,
-      requestTimeoutMs: 1_000,
-      fetchImpl,
-    })
 
-    const error = await http.tests.get({ testId: 'missing' }).catch((value) => value)
+    const error = await adapter(fetchImpl)
+      .cohorts.get({ cohortId: 'missing' })
+      .catch((value) => value)
     expect(error).toBeInstanceOf(ApiError)
     expect(error).toMatchObject({
       code: 'NOT_FOUND',
       status: 404,
-      message: 'Test not found.',
+      message: 'Cohort not found.',
     })
   })
 
@@ -249,13 +348,10 @@ describe('http adapter — errors', () => {
     const fetchImpl = (async () => {
       throw new TypeError('offline')
     }) as typeof fetch
-    const http = createHttpApi({
-      baseUrl: BASE_URL,
-      requestTimeoutMs: 1_000,
-      fetchImpl,
-    })
 
-    const error = await http.auth.getSession().catch((value) => value)
+    const error = await adapter(fetchImpl)
+      .auth.getSession()
+      .catch((value) => value)
     expect(error).toBeInstanceOf(ApiError)
     expect(error).toMatchObject({ code: 'NETWORK' })
   })

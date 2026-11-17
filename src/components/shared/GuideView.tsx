@@ -26,7 +26,9 @@ export function GuideView() {
 
       <section className="guide" aria-labelledby="guide-heading">
         <header className="guide__head">
-          <p className="guide__role">{strings.profile.roles[role]}</p>
+          <p className="guide__role">
+            {strings.profile.roles[role === 'academy' ? 'academy_owner' : 'instructor']}
+          </p>
           <h2 id="guide-heading">{walkthrough.title}</h2>
           <p className="section-lead">{walkthrough.lead}</p>
         </header>

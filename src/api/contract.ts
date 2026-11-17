@@ -1,56 +1,43 @@
 import type {
+  Academy,
+  AcademyDashboard,
+  AcademyOnboarding,
+  AddLessonInput,
+  AddUnitInput,
   AdapterInfo,
-  AskMohsenInput,
-  Attempt,
-  AttemptId,
-  AttemptSummary,
-  ClassroomDetail,
-  ClassroomId,
-  ClassroomStudent,
-  ClassroomSummary,
-  CreateMaterialInput,
-  CreateQuestionInput,
-  CreateTestDraftInput,
-  CurriculumSubject,
-  CurriculumUnit,
-  DraftQuestionsInput,
-  DraftQuestionsResult,
-  Material,
-  MaterialId,
+  AttendanceSheet,
+  Cohort,
+  CohortList,
+  CompleteOnboardingStepInput,
+  CreateCohortInput,
+  CreateCurriculumInput,
+  Curriculum,
+  CurriculumList,
+  DraftCurriculumOutlineInput,
+  EarningsLedger,
+  Language,
+  LanguageId,
+  Level,
+  MarkAttendanceInput,
   Message,
   MessageThread,
-  MohsenAnswer,
-  ParentOverview,
-  ParentProfile,
-  Question,
-  QuestionId,
-  ReorderQuestionsInput,
-  SaveAnswerInput,
+  MohsenCurriculumDraft,
+  PublishCohortInput,
+  PublishCurriculumInput,
+  PublishRubricInput,
+  Roster,
+  Rubric,
+  RubricList,
   SendMessageInput,
   SendMessageResult,
   Session,
   SignInInput,
-  StartAttemptInput,
-  StudentProfile,
-  StudentProgress,
-  StudentQuestion,
-  SubjectId,
-  SubmitAttemptInput,
-  TeacherDashboard,
-  TeacherProfile,
-  Test,
-  TestAttemptSummary,
-  TestId,
-  TestSummary,
-  UnitId,
-  UpdateQuestionInput,
-  UpdateTestInput,
-  UserCapabilities,
-  UserId,
+  UpdateAcademyProfileInput,
+  UpdateRubricDimensionInput,
 } from './types'
 
 /**
- * BRIDGIO API CONTRACT v0.1 — PROPOSED ONLY.
+ * BRIDGIO Learn-to-Hire API CONTRACT v0.2 — PROPOSED ONLY.
  *
  * Mentingo's local source was deleted by the owner (2026-11-01), so there are NO
  * confirmed Mentingo endpoints in this build. EVERY method below is
@@ -79,50 +66,118 @@ export interface BridgioApi {
     signOut(): Promise<void>
   }
 
-  teachers: {
-    /** PROPOSED — Mentingo to implement on restore/rebuild. */
-    getProfile(input: { teacherId: UserId }): Promise<TeacherProfile>
-    /** PROPOSED — dashboard aggregate for Stage 2. */
-    getDashboard(input: { teacherId: UserId }): Promise<TeacherDashboard>
-  }
-
-  students: {
-    /** PROPOSED — Mentingo to implement on restore/rebuild. */
-    getProfile(input: { studentId: UserId }): Promise<StudentProfile>
-    /** PROPOSED — Mentingo to implement on restore/rebuild. */
-    getProgress(input: {
-      studentId: UserId
-      classroomId?: ClassroomId
-    }): Promise<StudentProgress>
-  }
-
   /**
-   * Teacher Assistant grants — PROPOSED, backend/RBAC-owned.
-   *
-   * Display-only: the frontend asks which nav capabilities were granted and
-   * hides the rest. There is no granting UI here, and no fixed assistant menu.
+   * Language and level records. The UI never hard-codes a language list; every
+   * label, code and direction comes from here.
    */
-  rbac: {
-    /** PROPOSED — Mentingo to implement on restore/rebuild. */
-    getCapabilities(input: { userId: UserId }): Promise<UserCapabilities>
+  languages: {
+    /** PROPOSED — Mentingo/BFF to implement on restore/rebuild. */
+    list(): Promise<Language[]>
+    /** PROPOSED — levels are language-scoped data, not a UI constant. */
+    listLevels(input: { languageId: LanguageId }): Promise<Level[]>
   }
 
   /**
-   * Parent view — PROPOSED, display only.
+   * Academy profile, calibration and dashboard aggregate.
    *
-   * The parent screens show what these methods return and never compute a score,
-   * mark an answer, or invent a result. `scorePercent` is backend-supplied.
+   * PROPOSED — tenant provisioning and calibration APIs are NOT VERIFIED. This
+   * is a proposed BFF aggregate, not an existing Mentingo surface.
    */
-  parents: {
-    /** PROPOSED — the signed-in parent and their linked children. */
-    getProfile(): Promise<ParentProfile>
-    /** PROPOSED — one child's progress, tests and results, assembled by the backend. */
-    getOverview(input: { childId: UserId }): Promise<ParentOverview>
+  academies: {
+    /** PROPOSED — the signed-in academy owner's academy. */
+    get(): Promise<Academy>
+    /** PROPOSED — partner onboarding and calibration state. */
+    getOnboarding(): Promise<AcademyOnboarding>
+    /** PROPOSED — one aggregate call for screen 12. */
+    getDashboard(): Promise<AcademyDashboard>
+    /** PROPOSED — update the demo partner profile. */
+    updateProfile(input: UpdateAcademyProfileInput): Promise<Academy>
+    /** PROPOSED — mark one onboarding step complete. */
+    completeOnboardingStep(
+      input: CompleteOnboardingStepInput,
+    ): Promise<AcademyOnboarding>
   }
 
   /**
-   * In-app chat — PROPOSED, mock only. Never WhatsApp or an external channel;
-   * no real-time transport and no notifications are claimed.
+   * Cohorts, roster and attendance.
+   *
+   * PROPOSED — the cohort model is a proposal; attendance is NOT VERIFIED.
+   */
+  cohorts: {
+    /** PROPOSED — cohorts with the language, level and instructor reference data. */
+    list(): Promise<CohortList>
+    /** PROPOSED — one cohort. */
+    get(input: { cohortId: string }): Promise<Cohort>
+    /** PROPOSED — create a draft cohort. */
+    create(input: CreateCohortInput): Promise<Cohort>
+    /** PROPOSED — publish seats; requires at least one available seat. */
+    publish(input: PublishCohortInput): Promise<Cohort>
+    /** PROPOSED — roster plus the session list and attendance summary. */
+    getRoster(input: { cohortId: string }): Promise<Roster>
+    /** PROPOSED — one session's attendance sheet. */
+    getAttendanceSheet(input: {
+      cohortId: string
+      sessionId: string
+    }): Promise<AttendanceSheet>
+    /** PROPOSED — save attendance for one session. */
+    markAttendance(input: MarkAttendanceInput): Promise<AttendanceSheet>
+  }
+
+  /**
+   * Curriculum and lesson builder.
+   *
+   * PROPOSED — Mentingo has no verified curriculum model. The whole resource is
+   * a proposal for the BFF.
+   */
+  curricula: {
+    /** PROPOSED — academy curricula with language and level reference data. */
+    list(): Promise<CurriculumList>
+    /** PROPOSED — one curriculum with units and lessons. */
+    get(input: { curriculumId: string }): Promise<Curriculum>
+    /** PROPOSED — create a draft curriculum. */
+    create(input: CreateCurriculumInput): Promise<Curriculum>
+    /** PROPOSED — append a unit. */
+    addUnit(input: AddUnitInput): Promise<Curriculum>
+    /** PROPOSED — append a lesson to a unit. */
+    addLesson(input: AddLessonInput): Promise<Curriculum>
+    /** PROPOSED — publish a curriculum; requires at least one lesson. */
+    publish(input: PublishCurriculumInput): Promise<Curriculum>
+    /** PROPOSED — Mohsen drafts an outline; nothing is saved until the owner adds it. */
+    draftOutline(
+      input: DraftCurriculumOutlineInput,
+    ): Promise<MohsenCurriculumDraft>
+  }
+
+  /**
+   * Structured CEFR grading rubric.
+   *
+   * PROPOSED — five-dimension coverage is NOT VERIFIED; a dimension the rubric
+   * does not assess is shown as "not assessed".
+   */
+  rubrics: {
+    /** PROPOSED — academy rubrics with language and level reference data. */
+    list(): Promise<RubricList>
+    /** PROPOSED — one rubric with dimensions and descriptors. */
+    get(input: { rubricId: string }): Promise<Rubric>
+    /** PROPOSED — update one dimension's weight and descriptors. */
+    updateDimension(input: UpdateRubricDimensionInput): Promise<Rubric>
+    /** PROPOSED — publish a rubric. */
+    publish(input: PublishRubricInput): Promise<Rubric>
+  }
+
+  /**
+   * Earnings, escrow and payout ledger.
+   *
+   * PROPOSED — every amount is a placeholder until the legal and finance review.
+   */
+  earnings: {
+    /** PROPOSED — summary, entries and payout schedule. */
+    getLedger(): Promise<EarningsLedger>
+  }
+
+  /**
+   * In-app human messages — PROPOSED, mock only. Never an external channel; no
+   * real-time transport and no notifications are claimed.
    */
   messages: {
     /** PROPOSED — the signed-in user's conversation threads. */
@@ -131,130 +186,6 @@ export interface BridgioApi {
     listMessages(input: { threadId: string }): Promise<Message[]>
     /** PROPOSED — sends a message; the mock answers with a deterministic reply. */
     sendMessage(input: SendMessageInput): Promise<SendMessageResult>
-  }
-
-  classrooms: {
-    /** PROPOSED — teacher's classes for the dashboard. */
-    listForTeacher(input: { teacherId: UserId }): Promise<ClassroomSummary[]>
-    /** PROPOSED — class detail with units. */
-    get(input: { classroomId: ClassroomId }): Promise<ClassroomDetail>
-    /** PROPOSED — roster with at-a-glance progress. */
-    listStudents(input: {
-      classroomId: ClassroomId
-    }): Promise<ClassroomStudent[]>
-  }
-
-  curriculum: {
-    /** PROPOSED — fixed Egyptian curriculum projection. */
-    listSubjects(input?: { gradeLevel?: string }): Promise<CurriculumSubject[]>
-    /** PROPOSED — units for a subject. */
-    listUnits(input: { subjectId: SubjectId }): Promise<CurriculumUnit[]>
-    /** PROPOSED — one curriculum unit. */
-    getUnit(input: { unitId: UnitId }): Promise<CurriculumUnit>
-  }
-
-  materials: {
-    /** PROPOSED — teacher-uploaded material, optional class filter. */
-    listForTeacher(input: {
-      teacherId: UserId
-      classroomId?: ClassroomId
-    }): Promise<Material[]>
-    /** PROPOSED — one material. */
-    get(input: { materialId: MaterialId }): Promise<Material>
-    /** PROPOSED — metadata-only create; binary upload is an integration gap. */
-    create(input: CreateMaterialInput): Promise<Material>
-    /** PROPOSED — Mentingo to implement on restore/rebuild. */
-    delete(input: {
-      teacherId: UserId
-      materialId: MaterialId
-    }): Promise<void>
-  }
-
-  tests: {
-    /** PROPOSED — teacher's tests, newest first. */
-    listForTeacher(input: { teacherId: UserId }): Promise<TestSummary[]>
-    /** PROPOSED — student-facing published tests for a class. */
-    listForClass(input: { classroomId: ClassroomId }): Promise<TestSummary[]>
-    /** PROPOSED — test detail. */
-    get(input: { testId: TestId }): Promise<Test>
-    /** PROPOSED — step 1 of the builder creates a draft. */
-    createDraft(input: CreateTestDraftInput): Promise<Test>
-    /** PROPOSED — edit title/description while draft. */
-    update(
-      input: UpdateTestInput & { teacherId: UserId; testId: TestId },
-    ): Promise<Test>
-    /** PROPOSED — step 4 publishes to the class; requires at least one question. */
-    publish(input: { teacherId: UserId; testId: TestId }): Promise<Test>
-    /** PROPOSED — draft-only delete. */
-    delete(input: { teacherId: UserId; testId: TestId }): Promise<void>
-  }
-
-  questions: {
-    /**
-     * PROPOSED — TEACHER-ONLY. Ordered full questions of a test for the builder,
-     * including `correctOptionId`. Student screens must not call this; they use
-     * `listForStudentTest`. The mock rejects a student session with FORBIDDEN,
-     * and a real backend must never return `correctOptionId` to a student.
-     */
-    listForTest(input: { testId: TestId }): Promise<Question[]>
-    /**
-     * PROPOSED — student-safe ordered questions of a published test, for the
-     * player. Never carries `correctOptionId`, as a value or as a property. The
-     * owning teacher may also call it (preview); the result is stripped for every
-     * caller.
-     */
-    listForStudentTest(input: { testId: TestId }): Promise<StudentQuestion[]>
-    /** PROPOSED — add a teacher-authored question. */
-    create(
-      input: CreateQuestionInput & { teacherId: UserId; testId: TestId },
-    ): Promise<Question>
-    /** PROPOSED — step 3 edit; replaces options when supplied. */
-    update(
-      input: UpdateQuestionInput & {
-        teacherId: UserId
-        testId: TestId
-        questionId: QuestionId
-      },
-    ): Promise<Question>
-    /** PROPOSED — step 3 delete before publishing. */
-    delete(input: {
-      teacherId: UserId
-      testId: TestId
-      questionId: QuestionId
-    }): Promise<void>
-    /** PROPOSED — step 3 reorder. */
-    reorder(
-      input: ReorderQuestionsInput & { teacherId: UserId; testId: TestId },
-    ): Promise<Question[]>
-  }
-
-  attempts: {
-    /** PROPOSED — student's attempts for "My Tests". */
-    listForStudent(input: { studentId: UserId }): Promise<AttemptSummary[]>
-    /**
-     * PROPOSED — NEW in Batch 2. TEACHER-ONLY: every attempt on one of the
-     * teacher's own tests, newest first, each with the student it belongs to and
-     * the backend-supplied score. The contract had `listForStudent` only, so
-     * this method is a proposal for Mentingo to implement on restore/rebuild —
-     * not an existing endpoint. The frontend shows `scorePercent` as given and
-     * never marks an answer or computes a score.
-     */
-    listForTest(input: { testId: TestId }): Promise<TestAttemptSummary[]>
-    /** PROPOSED — start or resume an in-progress attempt. */
-    start(input: StartAttemptInput): Promise<Attempt>
-    /** PROPOSED — attempt with saved answers. */
-    get(input: { attemptId: AttemptId }): Promise<Attempt>
-    /** PROPOSED — autosave one answer. */
-    saveAnswer(input: SaveAnswerInput): Promise<Attempt>
-    /** PROPOSED — records submission only. NO marking or scoring in the MVP. */
-    submit(input: SubmitAttemptInput): Promise<Attempt>
-  }
-
-  mohsen: {
-    /** PROPOSED — grounded Q&A; refusal when material does not contain the answer. */
-    ask(input: AskMohsenInput): Promise<MohsenAnswer>
-    /** PROPOSED — step 2 of the builder; grounded question drafts. */
-    draftQuestions(input: DraftQuestionsInput): Promise<DraftQuestionsResult>
   }
 
   system: {

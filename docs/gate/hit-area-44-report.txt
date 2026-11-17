@@ -1,0 +1,24 @@
+BRIDGIO LTH — 44 px hit-area gate (Batch 0)
+Base URL: http://localhost:3001
+Minimum: 44 × 44 px. Inline sentence links are listed separately.
+
+PASS  dashboard  @1920px  controls=8, failures=0, inline exceptions=0
+PASS  dashboard  @390px  controls=8, failures=0, inline exceptions=0
+PASS  cohorts  @1920px  controls=19, failures=0, inline exceptions=0
+PASS  cohorts  @390px  controls=19, failures=0, inline exceptions=0
+PASS  roster  @1920px  controls=69, failures=0, inline exceptions=0
+PASS  roster  @390px  controls=69, failures=0, inline exceptions=0
+PASS  curriculum-list  @1920px  controls=13, failures=0, inline exceptions=0
+PASS  curriculum-list  @390px  controls=13, failures=0, inline exceptions=0
+PASS  curriculum-builder  @1920px  controls=20, failures=0, inline exceptions=0
+PASS  curriculum-builder  @390px  controls=20, failures=0, inline exceptions=0
+PASS  rubric-list  @1920px  controls=8, failures=0, inline exceptions=0
+PASS  rubric-list  @390px  controls=8, failures=0, inline exceptions=0
+PASS  rubric  @1920px  controls=17, failures=0, inline exceptions=0
+PASS  rubric  @390px  controls=17, failures=0, inline exceptions=0
+PASS  earnings  @1920px  controls=5, failures=0, inline exceptions=0
+PASS  earnings  @390px  controls=5, failures=0, inline exceptions=0
+PASS  onboarding  @1920px  controls=8, failures=0, inline exceptions=0
+PASS  onboarding  @390px  controls=8, failures=0, inline exceptions=0
+
+Summary: 18/18 route/viewport runs have no non-inline control under 44 px.

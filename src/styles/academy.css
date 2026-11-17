@@ -1,0 +1,739 @@
+/*
+ * Academy and instructor screens (screens 11–17).
+ *
+ * Built only from the locked tokens in tokens.css: sticker cards (paper
+ * surface + hairline outline, no shadows), locked brand colours and logical
+ * properties so every layout mirrors in RTL. Desktop-first but never
+ * desktop-only: grids collapse to one column below 900 px and tables scroll
+ * inside their own wrapper rather than forcing the page wide.
+ */
+
+.academy {
+  --academy-gap: var(--space-6);
+}
+
+/* Demo-data banner — visible on every academy screen, never dismissible. */
+.academy-demo-notice {
+  margin: 0 0 var(--academy-gap);
+  padding: var(--space-3) var(--space-4);
+  border: var(--outline-hairline) dashed var(--border-strong);
+  border-radius: var(--radius-input);
+  background: var(--tint-cream-deep);
+  color: var(--text-secondary);
+  font-size: var(--font-caption-size);
+}
+
+.academy-greeting {
+  margin: 0 0 var(--academy-gap);
+  color: var(--text-primary);
+  font-size: var(--font-body-size);
+}
+
+/* ---- Sections ------------------------------------------------------------ */
+
+.academy-section {
+  margin-block-start: var(--space-8);
+}
+
+.academy-section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-block-end: var(--space-4);
+}
+
+.academy-section__head h2 {
+  margin: 0;
+  font-size: var(--font-display-size-h2);
+}
+
+.academy-section__lead {
+  max-width: 52rem;
+  margin-block: var(--space-2) 0;
+  color: var(--text-secondary);
+  font-size: var(--font-body-small-size);
+}
+
+.academy-section__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.academy-two-col {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(18rem, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.academy-two-col--roster {
+  grid-template-columns: minmax(18rem, 0.9fr) minmax(0, 1.6fr);
+}
+
+@media (max-width: 1280px) {
+  .academy-two-col--roster {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.academy-two-col > .academy-section {
+  margin-block-start: var(--space-8);
+}
+
+@media (max-width: 1100px) {
+  .academy-two-col {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .academy-two-col > .academy-section {
+    margin-block-start: var(--space-6);
+  }
+}
+
+/* ---- Stats --------------------------------------------------------------- */
+
+/*
+ * R1 — the provisional notice and the three summary cards read as one block.
+ * Gestalt: the outer gap (24 px) is greater than the card padding (16 px), so
+ * the group binds internally while still separating from the sections below.
+ */
+.academy-summary {
+  display: grid;
+  gap: var(--space-6);
+  margin-block-end: var(--academy-gap);
+}
+
+.academy-summary .academy-notice {
+  margin: 0;
+}
+
+.academy-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--space-4);
+  margin-block-end: var(--academy-gap);
+}
+
+.academy-summary .academy-stats {
+  margin-block-end: 0;
+}
+
+/* Dashboard: the 12-column grid replaces the auto-fit stack at 1920px so the
+   three totals and the two panels stop stretching to the edges. */
+.academy-dashboard-stats,
+.academy-dashboard-split {
+  margin-block-end: var(--academy-gap);
+}
+
+.academy-dashboard-stats .academy-stat,
+.academy-dashboard-split .academy-section {
+  height: 100%;
+}
+
+.academy-stat {
+  padding: var(--space-4);
+  border: var(--outline-hairline) solid var(--border-strong);
+  border-radius: var(--radius-card);
+  background: var(--bridgio-paper);
+}
+
+.academy-stat__label {
+  margin: 0;
+  color: var(--text-secondary);
+  font-family: var(--font-stack-ui);
+  font-size: var(--font-caption-size);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.academy-stat__value {
+  margin: var(--space-2) 0 0;
+  color: var(--text-primary);
+  font-family: var(--font-stack-ui);
+  font-size: var(--font-display-size-h2);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.academy-stat__hint {
+  margin: var(--space-1) 0 0;
+  color: var(--text-muted);
+  font-size: var(--font-caption-size);
+}
+
+/* ---- Tables -------------------------------------------------------------- */
+
+.academy-table-wrap {
+  overflow-x: auto;
+  border: var(--outline-hairline) solid var(--border-strong);
+  border-radius: var(--radius-card);
+  background: var(--bridgio-paper);
+}
+
+.academy-table {
+  width: 100%;
+  min-width: 46rem;
+  border-collapse: collapse;
+  text-align: start;
+  font-size: var(--font-body-small-size);
+}
+
+.academy-table th,
+.academy-table td {
+  padding: var(--space-3) var(--space-4);
+  border-block-end: var(--outline-hairline) solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.academy-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--bridgio-paper);
+  color: var(--text-secondary);
+  font-family: var(--font-stack-ui);
+  font-size: var(--font-caption-size);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.academy-table tbody tr:last-child td {
+  border-block-end: 0;
+}
+
+.academy-table tbody tr:hover {
+  background: var(--hover-bg);
+}
+
+.academy-table--attendance,
+.academy-table--rubric {
+  min-width: 40rem;
+}
+
+.academy-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ---- Tags, money, notices ------------------------------------------------ */
+
+.academy-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border: var(--outline-hairline) solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  font-family: var(--font-stack-ui);
+  font-size: var(--font-caption-size);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.academy-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.academy-tag-card {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  border: var(--outline-hairline) solid var(--border-strong);
+  border-radius: var(--radius-input);
+  background: var(--bridgio-paper);
+}
+
+.academy-money {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.academy-money.is-placeholder {
+  color: var(--text-muted);
+}
+
+.academy-muted {
+  color: var(--text-muted);
+  font-size: var(--font-caption-size);
+}
+
+.academy-error {
+  margin-block: var(--space-3) 0;
+  padding: var(--space-3) var(--space-4);
+  border: var(--outline-hairline) solid var(--bridgio-error);
+  border-radius: var(--radius-input);
+  color: var(--bridgio-error);
+  font-size: var(--font-body-small-size);
+}
+
+.academy-success {
+  margin-block: var(--space-3) 0;
+  color: var(--bridgio-success);
+  font-size: var(--font-body-small-size);
+  font-weight: 600;
+}
+
+.academy-notice {
+  margin-block: var(--space-4) 0;
+  padding: var(--space-3) var(--space-4);
+  border: var(--outline-hairline) solid var(--border);
+  border-inline-start: var(--outline-sticker) solid var(--bridgio-maroon);
+  border-radius: var(--radius-input);
+  background: var(--bridgio-paper);
+  color: var(--text-secondary);
+  font-size: var(--font-body-small-size);
+}
+
+.academy-notice--provisional {
+  border-inline-start-color: var(--bridgio-warning-fill);
+  background: var(--tint-cream-deep);
+}
+
+/* Provisional earnings block — states the provisional status before figures. */
+.academy-provisional {
+  padding: var(--space-4) var(--space-6);
+  border: var(--outline-sticker) solid var(--bridgio-warning-fill);
+  border-radius: var(--radius-card);
+  background: var(--bridgio-paper);
+}
+
+.academy-provisional h2 {
+  margin: var(--space-2) 0;
+  font-size: var(--font-display-size-h2);
+}
+
+.academy-provisional p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--font-body-small-size);
+}
+
+.academy-earnings-teaser {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+/* ---- Forms --------------------------------------------------------------- */
+
+.academy-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: var(--outline-hairline) solid var(--border-strong);
+  border-radius: var(--radius-card);
+  background: var(--bridgio-paper);
+}
+
+.academy-form--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.academy-form__wide {
+  grid-column: 1 / -1;
+}
+
+.academy-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding-block-start: var(--space-2);
+}
+
+.academy-form .field {
+  margin: 0;
+}
+
+.academy-inline-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+@media (max-width: 700px) {
+  .academy-form,
+  .academy-inline-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- Onboarding ---------------------------------------------------------- */
+
+.onboarding-steps {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.onboarding-step {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: var(--outline-hairline) solid var(--border-strong);
+  border-radius: var(--radius-card);
+  background: var(--bridgio-paper);
+}
+
+.onboarding-step.is-complete {
+  border-inline-start: var(--outline-sticker) solid var(--bridgio-success);
+}
+
+.onboarding-step__body {
+  flex: 1 1 20rem;
+  min-width: 0;
+}
+
+.onboarding-step__body h3 {
+  margin: 0;
+  font-size: var(--font-display-size-h3);
+}
+
+.onboarding-step__body p {
+  margin: var(--space-1) 0 0;
+  color: var(--text-secondary);
+  font-size: var(--font-body-small-size);
+}
+
+.onboarding-step__detail {
+  color: var(--text-muted);
+  font-size: var(--font-caption-size);
+}
+
+.onboarding-step__aside {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ---- Sessions ------------------------------------------------------------ */
+
+.academy-session-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.academy-session {
+  display: grid;
+  gap: var(--space-1);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: var(--outline-hairline) solid var(--border-strong);
+  border-radius: var(--radius-input);
+  background: var(--bridgio-paper);
+  color: var(--text-primary);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.academy-session:hover {
+  background: var(--hover-bg);
+}
+
+.academy-session.is-active {
+  border-color: var(--bridgio-maroon);
+  background: var(--tint-cream-deep);
+}
+
+.academy-session__topic {
+  font-weight: 600;
+}
+
+.academy-session__meta {
+  color: var(--text-muted);
+  font-size: var(--font-caption-size);
+}
+
+/* ---- Attendance marks ---------------------------------------------------- */
+
+.academy-mark-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* Marks are a toggle, not a hover story: going from secondary to pressed
+   primary cross-fades paper→maroon behind text changing maroon→cream, and
+   mid-fade the pair measures ~3.6:1. State changes are instant so the button
+   is only ever painted in one of its two compliant pairs. */
+.academy-mark-group .button {
+  transition: none;
+}
+
+/* ---- Alerts -------------------------------------------------------------- */
+
+.academy-alert-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.academy-alert {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: var(--outline-hairline) solid var(--border);
+  border-radius: var(--radius-input);
+  background: var(--bridgio-paper);
+  font-size: var(--font-body-small-size);
+}
+
+.academy-alert__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  min-height: 2rem;
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--bridgio-warning-fill);
+  /* Warning fill is amber in both themes; its text must stay dark (maroon)
+     in both. `--bridgio-maroon` flips to cream in dark, so the dark theme
+     uses `--bridgio-cream`, which flips to maroon. */
+  color: var(--bridgio-maroon);
+  font-family: var(--font-stack-ui);
+  font-size: var(--font-caption-size);
+  font-weight: 700;
+}
+
+:root[data-theme='dark'] .academy-alert__count {
+  color: var(--bridgio-cream);
+}
+
+/* ---- Curriculum ---------------------------------------------------------- */
+
+.curriculum-units {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.curriculum-unit {
+  padding: var(--space-4);
+  border: var(--outline-hairline) solid var(--border-strong);
+  border-radius: var(--radius-card);
+  background: var(--bridgio-paper);
+}
+
+.curriculum-unit__head h3 {
+  margin: 0;
+  font-size: var(--font-display-size-h3);
+}
+
+.curriculum-unit__head p {
+  margin: var(--space-1) 0 var(--space-3);
+}
+
+.curriculum-lessons {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.curriculum-lesson {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: var(--outline-hairline) solid var(--border);
+  border-radius: var(--radius-input);
+}
+
+.curriculum-lesson__body {
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.curriculum-lesson__body h4 {
+  margin: 0;
+}
+
+.curriculum-lesson__body p {
+  margin: var(--space-1) 0 0;
+  font-size: var(--font-body-small-size);
+}
+
+.curriculum-lesson__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.academy-draft {
+  margin-block-start: var(--space-4);
+  padding: var(--space-4);
+  border: var(--outline-hairline) solid var(--border-strong);
+  border-radius: var(--radius-card);
+  background: var(--tint-cream-deep);
+}
+
+.academy-draft h3 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--font-display-size-h3);
+}
+
+.academy-draft__unit {
+  margin-block-end: var(--space-4);
+  padding-block-end: var(--space-4);
+  border-block-end: var(--outline-hairline) solid var(--border);
+}
+
+.academy-draft__unit h4 {
+  margin: 0;
+}
+
+.academy-draft__unit p,
+.academy-draft__unit li {
+  font-size: var(--font-body-small-size);
+}
+
+.academy-draft__unit ul {
+  margin: var(--space-2) 0 var(--space-3);
+  padding-inline-start: var(--space-6);
+}
+
+/* ---- Rubric -------------------------------------------------------------- */
+
+.academy-weight {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.input--weight {
+  width: 5.5rem;
+}
+
+.academy-descriptors {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--font-caption-size);
+}
+
+/* ---- Profile preview switch --------------------------------------------- */
+
+.profile-preview {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ---- Narrow screens ------------------------------------------------------ */
+
+@media (max-width: 900px) {
+  .academy-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .academy-section__head {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 520px) {
+  .academy-stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .academy-provisional {
+    padding: var(--space-3) var(--space-4);
+  }
+}
+
+/* ---- Narrow viewports: tables become cards ------------------------------- */
+@media (max-width: 700px) {
+  .academy-table-wrap {
+    overflow-x: visible;
+  }
+
+  .academy-table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .academy-table thead {
+    display: none;
+  }
+
+  .academy-table tbody {
+    display: block;
+  }
+
+  .academy-table tr {
+    display: block;
+    margin-block-end: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border: var(--outline-hairline) solid var(--border-strong);
+    border-radius: var(--radius-card);
+    background: var(--surface-1);
+  }
+
+  .academy-table td {
+    display: grid;
+    grid-template-columns: minmax(6rem, 34%) minmax(0, 1fr);
+    gap: var(--space-2);
+    align-items: start;
+    padding: 0.3rem 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .academy-table td::before {
+    content: attr(data-label);
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .academy-table td:empty {
+    display: none;
+  }
+
+  .academy-mark-group {
+    flex-wrap: wrap;
+  }
+}

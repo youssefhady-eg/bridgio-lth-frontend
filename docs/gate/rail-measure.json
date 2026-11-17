@@ -1,0 +1,132 @@
+{
+  "generatedAt": "2026-11-17T06:59:03.887Z",
+  "base": "http://localhost:3001",
+  "rows": [
+    {
+      "width": 1024,
+      "lang": "en",
+      "railWidth": 72,
+      "navIconCentres": [
+        35.5,
+        35.5,
+        35.5,
+        35.5,
+        35.5,
+        35.5
+      ],
+      "utilityIconCentres": [
+        35.5,
+        35.5,
+        35.5
+      ],
+      "toggleCentre": [
+        35.5
+      ]
+    },
+    {
+      "width": 1024,
+      "lang": "ar",
+      "railWidth": 72,
+      "navIconCentres": [
+        988.5,
+        988.5,
+        988.5,
+        988.5,
+        988.5,
+        988.5
+      ],
+      "utilityIconCentres": [
+        988.5,
+        988.5,
+        988.5
+      ],
+      "toggleCentre": [
+        988.5
+      ]
+    },
+    {
+      "width": 1440,
+      "lang": "en",
+      "railWidth": 72,
+      "navIconCentres": [
+        35.5,
+        35.5,
+        35.5,
+        35.5,
+        35.5,
+        35.5
+      ],
+      "utilityIconCentres": [
+        35.5,
+        35.5,
+        35.5
+      ],
+      "toggleCentre": [
+        35.5
+      ]
+    },
+    {
+      "width": 1440,
+      "lang": "ar",
+      "railWidth": 72,
+      "navIconCentres": [
+        1404.5,
+        1404.5,
+        1404.5,
+        1404.5,
+        1404.5,
+        1404.5
+      ],
+      "utilityIconCentres": [
+        1404.5,
+        1404.5,
+        1404.5
+      ],
+      "toggleCentre": [
+        1404.5
+      ]
+    },
+    {
+      "width": 1920,
+      "lang": "en",
+      "railWidth": 72,
+      "navIconCentres": [
+        35.5,
+        35.5,
+        35.5,
+        35.5,
+        35.5,
+        35.5
+      ],
+      "utilityIconCentres": [
+        35.5,
+        35.5,
+        35.5
+      ],
+      "toggleCentre": [
+        35.5
+      ]
+    },
+    {
+      "width": 1920,
+      "lang": "ar",
+      "railWidth": 72,
+      "navIconCentres": [
+        1884.5,
+        1884.5,
+        1884.5,
+        1884.5,
+        1884.5,
+        1884.5
+      ],
+      "utilityIconCentres": [
+        1884.5,
+        1884.5,
+        1884.5
+      ],
+      "toggleCentre": [
+        1884.5
+      ]
+    }
+  ]
+}

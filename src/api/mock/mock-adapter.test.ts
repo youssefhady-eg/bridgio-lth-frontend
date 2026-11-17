@@ -1,12 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { ApiError } from '../errors'
 import type { BridgioApi } from '../contract'
-import type { StudentQuestion } from '../types'
+import { ApiError } from '../errors'
 import { createMockApi } from './mock-adapter'
 import { seedIds } from './seed'
 
 const created = () =>
-  createMockApi({ scenario: 'seeded', session: 'teacher', latencyMs: 0 })
+  createMockApi({ scenario: 'seeded', session: 'academy', latencyMs: 0 })
 
 function methodPaths(api: BridgioApi): string[] {
   const paths: string[] = []
@@ -23,44 +22,32 @@ const EXPECTED_METHODS = [
   'auth.getSession',
   'auth.signIn',
   'auth.signOut',
-  'teachers.getProfile',
-  'teachers.getDashboard',
-  'students.getProfile',
-  'students.getProgress',
-  'classrooms.listForTeacher',
-  'classrooms.get',
-  'classrooms.listStudents',
-  'curriculum.listSubjects',
-  'curriculum.listUnits',
-  'curriculum.getUnit',
-  'materials.listForTeacher',
-  'materials.get',
-  'materials.create',
-  'materials.delete',
-  'tests.listForTeacher',
-  'tests.listForClass',
-  'tests.get',
-  'tests.createDraft',
-  'tests.update',
-  'tests.publish',
-  'tests.delete',
-  'questions.listForTest',
-  'questions.listForStudentTest',
-  'questions.create',
-  'questions.update',
-  'questions.delete',
-  'questions.reorder',
-  'attempts.listForStudent',
-  'attempts.listForTest',
-  'attempts.start',
-  'attempts.get',
-  'attempts.saveAnswer',
-  'attempts.submit',
-  'mohsen.ask',
-  'mohsen.draftQuestions',
-  'rbac.getCapabilities',
-  'parents.getProfile',
-  'parents.getOverview',
+  'languages.list',
+  'languages.listLevels',
+  'academies.get',
+  'academies.getOnboarding',
+  'academies.getDashboard',
+  'academies.updateProfile',
+  'academies.completeOnboardingStep',
+  'cohorts.list',
+  'cohorts.get',
+  'cohorts.create',
+  'cohorts.publish',
+  'cohorts.getRoster',
+  'cohorts.getAttendanceSheet',
+  'cohorts.markAttendance',
+  'curricula.list',
+  'curricula.get',
+  'curricula.create',
+  'curricula.addUnit',
+  'curricula.addLesson',
+  'curricula.publish',
+  'curricula.draftOutline',
+  'rubrics.list',
+  'rubrics.get',
+  'rubrics.updateDimension',
+  'rubrics.publish',
+  'earnings.getLedger',
   'messages.listThreads',
   'messages.listMessages',
   'messages.sendMessage',
@@ -79,589 +66,819 @@ describe('mock adapter — contract surface', () => {
     expect(info.endpointStatus).toBe('PROPOSED')
     expect(info.mode).toBe('mock')
     expect(info.mockScenario).toBe('seeded')
+    expect(info.contractVersion).toBe(created().contractVersion)
   })
 })
 
-describe('mock adapter — auth and permissions', () => {
-  it('starts with a demo teacher session and can sign out', async () => {
-    const api = created()
+describe('mock adapter — preview roles and auth shape', () => {
+  it('starts with the academy owner session by default', async () => {
+    const session = await created().auth.getSession()
+    expect(session?.user.id).toBe(seedIds.owner)
+    expect(session?.user.role).toBe('academy_owner')
+    expect(session?.expiresAt).toBeNull()
+  })
+
+  it('previews the instructor role when the session option says so', async () => {
+    const api = createMockApi({ session: 'instructor', latencyMs: 0 })
     const session = await api.auth.getSession()
-    expect(session?.user.id).toBe(seedIds.teacher)
+    expect(session?.user.role).toBe('instructor')
+    expect(session?.user.id).toBe(seedIds.instructorKarim)
+  })
+
+  it('starts signed out when the session option is none', async () => {
+    const api = createMockApi({ session: 'none', latencyMs: 0 })
+    await expect(api.auth.getSession()).resolves.toBeNull()
+  })
+
+  it('signs in by demo email and can sign out again', async () => {
+    const api = created()
+    const session = await api.auth.signIn({
+      email: 'new.instructor@example.test',
+      password: 'demo',
+    })
+    expect(session.user.role).toBe('instructor')
+
+    const owner = await api.auth.signIn({
+      email: 'owner@example.test',
+      password: 'demo',
+    })
+    expect(owner.user.role).toBe('academy_owner')
 
     await api.auth.signOut()
     expect(await api.auth.getSession()).toBeNull()
-    await expect(
-      api.teachers.getDashboard({ teacherId: seedIds.teacher }),
-    ).rejects.toMatchObject({ code: 'UNAUTHENTICATED' })
   })
 
-  it('signs a student in by demo email and rejects unknown credentials', async () => {
-    const api = created()
-    const session = await api.auth.signIn({
-      email: 'sara.student@bridgio.test',
-      password: 'demo',
-    })
-    expect(session.user.role).toBe('student')
-    expect(session.user.id).toBe(seedIds.studentSara)
-
+  it('rejects empty credentials instead of inventing a session', async () => {
     await expect(
-      api.auth.signIn({ email: 'nobody@example.test', password: 'demo' }),
-    ).rejects.toMatchObject({ code: 'UNAUTHENTICATED' })
-  })
-})
-
-describe('mock adapter — teacher dashboard', () => {
-  it('returns classes, recent tests and student progress through the adapter', async () => {
-    const dashboard = await created().teachers.getDashboard({
-      teacherId: seedIds.teacher,
-    })
-    expect(dashboard.classes).toHaveLength(2)
-    expect(dashboard.recentTests.length).toBeGreaterThan(0)
-    expect(dashboard.studentProgress.length).toBeGreaterThan(0)
-    expect(dashboard.totals.classes).toBe(2)
-    expect(dashboard.totals.students).toBe(3)
-    expect(
-      dashboard.recentTests.every((test) => test.questionCount >= 0),
-    ).toBe(true)
-  })
-
-  it('returns an empty dashboard in the empty scenario', async () => {
-    const api = createMockApi({ scenario: 'empty', session: 'teacher' })
-    const dashboard = await api.teachers.getDashboard({
-      teacherId: seedIds.teacher,
-    })
-    expect(dashboard.classes).toEqual([])
-    expect(dashboard.recentTests).toEqual([])
-    expect(dashboard.studentProgress).toEqual([])
-    await expect(
-      api.students.getProgress({ studentId: seedIds.studentSara }),
-    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
-  })
-})
-
-describe('mock adapter — test builder flow', () => {
-  it('drafts grounded questions, edits, deletes, reorders and publishes', async () => {
-    const api = created()
-    const draft = await api.tests.createDraft({
-      teacherId: seedIds.teacher,
-      classroomId: seedIds.classMath,
-      title: 'اختبار تجريبي — المرحلة صفر',
-      description: null,
-      source: { kind: 'material', materialId: seedIds.materialDerivatives },
-    })
-    expect(draft.status).toBe('draft')
-    expect(draft.questionCount).toBe(0)
-
-    const drafted = await api.mohsen.draftQuestions({
-      teacherId: seedIds.teacher,
-      testId: draft.id,
-      count: 2,
-      focus: null,
-    })
-    expect(drafted.status).toBe('drafted')
-    if (drafted.status !== 'drafted') throw new Error('expected drafted')
-    expect(drafted.questions).toHaveLength(2)
-    expect(drafted.grounding.length).toBeGreaterThan(0)
-    expect(drafted.questions.every((question) => question.grounding.length > 0)).toBe(
-      true,
-    )
-    expect(drafted.questions.every((question) => question.origin === 'mohsen')).toBe(
-      true,
-    )
-
-    const [first, second] = drafted.questions
-    if (!first || !second) throw new Error('expected two drafted questions')
-
-    const edited = await api.questions.update({
-      teacherId: seedIds.teacher,
-      testId: draft.id,
-      questionId: first.id,
-      prompt: 'ما مشتقة الدالة x² بعد التعديل؟',
-      options: ['2x', 'x', 'x³'],
-      correctOptionIndex: 0,
-    })
-    expect(edited.options).toHaveLength(3)
-    expect(edited.correctOptionId).toBe(edited.options[0]?.id)
-
-    await api.questions.delete({
-      teacherId: seedIds.teacher,
-      testId: draft.id,
-      questionId: second.id,
-    })
-
-    const remaining = await api.questions.listForTest({ testId: draft.id })
-    expect(remaining).toHaveLength(1)
-    expect(remaining[0]?.order).toBe(1)
-
-    const published = await api.tests.publish({
-      teacherId: seedIds.teacher,
-      testId: draft.id,
-    })
-    expect(published.status).toBe('published')
-    expect(published.publishedAt).not.toBeNull()
-
-    await expect(
-      api.questions.update({
-        teacherId: seedIds.teacher,
-        testId: draft.id,
-        questionId: first.id,
-        prompt: 'تعديل بعد النشر',
-      }),
-    ).rejects.toMatchObject({ code: 'CONFLICT' })
-  })
-
-  it('refuses to publish a test with no questions', async () => {
-    const api = created()
-    const draft = await api.tests.createDraft({
-      teacherId: seedIds.teacher,
-      classroomId: seedIds.classMath,
-      title: 'اختبار بلا أسئلة',
-      description: null,
-      source: { kind: 'curriculum_unit', unitId: seedIds.unitIntegration },
-    })
-    await expect(
-      api.tests.publish({ teacherId: seedIds.teacher, testId: draft.id }),
+      created().auth.signIn({ email: ' ', password: 'demo' }),
     ).rejects.toMatchObject({ code: 'VALIDATION' })
   })
 })
 
-describe('mock adapter — student player flow (no marking)', () => {
-  it('starts, answers and submits an attempt without any score', async () => {
+describe('mock adapter — languages are data', () => {
+  it('returns language records with their own direction and numeral system', async () => {
+    const languages = await created().languages.list()
+    expect(languages.map((language) => language.code)).toEqual([
+      'de',
+      'nl',
+      'it',
+      'ar',
+    ])
+    const arabic = languages.find((language) => language.code === 'ar')
+    expect(arabic?.direction).toBe('rtl')
+    expect(arabic?.numeralSystem).toBe('arabic-indic')
+    expect(languages.every((language) => language.nativeLabel.length > 0)).toBe(
+      true,
+    )
+  })
+
+  it('lists levels only for a known language', async () => {
+    const levels = await created().languages.listLevels({
+      languageId: 'lang_de',
+    })
+    expect(levels.map((level) => level.id)).toContain('lvl_a2')
+    await expect(
+      created().languages.listLevels({ languageId: 'lang_missing' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+  })
+})
+
+describe('mock adapter — academy dashboard and onboarding', () => {
+  it('returns the academy profile', async () => {
+    const academy = await created().academies.get()
+    expect(academy.id).toBe(seedIds.academy)
+    expect(academy.status).toBe('active')
+    expect(academy.languageIds.length).toBeGreaterThan(0)
+  })
+
+  it('aggregates active cohorts, upcoming sessions, alerts and a provisional figure', async () => {
+    const dashboard = await created().academies.getDashboard()
+    expect(dashboard.totals.activeCohorts).toBe(2)
+    expect(dashboard.totals.activeLearners).toBe(30)
+    expect(dashboard.cohorts.length).toBe(2)
+    expect(dashboard.upcomingSessions.length).toBeGreaterThan(0)
+    expect(dashboard.alerts.map((alert) => alert.kind)).toEqual(
+      expect.arrayContaining(['roster_incomplete', 'curriculum_draft', 'rubric_draft', 'payout_profile']),
+    )
+    expect(dashboard.earnings.isPlaceholder).toBe(true)
+    expect(dashboard.earnings.amount).toBeNull()
+  })
+
+  it('sorts the upcoming sessions by start time', async () => {
+    const dashboard = await created().academies.getDashboard()
+    const starts = dashboard.upcomingSessions.map((session) => session.startsAt)
+    expect(starts).toEqual([...starts].sort())
+    expect(
+      dashboard.upcomingSessions.every(
+        (session) => session.cohortLabel.length > 0 && session.languageLabel.length > 0,
+      ),
+    ).toBe(true)
+  })
+
+  it('keeps every aggregate list empty in the empty scenario', async () => {
+    const api = createMockApi({ scenario: 'empty', latencyMs: 0 })
+    const dashboard = await api.academies.getDashboard()
+    expect(dashboard.cohorts).toEqual([])
+    expect(dashboard.upcomingSessions).toEqual([])
+    expect(dashboard.totals.activeCohorts).toBe(0)
+    expect(dashboard.totals.activeLearners).toBe(0)
+    expect((await api.cohorts.list()).cohorts).toEqual([])
+    expect((await api.curricula.list()).curricula).toEqual([])
+    expect((await api.rubrics.list()).rubrics).toEqual([])
+  })
+
+  it('updates the demo partner profile and validates its fields', async () => {
     const api = created()
-    await api.auth.signIn({
-      email: 'sara.student@bridgio.test',
-      password: 'demo',
+    const updated = await api.academies.updateProfile({
+      academyId: seedIds.academy,
+      name: 'Demo Academy — renamed',
+      contactEmail: 'hello@example.test',
     })
-
-    const attempt = await api.attempts.start({
-      studentId: seedIds.studentSara,
-      testId: seedIds.testDerivatives,
-    })
-    expect(attempt.status).toBe('in_progress')
-    expect(attempt.questionCount).toBe(3)
-
-    const question = await api.questions.listForStudentTest({
-      testId: seedIds.testDerivatives,
-    })
-    const secondQuestion = question[1]
-    const secondOption = secondQuestion?.options[1]
-    if (!secondQuestion || !secondOption) {
-      throw new Error('expected a second question with options')
-    }
-
-    const saved = await api.attempts.saveAnswer({
-      attemptId: attempt.id,
-      questionId: secondQuestion.id,
-      optionId: secondOption.id,
-    })
-    expect(saved.answeredCount).toBeGreaterThanOrEqual(2)
-
-    const submitted = await api.attempts.submit({ attemptId: attempt.id })
-    expect(submitted.status).toBe('submitted')
-    expect(submitted.submittedAt).not.toBeNull()
-    expect(submitted.scorePercent).toBeNull()
-    expect('score' in submitted).toBe(false)
-    expect('correctCount' in submitted).toBe(false)
+    expect(updated.name).toBe('Demo Academy — renamed')
+    expect(updated.contactEmail).toBe('hello@example.test')
 
     await expect(
-      api.attempts.saveAnswer({
-        attemptId: attempt.id,
-        questionId: secondQuestion.id,
-        optionId: secondOption.id,
+      api.academies.updateProfile({
+        academyId: seedIds.academy,
+        name: ' ',
+        contactEmail: 'hello@example.test',
       }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+  })
+
+  it('moves an onboarding step to complete and raises completion', async () => {
+    const api = created()
+    const before = await api.academies.getOnboarding()
+    const sample = before.steps.find((step) => step.id === 'sample_lesson')
+    expect(sample?.status).toBe('in_progress')
+
+    const after = await api.academies.completeOnboardingStep({
+      academyId: seedIds.academy,
+      stepId: 'sample_lesson',
+    })
+    const completed = after.steps.find((step) => step.id === 'sample_lesson')
+    expect(completed?.status).toBe('complete')
+    expect(completed?.completedAt).not.toBeNull()
+    expect(after.completionPercent).toBeGreaterThan(before.completionPercent)
+  })
+
+  it('returns a blocked payout step for the seeded demo, never a fake success', async () => {
+    const onboarding = await created().academies.getOnboarding()
+    const payout = onboarding.steps.find(
+      (step) => step.id === 'payout_profile',
+    )
+    expect(payout?.status).toBe('blocked')
+    expect(onboarding.calibration.status).toBe('in_review')
+  })
+
+  it('starts onboarding from zero in the empty scenario', async () => {
+    const api = createMockApi({ scenario: 'empty', latencyMs: 0 })
+    const onboarding = await api.academies.getOnboarding()
+    expect(onboarding.steps.every((step) => step.status === 'pending')).toBe(
+      true,
+    )
+    expect(onboarding.completionPercent).toBe(0)
+    expect(onboarding.calibration.status).toBe('not_started')
+  })
+})
+
+describe('mock adapter — cohorts', () => {
+  it('lists cohorts with language, level and instructor reference data', async () => {
+    const list = await created().cohorts.list()
+    expect(list.cohorts).toHaveLength(4)
+    expect(list.languages.length).toBe(4)
+    expect(list.levels.length).toBeGreaterThanOrEqual(4)
+    expect(list.instructors).toHaveLength(3)
+
+    const german = list.cohorts.find(
+      (cohort) => cohort.id === seedIds.cohortGermanA2,
+    )
+    expect(german).toMatchObject({
+      language: { code: 'de' },
+      level: { label: 'A2' },
+      status: 'active',
+      seatsFilled: 14,
+      seatsAvailable: 4,
+    })
+  })
+
+  it('returns one cohort and rejects an unknown id', async () => {
+    const cohort = await created().cohorts.get({
+      cohortId: seedIds.cohortGermanA2,
+    })
+    expect(cohort.label).toBe('German A2 — Evening')
+    expect(cohort.price.isPlaceholder).toBe(true)
+    expect(cohort.attendanceModel).toBe('proposed')
+
+    await expect(
+      created().cohorts.get({ cohortId: 'missing' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+  })
+
+  it('creates a draft cohort with an unpublished placeholder price', async () => {
+    const api = created()
+    const cohort = await api.cohorts.create({
+      languageId: 'lang_de',
+      levelId: 'lvl_b1',
+      label: 'German B1 — Weekend',
+      schedule: 'Sat · 10:00–12:00',
+      capacity: 16,
+      instructorId: seedIds.instructorLina,
+      startDate: '2027-01-09',
+      endDate: '2027-04-03',
+    })
+    expect(cohort.status).toBe('draft')
+    expect(cohort.seatsAvailable).toBe(16)
+    expect(cohort.price.isPlaceholder).toBe(true)
+
+    const list = await api.cohorts.list()
+    expect(list.cohorts.some((item) => item.id === cohort.id)).toBe(true)
+  })
+
+  it('adds a published cohort to the dashboard aggregate', async () => {
+    const api = created()
+    const before = await api.academies.getDashboard()
+    const cohort = await api.cohorts.create({
+      languageId: 'lang_it',
+      levelId: 'lvl_a2',
+      label: 'Italian A2 — New',
+      schedule: 'Mon · 10:00–12:00',
+      capacity: 12,
+      instructorId: seedIds.instructorJonas,
+      startDate: '2027-02-01',
+      endDate: '2027-05-01',
+    })
+    await api.cohorts.publish({ cohortId: cohort.id })
+
+    const after = await api.academies.getDashboard()
+    expect(after.totals.activeCohorts).toBe(before.totals.activeCohorts + 1)
+    expect(after.cohorts.map((item) => item.id)).toContain(cohort.id)
+  })
+
+  it('validates label, capacity and instructor when creating a cohort', async () => {
+    const api = created()
+    const base = {
+      languageId: 'lang_de',
+      levelId: 'lvl_b1',
+      label: 'Draft',
+      schedule: 'Sun · 10:00–12:00',
+      capacity: 10,
+      instructorId: seedIds.instructorLina,
+      startDate: '2027-01-09',
+      endDate: '2027-04-03',
+    }
+
+    await expect(
+      api.cohorts.create({ ...base, label: ' ' }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+    await expect(
+      api.cohorts.create({ ...base, capacity: 0 }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+    await expect(
+      api.cohorts.create({ ...base, capacity: 201 }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+    await expect(
+      api.cohorts.create({ ...base, instructorId: 'usr_missing' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+  })
+
+  it('publishes a draft with available seats', async () => {
+    const api = created()
+    const published = await api.cohorts.publish({
+      cohortId: seedIds.cohortItalianA1,
+    })
+    expect(published.status).toBe('published')
+  })
+
+  it('refuses to publish a cohort with no available seat', async () => {
+    await expect(
+      created().cohorts.publish({ cohortId: seedIds.cohortDutchB1 }),
     ).rejects.toMatchObject({ code: 'CONFLICT' })
   })
-})
 
-describe('mock adapter — teacher per-test results (PROPOSED)', () => {
-  it('lists every attempt on the teacher own test, newest activity first', async () => {
+  it('refuses to publish a cohort with no schedule', async () => {
     const api = created()
-    const rows = await api.attempts.listForTest({
-      testId: seedIds.testDerivatives,
-    })
-
-    expect(rows.map((row) => row.studentId)).toEqual([
-      seedIds.studentSara,
-      seedIds.studentOmar,
-    ])
-    expect(rows[0]).toMatchObject({
-      status: 'in_progress',
-      studentName: 'سارة محمد',
-      scorePercent: null,
-      submittedAt: null,
-    })
-    expect(rows[1]).toMatchObject({
-      status: 'submitted',
-      studentName: 'عمر خالد',
-      scorePercent: 67,
-    })
-    expect(rows[1]?.submittedAt).not.toBeNull()
-    expect(rows[1]?.answeredCount).toBeLessThanOrEqual(
-      rows[1]?.questionCount ?? 0,
-    )
-  })
-
-  it('returns the seeded scored attempt for the integration test', async () => {
-    const api = created()
-    const rows = await api.attempts.listForTest({
-      testId: seedIds.testIntegration,
-    })
-
-    expect(rows).toHaveLength(1)
-    expect(rows[0]).toMatchObject({
-      id: 'attempt_sara_integration',
-      studentId: seedIds.studentSara,
-      status: 'submitted',
-      scorePercent: 67,
-    })
-  })
-
-  it('returns an empty list for a test with no attempts', async () => {
-    const api = created()
-    await expect(
-      api.attempts.listForTest({ testId: seedIds.testIntegrationDraft }),
-    ).resolves.toEqual([])
-  })
-
-  it('refuses a student session', async () => {
-    const api = created()
-    await api.auth.signIn({
-      email: 'sara.student@bridgio.test',
-      password: 'demo',
+    const cohort = await api.cohorts.create({
+      languageId: 'lang_de',
+      levelId: 'lvl_a1',
+      label: 'No schedule yet',
+      schedule: ' ',
+      capacity: 8,
+      instructorId: seedIds.instructorJonas,
+      startDate: '2027-02-01',
+      endDate: '2027-05-01',
     })
     await expect(
-      api.attempts.listForTest({ testId: seedIds.testDerivatives }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
-  })
-
-  it('maps a backend score onto attempts.get without computing one', async () => {
-    const api = created()
-    await api.auth.signIn({
-      email: 'sara.student@bridgio.test',
-      password: 'demo',
-    })
-
-    const scored = await api.attempts.get({
-      attemptId: 'attempt_sara_integration',
-    })
-    expect(scored.scorePercent).toBe(67)
-
-    const unscored = await api.attempts.get({ attemptId: 'attempt_sara_deriv' })
-    expect(unscored.scorePercent).toBeNull()
+      api.cohorts.publish({ cohortId: cohort.id }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
   })
 })
 
-describe('mock adapter — Mohsen grounding', () => {
-  it('answers only from material and always shows grounding', async () => {
-    const api = created()
-    const answer = await api.mohsen.ask({
-      question: 'ما مشتقة الدالة x^n؟',
-      askedBy: seedIds.teacher,
-      scope: {
-        classroomId: seedIds.classMath,
-        testId: null,
-        materialIds: [],
-        unitId: null,
-      },
+describe('mock adapter — roster and attendance (PROPOSED model)', () => {
+  it('returns the roster, sessions and a rate computed from recorded sessions only', async () => {
+    const roster = await created().cohorts.getRoster({
+      cohortId: seedIds.cohortGermanA2,
     })
-    expect(answer.status).toBe('answered')
-    expect(answer.grounding.length).toBeGreaterThan(0)
-    expect(answer.grounding[0]?.excerpt).toBeTruthy()
+    expect(roster.members).toHaveLength(14)
+    expect(roster.sessions).toHaveLength(5)
+    expect(roster.attendanceRate).toBeGreaterThanOrEqual(0)
+    expect(roster.attendanceRate).toBeLessThanOrEqual(100)
+    expect(
+      roster.members.every((member) => member.attendance.recordedSessions === 3),
+    ).toBe(true)
   })
 
-  it('refuses instead of guessing when the source does not cover the question', async () => {
-    const api = created()
-    const answer = await api.mohsen.ask({
-      question: 'ما هي عاصمة فرنسا؟',
-      askedBy: seedIds.teacher,
-      scope: {
-        classroomId: seedIds.classMath,
-        testId: null,
-        materialIds: [],
-        unitId: null,
-      },
+  it('shows an unrecorded session as not_recorded with no recordedAt', async () => {
+    const sheet = await created().cohorts.getAttendanceSheet({
+      cohortId: seedIds.cohortGermanA2,
+      sessionId: `${seedIds.cohortGermanA2}_sess_next_1`,
     })
-    expect(answer.status).toBe('not_grounded')
-    expect(answer.grounding).toEqual([])
-  })
-
-  it('never returns an answered result without usable grounding', async () => {
-    const api = created()
-    const questions = [
-      'ما مشتقة الدالة x^n؟',
-      'ما الذي تقيسه المشتقة؟',
-      'ما العلاقة بين التكامل والاشتقاق؟',
-      'ما هي عاصمة فرنسا؟',
-    ]
-
-    for (const question of questions) {
-      const answer = await api.mohsen.ask({
-        question,
-        askedBy: seedIds.teacher,
-        scope: {
-          classroomId: seedIds.classMath,
-          testId: null,
-          materialIds: [],
-          unitId: null,
-        },
-      })
-
-      if (answer.status === 'answered') {
-        expect(answer.grounding.length).toBeGreaterThan(0)
-        expect(
-          answer.grounding.every(
-            (ref) =>
-              ref.label.trim().length > 0 &&
-              (ref.excerpt ?? '').trim().length > 0,
-          ),
-        ).toBe(true)
-      } else {
-        expect(answer.grounding).toEqual([])
-      }
-    }
-  })
-
-  it('refuses a question made only of stopwords instead of answering', async () => {
-    const api = created()
-    const answer = await api.mohsen.ask({
-      question: 'ما هو؟',
-      askedBy: seedIds.teacher,
-      scope: {
-        classroomId: seedIds.classMath,
-        testId: null,
-        materialIds: [],
-        unitId: null,
-      },
-    })
-    expect(answer.status).toBe('not_grounded')
-    expect(answer.grounding).toEqual([])
-  })
-
-  it('adds only unused grounded questions when asked for more', async () => {
-    const api = created()
-    const draft = await api.tests.createDraft({
-      teacherId: seedIds.teacher,
-      classroomId: seedIds.classMath,
-      title: 'اختبار الأسئلة الإضافية',
-      description: null,
-      source: { kind: 'material', materialId: seedIds.materialDerivatives },
-    })
-
-    const first = await api.mohsen.draftQuestions({
-      teacherId: seedIds.teacher,
-      testId: draft.id,
-      count: 3,
-      focus: null,
-    })
-    const second = await api.mohsen.draftQuestions({
-      teacherId: seedIds.teacher,
-      testId: draft.id,
-      count: 3,
-      focus: null,
-    })
-    expect(first.status).toBe('drafted')
-    expect(second.status).toBe('drafted')
-    if (first.status !== 'drafted' || second.status !== 'drafted') return
-
-    expect(second.questions).toHaveLength(1)
-    const all = await api.questions.listForTest({ testId: draft.id })
-    expect(all).toHaveLength(4)
-    expect(new Set(all.map((question) => question.prompt)).size).toBe(4)
-
-    const third = await api.mohsen.draftQuestions({
-      teacherId: seedIds.teacher,
-      testId: draft.id,
-      count: 3,
-      focus: null,
-    })
-    expect(third.status).toBe('no_grounding')
-  })
-
-  it('returns no_grounding draft result for a source the mock cannot draft from', async () => {
-    const api = created()
-    const material = await api.materials.create({
-      teacherId: seedIds.teacher,
-      classroomId: seedIds.classMath,
-      unitId: seedIds.unitDerivatives,
-      title: 'مادة بلا بنك أسئلة',
-      kind: 'text',
-      textContent: 'نص جديد لا يوجد له بنك أسئلة في المحاكي.',
-      sourceUrl: null,
-    })
-    const draft = await api.tests.createDraft({
-      teacherId: seedIds.teacher,
-      classroomId: seedIds.classMath,
-      title: 'اختبار من مادة جديدة',
-      description: null,
-      source: { kind: 'material', materialId: material.id },
-    })
-    const result = await api.mohsen.draftQuestions({
-      teacherId: seedIds.teacher,
-      testId: draft.id,
-      count: 3,
-      focus: null,
-    })
-    expect(result.status).toBe('no_grounding')
-    expect(result.questions).toEqual([])
-  })
-})
-
-describe('mock adapter — answer key boundary', () => {
-  const signInAsSara = (api: BridgioApi) =>
-    api.auth.signIn({ email: 'sara.student@bridgio.test', password: 'demo' })
-
-  it('never gives a student correctOptionId, as a value or as a property', async () => {
-    const api = created()
-    await signInAsSara(api)
-
-    const questions = await api.questions.listForStudentTest({
-      testId: seedIds.testDerivatives,
-    })
-    expect(questions).toHaveLength(3)
-
-    for (const question of questions) {
-      expect(
-        Object.prototype.hasOwnProperty.call(question, 'correctOptionId'),
-      ).toBe(false)
-      expect('correctOptionId' in question).toBe(false)
-      expect(question.options.length).toBeGreaterThanOrEqual(2)
-      for (const option of question.options) {
-        expect(Object.keys(option).sort()).toEqual(['id', 'text'])
-      }
-    }
-    // Pins the allowlist: a field added to `Question` must not leak by default.
-    expect(Object.keys(questions[0] ?? {}).sort()).toEqual([
-      'id',
-      'options',
-      'order',
-      'prompt',
-      'testId',
-    ])
-    expect(JSON.stringify(questions)).not.toContain('correctOptionId')
-  })
-
-  it('keeps correctOptionId on the teacher path for the builder', async () => {
-    const api = created()
-
-    const questions = await api.questions.listForTest({
-      testId: seedIds.testDerivatives,
-    })
-    expect(questions).toHaveLength(3)
-    for (const question of questions) {
-      expect('correctOptionId' in question).toBe(true)
-      expect(question.correctOptionId).not.toBeNull()
-      expect(question.options.map((option) => option.id)).toContain(
-        question.correctOptionId,
-      )
-    }
-  })
-
-  it('serves the student list in the same order and content as the teacher list', async () => {
-    const api = created()
-    const full = await api.questions.listForTest({
-      testId: seedIds.testDerivatives,
-    })
-    const safe = await api.questions.listForStudentTest({
-      testId: seedIds.testDerivatives,
-    })
-
-    expect(safe.map((question) => question.id)).toEqual(
-      full.map((question) => question.id),
+    expect(sheet.records).toHaveLength(14)
+    expect(sheet.records.every((record) => record.status === 'not_recorded')).toBe(
+      true,
     )
-    expect(safe.map((question) => question.prompt)).toEqual(
-      full.map((question) => question.prompt),
-    )
-    expect(safe.map((question) => question.options)).toEqual(
-      full.map((question) => question.options),
-    )
+    expect(sheet.recordedAt).toBeNull()
   })
 
-  it('strips the key for every caller of the student list, including the owning teacher', async () => {
-    const api = created()
-    const questions = await api.questions.listForStudentTest({
-      testId: seedIds.testDerivatives,
-    })
-    expect(questions).toHaveLength(3)
-    for (const question of questions) {
-      expect('correctOptionId' in question).toBe(false)
-    }
-  })
-
-  it('rejects a student calling the teacher-only full question list', async () => {
-    const api = created()
-    await signInAsSara(api)
+  it('rejects a session that is not on the cohort', async () => {
     await expect(
-      api.questions.listForTest({ testId: seedIds.testDerivatives }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
-  })
-
-  it('does not let a student read questions of an unpublished test', async () => {
-    const api = created()
-    await signInAsSara(api)
-    await expect(
-      api.questions.listForStudentTest({
-        testId: seedIds.testIntegrationDraft,
+      created().cohorts.getAttendanceSheet({
+        cohortId: seedIds.cohortGermanA2,
+        sessionId: 'sess_missing',
       }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
   })
 
-  it('does not let a student read questions of a class they are not enrolled in', async () => {
-    const api = created()
-    await signInAsSara(api)
-    await expect(
-      api.questions.listForStudentTest({ testId: seedIds.testPhysics }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
-  })
-
-  it('has no correctOptionId on the StudentQuestion type', () => {
-    const question: StudentQuestion = {
-      id: 'q',
-      testId: 't',
-      order: 1,
-      prompt: 'p',
-      options: [],
-    }
-    // @ts-expect-error StudentQuestion must not expose the answer key.
-    void question.correctOptionId
-    expect('correctOptionId' in question).toBe(false)
-  })
-})
-
-describe('mock adapter — student class tests', () => {
-  it('lists only published tests for a class the student is enrolled in', async () => {
-    const api = created()
-    await api.auth.signIn({
-      email: 'sara.student@bridgio.test',
-      password: 'demo',
+  it('returns the recorded marks and timestamp for a completed session', async () => {
+    const sheet = await created().cohorts.getAttendanceSheet({
+      cohortId: seedIds.cohortGermanA2,
+      sessionId: `${seedIds.cohortGermanA2}_sess_past_1`,
     })
-    const tests = await api.tests.listForClass({
-      classroomId: seedIds.classMath,
-    })
-    expect(tests.length).toBeGreaterThan(0)
-    expect(tests.every((test) => test.status === 'published')).toBe(true)
-    expect(tests.map((test) => test.id)).toContain(seedIds.testDerivatives)
-    expect(tests.map((test) => test.id)).not.toContain(
-      seedIds.testIntegrationDraft,
+    expect(sheet.recordedAt).not.toBeNull()
+    expect(sheet.records.every((record) => record.status !== 'not_recorded')).toBe(
+      true,
     )
   })
 
-  it('forbids a student from listing a class they are not enrolled in', async () => {
-    const api = created()
-    await api.auth.signIn({
-      email: 'sara.student@bridgio.test',
-      password: 'demo',
-    })
+  it('rejects a roster for an unknown cohort', async () => {
     await expect(
-      api.tests.listForClass({ classroomId: seedIds.classPhysics }),
-    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
+      created().cohorts.getRoster({ cohortId: 'missing' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+  })
+
+  it('requires a mark for every roster member and rejects duplicates or outsiders', async () => {
+    const api = created()
+    const roster = await api.cohorts.getRoster({
+      cohortId: seedIds.cohortGermanA2,
+    })
+    const sessionId = `${seedIds.cohortGermanA2}_sess_next_1`
+    const records = roster.members.map((member) => ({
+      learnerId: member.learnerId,
+      status: 'present' as const,
+    }))
+
+    await expect(
+      api.cohorts.markAttendance({
+        cohortId: seedIds.cohortGermanA2,
+        sessionId,
+        records: records.slice(0, 3),
+      }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+
+    await expect(
+      api.cohorts.markAttendance({
+        cohortId: seedIds.cohortGermanA2,
+        sessionId,
+        records: [records[0]!, records[0]!],
+      }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+
+    await expect(
+      api.cohorts.markAttendance({
+        cohortId: seedIds.cohortGermanA2,
+        sessionId,
+        records: [
+          ...records.slice(0, 13),
+          { learnerId: 'usr_missing', status: 'present' },
+        ],
+      }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+  })
+
+  it('saves a full sheet and recomputes each member rate from the records', async () => {
+    const api = created()
+    const cohortId = seedIds.cohortGermanA2
+    const sessionId = `${cohortId}_sess_next_1`
+    const roster = await api.cohorts.getRoster({ cohortId })
+
+    const saved = await api.cohorts.markAttendance({
+      cohortId,
+      sessionId,
+      records: roster.members.map((member) => ({
+        learnerId: member.learnerId,
+        status: 'present' as const,
+      })),
+    })
+    expect(saved.recordedAt).not.toBeNull()
+    expect(saved.records.every((record) => record.status === 'present')).toBe(
+      true,
+    )
+
+    const after = await api.cohorts.getRoster({ cohortId })
+    const first = after.members[0]
+    expect(first?.attendance.recordedSessions).toBe(4)
+    expect(first?.attendance.attendanceRate).toBe(100)
+    expect(after.attendanceRate).toBeGreaterThan(0)
+  })
+})
+
+describe('mock adapter — curriculum and lesson builder', () => {
+  it('lists curricula with unit and lesson counts', async () => {
+    const list = await created().curricula.list()
+    expect(list.curricula).toHaveLength(3)
+    const german = list.curricula.find(
+      (curriculum) => curriculum.id === seedIds.curriculumGermanA2,
+    )
+    expect(german).toMatchObject({ status: 'published', unitCount: 3, lessonCount: 6 })
+  })
+
+  it('rejects an unknown curriculum', async () => {
+    await expect(
+      created().curricula.get({ curriculumId: 'missing' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+  })
+
+  it('creates a draft curriculum and validates its fields', async () => {
+    const api = created()
+    const curriculum = await api.curricula.create({
+      languageId: 'lang_de',
+      levelId: 'lvl_b1',
+      title: 'German B1 — Escalations',
+      description: 'Handling a difficult case.',
+    })
+    expect(curriculum.status).toBe('draft')
+    expect(curriculum.units).toEqual([])
+
+    await expect(
+      api.curricula.create({
+        languageId: 'lang_de',
+        levelId: 'lvl_b1',
+        title: ' ',
+        description: 'Handling a difficult case.',
+      }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+    await expect(
+      api.curricula.create({
+        languageId: 'lang_de',
+        levelId: 'lvl_b1',
+        title: 'Title',
+        description: ' ',
+      }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+  })
+
+  it('adds a unit and lessons, then publishes the curriculum', async () => {
+    const api = created()
+    const createdCurriculum = await api.curricula.create({
+      languageId: 'lang_nl',
+      levelId: 'lvl_a2',
+      title: 'Dutch A2 — Intake',
+      description: 'Front-desk intake language.',
+    })
+
+    const withUnit = await api.curricula.addUnit({
+      curriculumId: createdCurriculum.id,
+      title: 'First contact',
+      objective: 'Greet a visitor and confirm the reason for the visit.',
+    })
+    expect(withUnit.units).toHaveLength(1)
+    const unitId = withUnit.units[0]?.id
+    if (!unitId) throw new Error('expected a unit')
+
+    await expect(
+      api.curricula.publish({ curriculumId: createdCurriculum.id }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' })
+
+    const withLesson = await api.curricula.addLesson({
+      curriculumId: createdCurriculum.id,
+      unitId,
+      title: 'Aan de balie',
+      objective: 'Ask for the appointment details.',
+      durationMinutes: 45,
+      contentLanguageId: 'lang_nl',
+      kind: 'lesson',
+    })
+    expect(withLesson.units[0]?.lessons).toHaveLength(1)
+    expect(withLesson.units[0]?.lessons[0]?.contentLanguage.code).toBe('nl')
+
+    const published = await api.curricula.publish({
+      curriculumId: createdCurriculum.id,
+    })
+    expect(published.status).toBe('published')
+  })
+
+  it('validates lesson duration and unit ownership', async () => {
+    const api = created()
+    const base = {
+      curriculumId: seedIds.curriculumGermanA2,
+      unitId: 'unit_de_a2_shift',
+      title: 'Lesson',
+      objective: 'Objective',
+      contentLanguageId: 'lang_de',
+      kind: 'lesson' as const,
+    }
+    await expect(
+      api.curricula.addLesson({ ...base, durationMinutes: 2 }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+    await expect(
+      api.curricula.addLesson({
+        ...base,
+        unitId: 'unit_missing',
+        durationMinutes: 45,
+      }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+  })
+
+  it('drafts a Mohsen outline with grounding and does not save it', async () => {
+    const api = created()
+    const before = await api.curricula.get({
+      curriculumId: seedIds.curriculumGermanA2,
+    })
+    const draft = await api.curricula.draftOutline({
+      curriculumId: seedIds.curriculumGermanA2,
+      unitTitle: 'Handling a complaint',
+      lessonCount: 4,
+    })
+
+    expect(draft.units).toHaveLength(1)
+    expect(draft.units[0]?.lessons).toHaveLength(4)
+    expect(draft.units[0]?.lessons[3]?.kind).toBe('assessment')
+    expect(draft.grounding.length).toBeGreaterThan(0)
+    expect(draft.disclaimer.length).toBeGreaterThan(0)
+
+    const after = await api.curricula.get({
+      curriculumId: seedIds.curriculumGermanA2,
+    })
+    expect(after.units).toHaveLength(before.units.length)
+  })
+
+  it('stores the lesson content language and direction as data', async () => {
+    const api = created()
+    const curriculum = await api.curricula.get({
+      curriculumId: seedIds.curriculumGermanA2,
+    })
+    const unit = curriculum.units[0]
+    if (!unit) throw new Error('expected a unit')
+
+    const updated = await api.curricula.addLesson({
+      curriculumId: curriculum.id,
+      unitId: unit.id,
+      title: 'مراجعة سريعة',
+      objective: 'Review the shift handover in Arabic.',
+      durationMinutes: 30,
+      contentLanguageId: 'lang_ar',
+      kind: 'practice',
+    })
+    const lesson = updated.units[0]?.lessons.at(-1)
+    expect(lesson?.contentLanguage.code).toBe('ar')
+    expect(lesson?.contentLanguage.direction).toBe('rtl')
+  })
+})
+
+describe('mock adapter — grading rubric', () => {
+  it('lists rubric summaries and one rubric with five dimensions', async () => {
+    const list = await created().rubrics.list()
+    expect(list.rubrics).toHaveLength(3)
+
+    const rubric = await created().rubrics.get({
+      rubricId: seedIds.rubricGermanA2,
+    })
+    expect(rubric.dimensions).toHaveLength(5)
+    expect(rubric.dimensions.map((dimension) => dimension.key)).toEqual([
+      'pronunciation',
+      'fluency',
+      'empathy',
+      'vocabulary',
+      'listening',
+    ])
+    expect(
+      rubric.dimensions.reduce(
+        (total, dimension) => total + dimension.weightPercent,
+        0,
+      ),
+    ).toBe(100)
+  })
+
+  it('marks an unassessed dimension instead of inventing a weight', async () => {
+    const rubric = await created().rubrics.get({
+      rubricId: seedIds.rubricDutchB1,
+    })
+    const listening = rubric.dimensions.find(
+      (dimension) => dimension.key === 'listening',
+    )
+    expect(listening?.assessed).toBe(false)
+    expect(listening?.weightPercent).toBe(0)
+    expect(rubric.coverageNote).toContain('not assessed')
+  })
+
+  it('validates a weight and its descriptors', async () => {
+    const api = created()
+    const rubric = await api.rubrics.get({
+      rubricId: seedIds.rubricGermanA2,
+    })
+    const dimension = rubric.dimensions[0]
+    if (!dimension) throw new Error('expected a dimension')
+
+    await expect(
+      api.rubrics.updateDimension({
+        rubricId: rubric.id,
+        dimensionId: dimension.id,
+        weightPercent: 101,
+        descriptors: dimension.descriptors,
+      }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+
+    await expect(
+      api.rubrics.updateDimension({
+        rubricId: rubric.id,
+        dimensionId: dimension.id,
+        weightPercent: 20,
+        descriptors: [],
+      }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+
+    await expect(
+      api.rubrics.updateDimension({
+        rubricId: rubric.id,
+        dimensionId: dimension.id,
+        weightPercent: 20,
+        descriptors: [
+          { band: 1, label: 'A', descriptor: 'First.' },
+          { band: 1, label: 'B', descriptor: 'Second.' },
+        ],
+      }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+  })
+
+  it('saves a dimension weight and then publishes a 100% rubric', async () => {
+    const api = created()
+    const rubric = await api.rubrics.get({ rubricId: seedIds.rubricDutchB1 })
+    const pronunciation = rubric.dimensions.find(
+      (dimension) => dimension.id === 'rub_nl_pron',
+    )
+    if (!pronunciation) throw new Error('expected the pronunciation dimension')
+
+    const updated = await api.rubrics.updateDimension({
+      rubricId: rubric.id,
+      dimensionId: pronunciation.id,
+      weightPercent: 40,
+      descriptors: pronunciation.descriptors,
+    })
+    expect(
+      updated.dimensions.find((dimension) => dimension.id === pronunciation.id)
+        ?.weightPercent,
+    ).toBe(40)
+
+    const published = await api.rubrics.publish({ rubricId: rubric.id })
+    expect(published.status).toBe('published')
+    expect(published.version).toBeGreaterThan(rubric.version)
+  })
+
+  it('refuses to publish a rubric whose assessed weights do not total 100', async () => {
+    await expect(
+      created().rubrics.publish({ rubricId: seedIds.rubricDutchB1 }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' })
+  })
+
+  it('publishes a draft whose assessed dimensions already total 100', async () => {
+    const api = created()
+    const published = await api.rubrics.publish({
+      rubricId: seedIds.rubricItalianA1,
+    })
+    expect(published.status).toBe('published')
+  })
+
+  it('rejects publishing a rubric that does not exist', async () => {
+    await expect(
+      created().rubrics.publish({ rubricId: 'missing' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+  })
+})
+
+describe('mock adapter — earnings and escrow ledger', () => {
+  it('returns provisional placeholder figures, never an invented amount', async () => {
+    const ledger = await created().earnings.getLedger()
+    expect(ledger.summary.provisional).toBe(true)
+    expect(ledger.summary.available).toMatchObject({
+      amount: null,
+      currency: 'XXX',
+      isPlaceholder: true,
+    })
+    expect(ledger.entries.length).toBeGreaterThan(0)
+    expect(
+      ledger.entries.every(
+        (entry) => entry.amount.amount === null && entry.amount.isPlaceholder,
+      ),
+    ).toBe(true)
+    expect(ledger.summary.payoutAccountStatus).toBe('pending')
+    expect(ledger.payoutSchedule.length).toBeGreaterThan(0)
+  })
+
+  it('returns an empty ledger in the empty scenario', async () => {
+    const api = createMockApi({ scenario: 'empty', latencyMs: 0 })
+    const ledger = await api.earnings.getLedger()
+    expect(ledger.entries).toEqual([])
+    expect(ledger.payoutSchedule).toEqual([])
+    expect(ledger.summary.provisional).toBe(true)
+  })
+})
+
+describe('mock adapter — academy messages', () => {
+  it('lists threads and their messages in order', async () => {
+    const api = created()
+    const threads = await api.messages.listThreads()
+    expect(threads.map((thread) => thread.id)).toEqual([
+      seedIds.threadSupport,
+      seedIds.threadInstructor,
+    ])
+
+    const messages = await api.messages.listMessages({
+      threadId: seedIds.threadSupport,
+    })
+    expect(messages.length).toBeGreaterThan(0)
+    expect(messages[0]?.fromMe).toBe(false)
+    expect(messages.some((message) => message.fromMe)).toBe(true)
+  })
+
+  it('rejects an unknown thread and an empty message', async () => {
+    const api = created()
+    await expect(
+      api.messages.listMessages({ threadId: 'thr_missing' }),
+    ).rejects.toMatchObject({ code: 'NOT_FOUND' })
+    await expect(
+      api.messages.sendMessage({ threadId: seedIds.threadSupport, body: ' ' }),
+    ).rejects.toMatchObject({ code: 'VALIDATION' })
+  })
+
+  it('appends the sent message and a deterministic mock reply', async () => {
+    const api = created()
+    const before = await api.messages.listMessages({
+      threadId: seedIds.threadSupport,
+    })
+    const result = await api.messages.sendMessage({
+      threadId: seedIds.threadSupport,
+      body: 'Please confirm the roster.',
+    })
+
+    expect(result.messages).toHaveLength(2)
+    expect(result.messages[0]).toMatchObject({
+      fromMe: true,
+      body: 'Please confirm the roster.',
+    })
+    expect(result.messages[1]?.fromMe).toBe(false)
+    expect(result.repliedBy?.role).toBe('support')
+
+    const after = await api.messages.listMessages({
+      threadId: seedIds.threadSupport,
+    })
+    expect(after).toHaveLength(before.length + 2)
+  })
+
+  it('answers an instructor thread with an Arabic, right-to-left block', async () => {
+    const api = created()
+    const result = await api.messages.sendMessage({
+      threadId: seedIds.threadInstructor,
+      body: 'See you on Sunday.',
+    })
+    const reply = result.messages[1]
+    expect(reply?.lang).toBe('ar')
+    expect(reply?.dir).toBe('rtl')
+    expect(reply?.author.role).toBe('instructor')
+  })
+
+  it('has no threads in the empty scenario', async () => {
+    const api = createMockApi({ scenario: 'empty', latencyMs: 0 })
+    await expect(api.messages.listThreads()).resolves.toEqual([])
+  })
+
+  it('authors a sent message as the instructor when previewing that role', async () => {
+    const api = createMockApi({ session: 'instructor', latencyMs: 0 })
+    const result = await api.messages.sendMessage({
+      threadId: seedIds.threadSupport,
+      body: 'Checking in.',
+    })
+    expect(result.messages[0]?.author.role).toBe('instructor')
+    expect(result.messages[0]?.author.name).toBe('Karim Adel')
   })
 })
 
 describe('mock adapter — errors', () => {
   it('throws ApiError for missing records', async () => {
     const api = created()
-    const error = await api.tests.get({ testId: 'missing' }).catch((value) => value)
+    const error = await api.cohorts
+      .get({ cohortId: 'missing' })
+      .catch((value) => value)
     expect(error).toBeInstanceOf(ApiError)
-    expect(error).toMatchObject({ code: 'NOT_FOUND', status: 404 })
+    expect(error).toMatchObject({ code: 'NOT_FOUND', status: null })
   })
 })

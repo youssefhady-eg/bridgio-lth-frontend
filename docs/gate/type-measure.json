@@ -1,0 +1,174 @@
+{
+  "generatedAt": "2026-11-16T21:26:36.539Z",
+  "base": "http://localhost:3001",
+  "rows": [
+    {
+      "width": 390,
+      "rootFontSize": "16px",
+      "tokens": {
+        "h1": "28px",
+        "h2": "22px",
+        "h3": "18px",
+        "body": "16px",
+        "bodySmall": "14px",
+        "label": "15px",
+        "caption": "13px"
+      },
+      "elements": [
+        {
+          "name": "page h1",
+          "selector": "h1",
+          "fontSize": "28px",
+          "lineHeight": "35px",
+          "fontWeight": "700",
+          "fontFamily": "thmanyahserifdisplay"
+        },
+        {
+          "name": "section h2",
+          "selector": ".academy-section__head h2",
+          "fontSize": "22px",
+          "lineHeight": "28.6px",
+          "fontWeight": "700",
+          "fontFamily": "thmanyahserifdisplay"
+        },
+        {
+          "name": "page lead",
+          "selector": ".dashboard__lead",
+          "fontSize": "16px",
+          "lineHeight": "24.8px",
+          "fontWeight": "400",
+          "fontFamily": "thmanyahseriftext"
+        },
+        {
+          "name": "body copy",
+          "selector": ".academy-section p",
+          "missing": true
+        },
+        {
+          "name": "body small",
+          "selector": ".academy-notice",
+          "fontSize": "14px",
+          "lineHeight": "21.7px",
+          "fontWeight": "400",
+          "fontFamily": "thmanyahseriftext"
+        },
+        {
+          "name": "label",
+          "selector": ".app-sidebar__link",
+          "fontSize": "15px",
+          "lineHeight": "23.25px",
+          "fontWeight": "600",
+          "fontFamily": "Bridgio Label"
+        },
+        {
+          "name": "caption",
+          "selector": ".academy-stat__label",
+          "fontSize": "13px",
+          "lineHeight": "20.15px",
+          "fontWeight": "600",
+          "fontFamily": "Bridgio Label"
+        },
+        {
+          "name": "table cell",
+          "selector": ".academy-table td",
+          "fontSize": "14px",
+          "lineHeight": "21.7px",
+          "fontWeight": "400",
+          "fontFamily": "thmanyahseriftext"
+        },
+        {
+          "name": "status chip",
+          "selector": ".status-chip",
+          "fontSize": "13px",
+          "lineHeight": "18.85px",
+          "fontWeight": "700",
+          "fontFamily": "Bridgio Label"
+        }
+      ]
+    },
+    {
+      "width": 1920,
+      "rootFontSize": "17px",
+      "tokens": {
+        "h1": "34px",
+        "h2": "26px",
+        "h3": "20px",
+        "body": "17px",
+        "bodySmall": "15px",
+        "label": "16px",
+        "caption": "13px"
+      },
+      "elements": [
+        {
+          "name": "page h1",
+          "selector": "h1",
+          "fontSize": "34px",
+          "lineHeight": "42.5px",
+          "fontWeight": "700",
+          "fontFamily": "thmanyahserifdisplay"
+        },
+        {
+          "name": "section h2",
+          "selector": ".academy-section__head h2",
+          "fontSize": "26px",
+          "lineHeight": "33.8px",
+          "fontWeight": "700",
+          "fontFamily": "thmanyahserifdisplay"
+        },
+        {
+          "name": "page lead",
+          "selector": ".dashboard__lead",
+          "fontSize": "17px",
+          "lineHeight": "26.35px",
+          "fontWeight": "400",
+          "fontFamily": "thmanyahseriftext"
+        },
+        {
+          "name": "body copy",
+          "selector": ".academy-section p",
+          "missing": true
+        },
+        {
+          "name": "body small",
+          "selector": ".academy-notice",
+          "fontSize": "15px",
+          "lineHeight": "23.25px",
+          "fontWeight": "400",
+          "fontFamily": "thmanyahseriftext"
+        },
+        {
+          "name": "label",
+          "selector": ".app-sidebar__link",
+          "fontSize": "16px",
+          "lineHeight": "24.8px",
+          "fontWeight": "600",
+          "fontFamily": "Bridgio Label"
+        },
+        {
+          "name": "caption",
+          "selector": ".academy-stat__label",
+          "fontSize": "13px",
+          "lineHeight": "20.15px",
+          "fontWeight": "600",
+          "fontFamily": "Bridgio Label"
+        },
+        {
+          "name": "table cell",
+          "selector": ".academy-table td",
+          "fontSize": "15px",
+          "lineHeight": "23.25px",
+          "fontWeight": "400",
+          "fontFamily": "thmanyahseriftext"
+        },
+        {
+          "name": "status chip",
+          "selector": ".status-chip",
+          "fontSize": "13px",
+          "lineHeight": "18.85px",
+          "fontWeight": "700",
+          "fontFamily": "Bridgio Label"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+BRIDGIO LTH — rendered type measurement (Batch 0)
+Base URL: http://localhost:3001
+Route: /academy/cohorts/coh_de_a2_evening (EN, light)
+
+tokens.css lines 157-162 are the ≥1024 px overrides. The C42 condition
+around them is not known, so both sets are measured below and the note
+records which set each row came from.
+
+Viewport 390px (measured set: base / phone)
+  root font-size: 16px
+  token values: h1=28px h2=22px h3=18px body=16px bodySmall=14px label=15px caption=13px
+  page h1      h1 — 28px / 35px, weight 700, thmanyahserifdisplay
+  section h2   .academy-section__head h2 — 22px / 28.6px, weight 700, thmanyahserifdisplay
+  page lead    .dashboard__lead — 16px / 24.8px, weight 400, thmanyahseriftext
+  body copy    .academy-section p — not on this screen
+  body small   .academy-notice — 14px / 21.7px, weight 400, thmanyahseriftext
+  label        .app-sidebar__link — 15px / 23.25px, weight 600, Bridgio Label
+  caption      .academy-stat__label — 13px / 20.15px, weight 600, Bridgio Label
+  table cell   .academy-table td — 14px / 21.7px, weight 400, thmanyahseriftext
+  status chip  .status-chip — 13px / 18.85px, weight 700, Bridgio Label
+
+Viewport 1920px (measured set: desktop ≥1024 override)
+  root font-size: 17px
+  token values: h1=34px h2=26px h3=20px body=17px bodySmall=15px label=16px caption=13px
+  page h1      h1 — 34px / 42.5px, weight 700, thmanyahserifdisplay
+  section h2   .academy-section__head h2 — 26px / 33.8px, weight 700, thmanyahserifdisplay
+  page lead    .dashboard__lead — 17px / 26.35px, weight 400, thmanyahseriftext
+  body copy    .academy-section p — not on this screen
+  body small   .academy-notice — 15px / 23.25px, weight 400, thmanyahseriftext
+  label        .app-sidebar__link — 16px / 24.8px, weight 600, Bridgio Label
+  caption      .academy-stat__label — 13px / 20.15px, weight 600, Bridgio Label
+  table cell   .academy-table td — 15px / 23.25px, weight 400, thmanyahseriftext
+  status chip  .status-chip — 13px / 18.85px, weight 700, Bridgio Label

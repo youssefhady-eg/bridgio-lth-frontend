@@ -1,0 +1,619 @@
+{
+  "generatedAt": "2026-11-17T07:13:25.547Z",
+  "base": "http://localhost:3001",
+  "axe": "node_modules/axe-core (shipped with @storybook/addon-a11y)",
+  "rows": [
+    {
+      "route": "dashboard",
+      "path": "/academy",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "dashboard",
+      "path": "/academy",
+      "lang": "en",
+      "theme": "light",
+      "width": 390,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "dashboard",
+      "path": "/academy",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "dashboard",
+      "path": "/academy",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "cohorts",
+      "path": "/academy/cohorts",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "cohorts",
+      "path": "/academy/cohorts",
+      "lang": "en",
+      "theme": "light",
+      "width": 390,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "cohorts",
+      "path": "/academy/cohorts",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "cohorts",
+      "path": "/academy/cohorts",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "roster",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "roster",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "lang": "en",
+      "theme": "light",
+      "width": 390,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "roster",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "roster",
+      "path": "/academy/cohorts/coh_de_a2_evening",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "curriculum-list",
+      "path": "/academy/curriculum",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "curriculum-list",
+      "path": "/academy/curriculum",
+      "lang": "en",
+      "theme": "light",
+      "width": 390,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "curriculum-list",
+      "path": "/academy/curriculum",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "curriculum-list",
+      "path": "/academy/curriculum",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "curriculum-builder",
+      "path": "/academy/curriculum/cur_de_a2_workplace",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "curriculum-builder",
+      "path": "/academy/curriculum/cur_de_a2_workplace",
+      "lang": "en",
+      "theme": "light",
+      "width": 390,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "curriculum-builder",
+      "path": "/academy/curriculum/cur_de_a2_workplace",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "curriculum-builder",
+      "path": "/academy/curriculum/cur_de_a2_workplace",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "rubric-list",
+      "path": "/academy/rubrics",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "rubric-list",
+      "path": "/academy/rubrics",
+      "lang": "en",
+      "theme": "light",
+      "width": 390,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "rubric-list",
+      "path": "/academy/rubrics",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "rubric-list",
+      "path": "/academy/rubrics",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "rubric",
+      "path": "/academy/rubrics/rub_de_a2_workplace",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "rubric",
+      "path": "/academy/rubrics/rub_de_a2_workplace",
+      "lang": "en",
+      "theme": "light",
+      "width": 390,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "rubric",
+      "path": "/academy/rubrics/rub_de_a2_workplace",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "rubric",
+      "path": "/academy/rubrics/rub_de_a2_workplace",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "earnings",
+      "path": "/academy/earnings",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "earnings",
+      "path": "/academy/earnings",
+      "lang": "en",
+      "theme": "light",
+      "width": 390,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "earnings",
+      "path": "/academy/earnings",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "earnings",
+      "path": "/academy/earnings",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "onboarding",
+      "path": "/academy/onboarding",
+      "lang": "en",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "onboarding",
+      "path": "/academy/onboarding",
+      "lang": "en",
+      "theme": "light",
+      "width": 390,
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                ".app-utility__button--lang"
+              ],
+              "summary": "Fix any of the following: Unable to determine if the visible text is part of the accessible name"
+            }
+          ]
+        }
+      ],
+      "consoleErrors": []
+    },
+    {
+      "route": "onboarding",
+      "path": "/academy/onboarding",
+      "lang": "ar",
+      "theme": "light",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "onboarding",
+      "path": "/academy/onboarding",
+      "lang": "ar",
+      "theme": "dark",
+      "width": 1920,
+      "violations": [],
+      "incomplete": [],
+      "consoleErrors": []
+    }
+  ]
+}

@@ -21,14 +21,14 @@ describe('shell lang', () => {
   })
 
   it('hrefWithLang keeps path and other params, sets lang', () => {
-    expect(hrefWithLang('/teacher/tests', '', 'en')).toBe(
-      '/teacher/tests?lang=en',
+    expect(hrefWithLang('/academy/cohorts', '', 'en')).toBe(
+      '/academy/cohorts?lang=en',
     )
-    expect(hrefWithLang('/parent/results', '?as=parent', 'en')).toBe(
-      '/parent/results?as=parent&lang=en',
+    expect(hrefWithLang('/academy/earnings', '?as=instructor', 'en')).toBe(
+      '/academy/earnings?as=instructor&lang=en',
     )
-    expect(hrefWithLang('/parent/results', '?as=parent&lang=en', 'ar')).toBe(
-      '/parent/results?as=parent&lang=ar',
+    expect(hrefWithLang('/academy', '?as=academy&lang=en', 'ar')).toBe(
+      '/academy?as=academy&lang=ar',
     )
     expect(hrefWithLang('/', '?lang=en', 'ar')).toBe('/?lang=ar')
   })

@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { ar, assistant, brand, en } from './strings'
 
 /**
- * Stage 6 guard: UI copy lives in this central file, not in components/routes.
+ * Centralisation guard: UI copy lives in `strings.ts`, not in components/routes.
  *
  * The scan covers the rendering tree only. Test fixtures and the mock adapter's
  * seed / refusal data are demo content by design, not UI chrome, so they are
@@ -35,19 +35,39 @@ describe('centralised UI strings', () => {
     expect(offenders).toEqual([])
   })
 
-  it('labels the parent role apart from every section heading', () => {
-    // Regression: the parent frame rendered the same string as the eyebrow and
-    // the H1, duplicating the heading on every parent section.
-    for (const copy of [ar.parent, en.parent]) {
-      const headings = [
-        copy.progress.heading,
-        copy.tests.heading,
-        copy.results.heading,
-        copy.messages.heading,
-      ]
+  it('gives every academy screen a badge that is not its own heading', () => {
+    // Regression from the inherited shell: an eyebrow that repeats the H1
+    // duplicates the heading on every screen.
+    for (const copy of [
+      ar.onboarding,
+      ar.dashboard,
+      ar.cohorts,
+      ar.roster,
+      ar.curriculum,
+      ar.rubric,
+      ar.earnings,
+      en.onboarding,
+      en.dashboard,
+      en.cohorts,
+      en.roster,
+      en.curriculum,
+      en.rubric,
+      en.earnings,
+    ]) {
       expect(copy.badge.length).toBeGreaterThan(0)
-      expect(headings).not.toContain(copy.badge)
+      expect(copy.title).not.toBe(copy.badge)
+      expect(copy.headTitle).toContain(brand.name)
     }
+  })
+
+  it('keeps the two preview roles in the copy without an auth claim', () => {
+    for (const copy of [ar.profile, en.profile]) {
+      expect(copy.previewHeading.length).toBeGreaterThan(0)
+      expect(copy.roles.academy_owner.length).toBeGreaterThan(0)
+      expect(copy.roles.instructor.length).toBeGreaterThan(0)
+      expect(copy.previewNote.length).toBeGreaterThan(0)
+    }
+    expect(ar.profile.previewNote).not.toContain('تسجيل الدخول')
   })
 
   it('builds every named mention from the two working-name swap points', () => {
@@ -57,7 +77,8 @@ describe('centralised UI strings', () => {
     expect(ar.head.title).toContain(brand.name)
     expect(ar.help.headTitle).toContain(brand.name)
     expect(ar.guide.headTitle).toContain(brand.name)
-    expect(ar.builder.draft.heading).toContain(assistant.nameAr)
-    expect(ar.player.mohsen.heading).toContain(assistant.nameAr)
+    expect(ar.curriculum.mohsen.heading).toContain(assistant.nameAr)
+    expect(ar.curriculum.mohsen.disclaimer).toContain(assistant.nameAr)
+    expect(en.curriculum.mohsen.heading).toContain(assistant.name)
   })
 })

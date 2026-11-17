@@ -9,12 +9,7 @@ import type { AppRole } from './nav'
  * so both languages are checked against the same map.
  */
 
-const guideRoles: readonly AppRole[] = [
-  'teacher',
-  'student',
-  'parent',
-  'assistant',
-]
+const guideRoles: readonly AppRole[] = ['academy', 'instructor']
 
 function copyLinkIds(copy: Strings): string[] {
   const ids = Object.values(copy.help.articles).flatMap((article) =>
@@ -39,13 +34,30 @@ describe('help links', () => {
     }
   })
 
-  it('keeps the current role on a shared screen and the area role elsewhere', () => {
-    expect(linkSearchRole('/profile', 'student')).toBe('student')
-    expect(linkSearchRole('/profile', 'assistant')).toBe('assistant')
+  it('links every id to the LTH academy area', () => {
+    for (const [id, to] of Object.entries(linkRoutes)) {
+      if (id === 'profile') continue
+      expect(to.startsWith('/academy')).toBe(true)
+    }
+  })
 
-    expect(linkSearchRole('/teacher/classes', 'student')).toBe('teacher')
-    expect(linkSearchRole('/student/tests', 'teacher')).toBe('student')
-    expect(linkSearchRole('/parent/progress', 'teacher')).toBe('parent')
-    expect(linkSearchRole('/assistant', 'teacher')).toBe('assistant')
+  it('keeps the current role on a shared screen and the area role elsewhere', () => {
+    expect(linkSearchRole('/profile', 'academy')).toBe('academy')
+    expect(linkSearchRole('/profile', 'instructor')).toBe('instructor')
+
+    expect(linkSearchRole('/academy/cohorts', 'instructor')).toBe('academy')
+    expect(linkSearchRole('/academy/earnings', 'instructor')).toBe('academy')
+  })
+
+  it('never borrows a retired role or a high-school route', () => {
+    const paths = Object.values(linkRoutes).join(' ')
+    expect(paths).not.toMatch(/\/(teacher|student|parent|assistant)\b/)
+  })
+
+  it('covers both roles with at least one guide step', () => {
+    for (const copy of [ar, en]) {
+      expect(copy.guide.academy.steps.length).toBeGreaterThan(0)
+      expect(copy.guide.instructor.steps.length).toBeGreaterThan(0)
+    }
   })
 })

@@ -1,18 +1,23 @@
-import type { IsoDateTime, UserId } from './common'
+import type {
+  ContentDirection,
+  IsoDateTime,
+  MessageId,
+  MessageThreadId,
+} from './common'
 
 /**
  * In-app chat — PROPOSED, mock only.
  *
- * This is an in-app conversation surface in the pattern of the planned AI Chat /
- * AI Assistant popup — never WhatsApp and never an external channel. No
- * real-time transport, no notifications, and no confirmed backend endpoint is
- * claimed: the whole surface is mocked in this MVP and every method stays
- * PROPOSED. The parent sees the Teacher and the Teacher Assistant; a message
- * sent from the popup is answered by a deterministic mock reply in the mock
- * adapter.
+ * This is the header's human message surface (N1: the header button opens human
+ * threads, not the AI persona). It is never WhatsApp and never an external
+ * channel. No real-time transport and no notifications are claimed. Every
+ * method stays PROPOSED.
+ *
+ * Message bodies carry their own language and direction, so a mixed-direction
+ * conversation renders each block correctly.
  */
 
-export type MessageAuthorRole = 'parent' | 'teacher' | 'assistant'
+export type MessageAuthorRole = 'academy_owner' | 'instructor' | 'support'
 
 export interface MessageParticipant {
   role: MessageAuthorRole
@@ -20,24 +25,27 @@ export interface MessageParticipant {
 }
 
 export interface MessageThread {
-  id: string
+  id: MessageThreadId
   title: string
   participant: MessageParticipant
   lastMessageAt: IsoDateTime
 }
 
 export interface Message {
-  id: string
-  threadId: string
+  id: MessageId
+  threadId: MessageThreadId
   author: MessageParticipant
   /** True when the signed-in user sent this message. */
   fromMe: boolean
   body: string
   sentAt: IsoDateTime
+  /** BCP 47-style language tag for this content block. */
+  lang: string
+  dir: ContentDirection
 }
 
 export interface SendMessageInput {
-  threadId: string
+  threadId: MessageThreadId
   body: string
 }
 

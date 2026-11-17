@@ -1,0 +1,340 @@
+{
+  "generatedAt": "2026-11-16T21:27:15.420Z",
+  "threshold": 4.5,
+  "tokenPairs": [
+    {
+      "theme": "light",
+      "fg": "--text-primary",
+      "bg": "--bridgio-cream",
+      "min": 4.5,
+      "use": "Body / headings on the page",
+      "ratio": 15.812497934218666,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--text-primary",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Body on cards and surfaces",
+      "ratio": 17.190837400227856,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--text-secondary",
+      "bg": "--bridgio-cream",
+      "min": 4.5,
+      "use": "Secondary copy on the page",
+      "ratio": 6.6305681756992945,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--text-secondary",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Secondary copy on cards",
+      "ratio": 6.908580594260014,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--text-muted",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Caption 13 / hints",
+      "ratio": 5.5934919891940185,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--bridgio-cream",
+      "bg": "--bridgio-maroon",
+      "min": 4.5,
+      "use": "Primary button label",
+      "ratio": 15.812497934218666,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--bridgio-maroon",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Links and ink on cards",
+      "ratio": 17.190837400227856,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--bridgio-success",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Success text",
+      "ratio": 4.924881876946691,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--bridgio-info",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Info text",
+      "ratio": 5.644316904924323,
+      "pass": true
+    },
+    {
+      "theme": "light",
+      "fg": "--bridgio-error",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Error text",
+      "ratio": 9.469452965674614,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--text-primary",
+      "bg": "--bridgio-cream",
+      "min": 4.5,
+      "use": "Body / headings on the page",
+      "ratio": 15.812497934218666,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--text-primary",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Body on cards and surfaces",
+      "ratio": 12.268554187476221,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--text-secondary",
+      "bg": "--bridgio-cream",
+      "min": 4.5,
+      "use": "Secondary copy on the page",
+      "ratio": 8.434156617880278,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--text-secondary",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Secondary copy on cards",
+      "ratio": 7.050973073691116,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--text-muted",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Caption 13 / hints",
+      "ratio": 5.885972311969557,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--bridgio-cream",
+      "bg": "--bridgio-maroon",
+      "min": 4.5,
+      "use": "Primary button label",
+      "ratio": 15.812497934218666,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--bridgio-maroon",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Links and ink on cards",
+      "ratio": 12.268554187476221,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--bridgio-success",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Success text",
+      "ratio": 5.270105582796026,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--bridgio-info",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Info text",
+      "ratio": 4.892729438471336,
+      "pass": true
+    },
+    {
+      "theme": "dark",
+      "fg": "--bridgio-error",
+      "bg": "--bridgio-paper",
+      "min": 4.5,
+      "use": "Error text",
+      "ratio": 5.585456972584155,
+      "pass": true
+    }
+  ],
+  "c10": [
+    {
+      "route": "dashboard",
+      "theme": "light",
+      "links": []
+    },
+    {
+      "route": "dashboard",
+      "theme": "dark",
+      "links": []
+    },
+    {
+      "route": "cohorts",
+      "theme": "light",
+      "links": []
+    },
+    {
+      "route": "cohorts",
+      "theme": "dark",
+      "links": []
+    },
+    {
+      "route": "roster",
+      "theme": "light",
+      "links": []
+    },
+    {
+      "route": "roster",
+      "theme": "dark",
+      "links": []
+    },
+    {
+      "route": "curriculum-list",
+      "theme": "light",
+      "links": []
+    },
+    {
+      "route": "curriculum-list",
+      "theme": "dark",
+      "links": []
+    },
+    {
+      "route": "curriculum-builder",
+      "theme": "light",
+      "links": []
+    },
+    {
+      "route": "curriculum-builder",
+      "theme": "dark",
+      "links": []
+    },
+    {
+      "route": "rubric-list",
+      "theme": "light",
+      "links": []
+    },
+    {
+      "route": "rubric-list",
+      "theme": "dark",
+      "links": []
+    },
+    {
+      "route": "rubric",
+      "theme": "light",
+      "links": []
+    },
+    {
+      "route": "rubric",
+      "theme": "dark",
+      "links": []
+    },
+    {
+      "route": "earnings",
+      "theme": "light",
+      "links": []
+    },
+    {
+      "route": "earnings",
+      "theme": "dark",
+      "links": []
+    },
+    {
+      "route": "onboarding",
+      "theme": "light",
+      "links": []
+    },
+    {
+      "route": "onboarding",
+      "theme": "dark",
+      "links": []
+    },
+    {
+      "route": "profile",
+      "theme": "light",
+      "links": [
+        {
+          "text": "العربية",
+          "selector": "screen-link",
+          "color": "rgb(44, 7, 6)",
+          "parentColor": "rgb(44, 7, 6)",
+          "weight": "600",
+          "parentWeight": "400",
+          "decoration": "none",
+          "parentBackground": "rgba(0, 0, 0, 0)"
+        }
+      ]
+    },
+    {
+      "route": "profile",
+      "theme": "dark",
+      "links": [
+        {
+          "text": "العربية",
+          "selector": "screen-link",
+          "color": "rgb(249, 236, 217)",
+          "parentColor": "rgb(249, 236, 217)",
+          "weight": "600",
+          "parentWeight": "400",
+          "decoration": "none",
+          "parentBackground": "rgba(0, 0, 0, 0)"
+        }
+      ]
+    },
+    {
+      "route": "help",
+      "theme": "light",
+      "links": []
+    },
+    {
+      "route": "help",
+      "theme": "dark",
+      "links": []
+    },
+    {
+      "route": "guide",
+      "theme": "light",
+      "links": []
+    },
+    {
+      "route": "guide",
+      "theme": "dark",
+      "links": []
+    },
+    {
+      "route": "sign-in",
+      "theme": "light",
+      "links": []
+    },
+    {
+      "route": "sign-in",
+      "theme": "dark",
+      "links": []
+    }
+  ]
+}

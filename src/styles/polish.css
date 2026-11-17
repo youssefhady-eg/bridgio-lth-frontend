@@ -21,7 +21,9 @@
   --outline-card: 1.5px;
   --card-border: rgba(44, 7, 6, 0.85);
   --radius-panel: var(--radius-card);
-  --content-max: 72rem;
+  /* Desktop grid (owner answer 2026-11-14): 1440 px max content width. px on
+     purpose — the desktop root font-size is 17 px, so rem would drift. */
+  --content-max: 1440px;
   /* Header minimum for the inner bar (phone/tablet sizing). */
   --header-min: 72px;
   /* Full desktop header height, border included (box-sizing: border-box).
@@ -54,7 +56,7 @@ body {
 
 .app-utility__button,
 .app-header__menu {
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition: background-color var(--motion-base) var(--motion-ease), border-color var(--motion-base) var(--motion-ease);
 }
 
 @media (min-width: 768px) {
@@ -122,7 +124,7 @@ body {
   border-radius: 12px;
   padding-inline: var(--space-3) var(--space-4);
   color: var(--text-secondary);
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color var(--motion-base) var(--motion-ease), color var(--motion-base) var(--motion-ease);
 }
 
 .app-sidebar__link:hover {
@@ -150,21 +152,9 @@ body {
   color: var(--bridgio-maroon);
 }
 
-/* Small brand-red tick on the active item — accent, never a status. Sits at
-   the inline start, vertically centred so the 16 px tile radius never clips it
-   (it clipped at the corner before), and mirrors with the writing direction
-   instead of jumping to the trailing edge. */
-.app-sidebar__link.is-active::after {
-  content: '';
-  position: absolute;
-  inset-inline-start: var(--space-1);
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--bridgio-red);
-}
+/* R2 — the active item is carried by the cream tile alone. The old brand-red
+   dot is removed in both the expanded and the collapsed sidebar; no
+   replacement badge or notification system is introduced here. */
 
 .app-sidebar__note {
   margin: var(--space-4) var(--space-1) 0;
@@ -175,24 +165,23 @@ body {
 }
 
 @media (min-width: 1024px) {
-  /* Redesign shell lock: 272 px expanded / 88 px collapsed. Written in px on
-     purpose — the desktop root font-size is 17 px, so 5.5rem would render
-     93.5 px, not 88 px. */
+  /* Redesign shell lock (LTH): 240 px expanded / 72 px collapsed. Written in
+     px on purpose — the desktop root font-size is 17 px, so rem would drift. */
   .app-body {
-    grid-template-columns: 272px minmax(0, 1fr);
+    grid-template-columns: 240px minmax(0, 1fr);
     /* Owner decision 2026-11-13: the sidebar and the content column animate
-       together. Only the first track changes (272px ↔ 88px); the content track
+       together. Only the first track changes (240px ↔ 72px); the content track
        keeps its width and moves with the grid, so there is no separate content
        animation and no jump. `grid-template-columns` is interpolable because
        both states have the same track count and the same flexible second
        track. Reduced motion is handled by the global 0.01ms rule in app.css. */
-    transition: grid-template-columns 250ms ease;
+    transition: grid-template-columns var(--motion-standard) var(--motion-ease);
   }
 
-  /* Collapsed rail — must stay after the 272 px rule above to win at equal
+  /* Collapsed rail — must stay after the 240 px rule above to win at equal
      specificity (this was the live collapse bug). */
   .app-body--collapsed {
-    grid-template-columns: 88px minmax(0, 1fr);
+    grid-template-columns: 72px minmax(0, 1fr);
   }
 
   /* The sidebar starts below the header, so a sticky top:0 + height:100dvh
@@ -237,6 +226,33 @@ body {
     color: var(--text-primary);
     background: var(--tint-cream-deep);
   }
+
+  /* R3 — collapsed rail: every icon sits on one centred vertical column.
+     Main nav, utility links and the collapse toggle share the same 40 px
+     icon box inside the 72 px rail, so their glyphs cannot drift apart. */
+  .app-sidebar.is-collapsed .app-sidebar__link,
+  .app-sidebar.is-collapsed .utility-links__link,
+  .app-sidebar.is-collapsed .app-sidebar__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding-inline: 0;
+  }
+
+  .app-sidebar.is-collapsed .app-sidebar__icon,
+  .app-sidebar.is-collapsed .utility-links__icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex: none;
+  }
+
+  .app-sidebar.is-collapsed .app-sidebar__toggle > svg {
+    flex: none;
+    margin: 0;
+  }
 }
 
 @media (max-width: 1023.98px) {
@@ -248,7 +264,9 @@ body {
 /* ---- Main column --------------------------------------------------------- */
 
 .app-main {
+  width: 100%;
   max-width: var(--content-max);
+  margin-inline: auto;
   padding: var(--space-8) var(--space-4) var(--space-16);
 }
 
@@ -317,7 +335,7 @@ h1 {
 .player-test,
 .choice-card,
 .player-option {
-  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+  transition: border-color var(--motion-base) var(--motion-ease), background-color var(--motion-base) var(--motion-ease), transform var(--motion-base) var(--motion-ease);
 }
 
 .class-card:hover,
@@ -369,7 +387,7 @@ h1 {
 /* Rows inside panels. */
 .test-row,
 .progress-row {
-  transition: background-color 0.15s ease;
+  transition: background-color var(--motion-base) var(--motion-ease);
 }
 
 .test-row + .test-row,
@@ -398,6 +416,11 @@ h1 {
 
 .status-chip--success {
   background: var(--tint-success);
+  /* Batch 0 contrast fix: the locked success hue on the 10% success tint
+     measured 4.33:1 at 13 px bold (axe, 2026-11-16) — just under AA. Mixing
+     the locked success with the locked ink darkens the word without inventing
+     a hue. Measured after: see docs/gate/contrast-report.txt. */
+  color: color-mix(in srgb, var(--bridgio-success) 88%, var(--bridgio-maroon));
 }
 
 .status-chip--neutral {
@@ -431,7 +454,7 @@ h1 {
 
 .button {
   border-radius: var(--radius-pill);
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: background-color var(--motion-base) var(--motion-ease), border-color var(--motion-base) var(--motion-ease), color var(--motion-base) var(--motion-ease);
 }
 
 .button--primary {
@@ -467,7 +490,7 @@ h1 {
 select.input {
   border-radius: 12px;
   background: var(--bridgio-paper);
-  transition: border-color 0.15s ease;
+  transition: border-color var(--motion-base) var(--motion-ease);
 }
 
 .input:hover,

@@ -2,34 +2,34 @@ import { describe, expect, it } from 'vitest'
 import { countPhrase, englishCount, type NounForms } from './plural'
 import { ar, en } from './strings'
 
-const questions: NounForms = {
-  one: 'سؤال واحد',
-  two: 'سؤالان',
-  few: 'أسئلة',
-  many: 'سؤالًا',
+const cohorts: NounForms = {
+  one: 'فوج واحد',
+  two: 'فوجان',
+  few: 'أفواج',
+  many: 'فوجًا',
 }
 
 describe('countPhrase — Arabic number–noun agreement', () => {
   it('uses the singular phrase for one and the dual for two', () => {
-    expect(countPhrase(1, questions)).toBe('سؤال واحد')
-    expect(countPhrase(2, questions)).toBe('سؤالان')
+    expect(countPhrase(1, cohorts)).toBe('فوج واحد')
+    expect(countPhrase(2, cohorts)).toBe('فوجان')
   })
 
   it('uses digit + plural for 0 and 3–10', () => {
-    expect(countPhrase(0, questions)).toBe('٠ أسئلة')
-    expect(countPhrase(3, questions)).toBe('٣ أسئلة')
-    expect(countPhrase(10, questions)).toBe('١٠ أسئلة')
+    expect(countPhrase(0, cohorts)).toBe('٠ أفواج')
+    expect(countPhrase(3, cohorts)).toBe('٣ أفواج')
+    expect(countPhrase(10, cohorts)).toBe('١٠ أفواج')
   })
 
   it('uses digit + singular for 11 and above', () => {
-    expect(countPhrase(11, questions)).toBe('١١ سؤالًا')
-    expect(countPhrase(25, questions)).toBe('٢٥ سؤالًا')
+    expect(countPhrase(11, cohorts)).toBe('١١ فوجًا')
+    expect(countPhrase(25, cohorts)).toBe('٢٥ فوجًا')
   })
 
   it('never throws or prints NaN for a bad count', () => {
-    expect(countPhrase(Number.NaN, questions)).toBe('٠ أسئلة')
-    expect(countPhrase(-4, questions)).toBe('٠ أسئلة')
-    expect(countPhrase(2.4, questions)).toBe('سؤالان')
+    expect(countPhrase(Number.NaN, cohorts)).toBe('٠ أفواج')
+    expect(countPhrase(-4, cohorts)).toBe('٠ أفواج')
+    expect(countPhrase(2.4, cohorts)).toBe('فوجان')
   })
 })
 
@@ -43,49 +43,46 @@ describe('englishCount', () => {
 })
 
 describe('UI copy that counts things', () => {
-  it('teacher copy uses formal agreement', () => {
-    expect(ar.dashboard.tests.questionsCount(1)).toBe('سؤال واحد')
-    expect(ar.dashboard.tests.questionsCount(2)).toBe('سؤالان')
-    expect(ar.dashboard.tests.questionsCount(3)).toBe('٣ أسئلة')
-    expect(ar.builder.draft.questionsCount(3)).toBe('٣ أسئلة في المسودة')
-    expect(ar.builder.draft.questionsCount(1)).toBe('سؤال واحد في المسودة')
-    expect(ar.builder.source.materialWords(43)).toBe('٤٣ كلمة')
-    expect(ar.builder.source.unitLessons(4)).toBe('٤ دروس')
-    expect(ar.builder.source.unitLessons(2)).toBe('درسان')
-  })
-
-  it('student copy uses Egyptian casual agreement', () => {
-    expect(ar.player.list.questions(2)).toBe('سؤالين')
-    expect(ar.player.list.questions(3)).toBe('٣ أسئلة')
-    expect(ar.player.runner.confirmBody(2)).toBe(
-      'فاضل سؤالين من غير إجابة. تحب تسلّم برضه؟',
-    )
-    expect(ar.player.runner.confirmBody(1)).toContain('سؤال واحد')
-    expect(ar.player.runner.confirmBody(5)).toContain('٥ أسئلة')
+  it('Arabic academy copy uses formal agreement', () => {
+    expect(ar.dashboard.cohortsCount(1)).toBe('فوج واحد')
+    expect(ar.dashboard.cohortsCount(2)).toBe('فوجان')
+    expect(ar.dashboard.cohortsCount(3)).toBe('٣ أفواج')
+    expect(ar.dashboard.learnersCount(11)).toBe('١١ متدرّبًا')
+    expect(ar.cohorts.seatsAvailable(4)).toBe('٤ مقاعد')
+    expect(ar.curriculum.unitsCount(2)).toBe('وحدتان')
+    expect(ar.curriculum.unitsCount(7)).toBe('٧ وحدات')
+    expect(ar.curriculum.lessonsCount(1)).toBe('درس واحد')
+    expect(ar.curriculum.lessonsCount(12)).toBe('١٢ درسًا')
+    expect(ar.roster.recordedSessions(3)).toBe('٣ جلسات')
   })
 
   it('English copy agrees in number', () => {
-    expect(en.dashboard.tests.questionsCount(1)).toBe('1 question')
-    expect(en.player.list.questions(3)).toBe('3 questions')
-    expect(en.builder.draft.questionsCount(1)).toBe('1 question in the draft')
-    expect(en.player.runner.confirmBody(1)).toBe(
-      '1 question is still unanswered. Do you want to submit anyway?',
-    )
-    expect(en.builder.source.unitLessons(1)).toBe('1 lesson')
+    expect(en.dashboard.cohortsCount(1)).toBe('1 cohort')
+    expect(en.dashboard.cohortsCount(3)).toBe('3 cohorts')
+    expect(en.cohorts.seatsAvailable(1)).toBe('1 seat')
+    expect(en.curriculum.unitsCount(2)).toBe('2 units')
+    expect(en.curriculum.lessonsCount(1)).toBe('1 lesson')
+    expect(en.roster.recordedSessions(2)).toBe('2 recorded sessions')
   })
 
-  it('no counted Arabic copy keeps the old fixed plural after a digit', () => {
+  it('Arabic counted copy never keeps a fixed plural after 1, 2 or 11+', () => {
     for (const text of [
-      ar.dashboard.tests.questionsCount(1),
-      ar.dashboard.tests.questionsCount(2),
-      ar.builder.draft.questionsCount(3),
-      ar.player.list.questions(1),
-      ar.player.list.questions(2),
-      ar.player.runner.confirmBody(1),
-      ar.player.runner.confirmBody(2),
+      ar.dashboard.cohortsCount(1),
+      ar.dashboard.cohortsCount(2),
+      ar.dashboard.learnersCount(1),
+      ar.dashboard.learnersCount(2),
+      ar.cohorts.seatsAvailable(1),
+      ar.cohorts.seatsAvailable(2),
+      ar.curriculum.unitsCount(1),
+      ar.curriculum.unitsCount(2),
+      ar.curriculum.lessonsCount(1),
+      ar.curriculum.lessonsCount(2),
+      ar.curriculum.lessonsCount(11),
     ]) {
-      expect(text).not.toMatch(/[١٢] أسئلة/)
-      expect(text).not.toMatch(/٣ سؤالًا/)
+      expect(text).not.toMatch(/[١٢] أفواج/)
+      expect(text).not.toMatch(/[١٢] متدرّبين/)
+      expect(text).not.toMatch(/[١٢] مقاعد/)
+      expect(text).not.toMatch(/[١٢] دروس/)
     }
   })
 })

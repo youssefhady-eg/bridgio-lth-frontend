@@ -56,22 +56,24 @@ export function AppHeader({
         </button>
 
         <div className="app-header__brand">
-          {/* Adopted wordmark — fills baked in the files, never recoloured.
-              One of the two is visible per breakpoint/theme (see app.css). */}
+          {/* C14 LOCKED — Alexandria Bold lockup. Fills are baked in the files
+              and are never recoloured. One of the two is visible per
+              breakpoint/theme (see app.css): cream on dark surfaces, maroon on
+              light surfaces. Never retyped, mirrored or stretched. */}
           <img
             className="app-header__wordmark app-header__wordmark--cream"
-            src="/brand/wordmark-cream.svg"
+            src="/brand/wordmark-alex-cream-red-arch.svg"
             alt={strings.header.wordmarkAlt}
             width={136}
-            height={49}
+            height={60}
             decoding="async"
           />
           <img
             className="app-header__wordmark app-header__wordmark--maroon"
-            src="/brand/wordmark-maroon.svg"
+            src="/brand/wordmark-alex-maroon-red-arch.svg"
             alt={strings.header.wordmarkAlt}
             width={148}
-            height={53}
+            height={66}
             decoding="async"
           />
         </div>
@@ -86,7 +88,11 @@ export function AppHeader({
             href={hrefWithLang(pathname, searchStr, nextLang)}
             lang={nextLang}
             hrefLang={nextLang}
-            aria-label={`${strings.header.langLabel}: ${
+            aria-label={`${
+              nextLang === 'en'
+                ? strings.header.langGlyphEnglish
+                : strings.header.langGlyphArabic
+            } ${
               nextLang === 'en'
                 ? strings.header.langToEnglish
                 : strings.header.langToArabic

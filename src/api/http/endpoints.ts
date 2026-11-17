@@ -14,83 +14,59 @@ export const endpoints = {
     signIn: '/auth/sign-in',
     signOut: '/auth/sign-out',
   },
-  teachers: {
-    profile: (teacherId: string) => `/teachers/${encode(teacherId)}`,
-    dashboard: (teacherId: string) =>
-      `/teachers/${encode(teacherId)}/dashboard`,
+  languages: {
+    // PROPOSED — language and level records are data, never a UI constant.
+    list: '/languages',
+    levels: (languageId: string) =>
+      `/languages/${encode(languageId)}/levels`,
   },
-  students: {
-    profile: (studentId: string) => `/students/${encode(studentId)}`,
-    progress: (studentId: string) =>
-      `/students/${encode(studentId)}/progress`,
+  academies: {
+    // PROPOSED — tenant provisioning is NOT VERIFIED.
+    current: '/academies/current',
+    onboarding: '/academies/current/onboarding',
+    dashboard: '/academies/current/dashboard',
+    profile: '/academies/current/profile',
+    completeStep: (stepId: string) =>
+      `/academies/current/onboarding/steps/${encode(stepId)}/complete`,
   },
-  rbac: {
-    // PROPOSED — RBAC-owned grants. The frontend only reads them.
-    capabilities: (userId: string) =>
-      `/users/${encode(userId)}/capabilities`,
+  cohorts: {
+    // PROPOSED — the cohort model itself is a proposal.
+    list: '/cohorts',
+    detail: (cohortId: string) => `/cohorts/${encode(cohortId)}`,
+    publish: (cohortId: string) => `/cohorts/${encode(cohortId)}/publish`,
+    roster: (cohortId: string) => `/cohorts/${encode(cohortId)}/roster`,
+    attendanceSheet: (cohortId: string, sessionId: string) =>
+      `/cohorts/${encode(cohortId)}/sessions/${encode(sessionId)}/attendance`,
   },
-  parents: {
-    // PROPOSED — parent view, display only.
-    profile: '/parents/me',
-    overview: (childId: string) =>
-      `/parents/children/${encode(childId)}/overview`,
+  curricula: {
+    // PROPOSED — Mentingo has no verified curriculum model.
+    list: '/curricula',
+    detail: (curriculumId: string) => `/curricula/${encode(curriculumId)}`,
+    units: (curriculumId: string) =>
+      `/curricula/${encode(curriculumId)}/units`,
+    lessons: (curriculumId: string, unitId: string) =>
+      `/curricula/${encode(curriculumId)}/units/${encode(unitId)}/lessons`,
+    publish: (curriculumId: string) =>
+      `/curricula/${encode(curriculumId)}/publish`,
+    draftOutline: (curriculumId: string) =>
+      `/curricula/${encode(curriculumId)}/draft-outline`,
+  },
+  rubrics: {
+    // PROPOSED — five-dimension coverage is NOT VERIFIED.
+    list: '/rubrics',
+    detail: (rubricId: string) => `/rubrics/${encode(rubricId)}`,
+    dimension: (rubricId: string, dimensionId: string) =>
+      `/rubrics/${encode(rubricId)}/dimensions/${encode(dimensionId)}`,
+    publish: (rubricId: string) => `/rubrics/${encode(rubricId)}/publish`,
+  },
+  earnings: {
+    // PROPOSED — every amount is a placeholder until the finance review.
+    ledger: '/earnings/ledger',
   },
   messages: {
     // PROPOSED — in-app chat, mock only; no real-time transport claimed.
     threads: '/messages/threads',
     messages: (threadId: string) =>
       `/messages/threads/${encode(threadId)}/messages`,
-  },
-  classrooms: {
-    forTeacher: (teacherId: string) =>
-      `/teachers/${encode(teacherId)}/classrooms`,
-    detail: (classroomId: string) => `/classrooms/${encode(classroomId)}`,
-    students: (classroomId: string) =>
-      `/classrooms/${encode(classroomId)}/students`,
-  },
-  curriculum: {
-    subjects: '/curriculum/subjects',
-    units: (subjectId: string) =>
-      `/curriculum/subjects/${encode(subjectId)}/units`,
-    unit: (unitId: string) => `/curriculum/units/${encode(unitId)}`,
-  },
-  materials: {
-    forTeacher: (teacherId: string) =>
-      `/teachers/${encode(teacherId)}/materials`,
-    detail: (materialId: string) => `/materials/${encode(materialId)}`,
-    create: '/materials',
-  },
-  tests: {
-    forTeacher: (teacherId: string) =>
-      `/teachers/${encode(teacherId)}/tests`,
-    forClass: (classroomId: string) =>
-      `/classrooms/${encode(classroomId)}/tests`,
-    detail: (testId: string) => `/tests/${encode(testId)}`,
-    createDraft: '/tests',
-    publish: (testId: string) => `/tests/${encode(testId)}/publish`,
-  },
-  questions: {
-    list: (testId: string) => `/tests/${encode(testId)}/questions`,
-    // PROPOSED route for the student-safe list (no `correctOptionId`).
-    studentList: (testId: string) =>
-      `/tests/${encode(testId)}/student-questions`,
-    detail: (testId: string, questionId: string) =>
-      `/tests/${encode(testId)}/questions/${encode(questionId)}`,
-    reorder: (testId: string) => `/tests/${encode(testId)}/questions/order`,
-  },
-  attempts: {
-    forStudent: (studentId: string) =>
-      `/students/${encode(studentId)}/attempts`,
-    // PROPOSED (Batch 2) — teacher-only attempts on one test, with scores.
-    forTest: (testId: string) => `/tests/${encode(testId)}/attempts`,
-    start: '/attempts',
-    detail: (attemptId: string) => `/attempts/${encode(attemptId)}`,
-    answer: (attemptId: string, questionId: string) =>
-      `/attempts/${encode(attemptId)}/answers/${encode(questionId)}`,
-    submit: (attemptId: string) => `/attempts/${encode(attemptId)}/submit`,
-  },
-  mohsen: {
-    ask: '/mohsen/ask',
-    draftQuestions: '/mohsen/draft-questions',
   },
 } as const
